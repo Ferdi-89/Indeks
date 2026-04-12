@@ -234,7 +234,7 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto lg:items-start">
 
                     {{-- Paket Dasar (Ekonomi) --}}
                     <div id="card-paket-ekonomi"
@@ -309,7 +309,7 @@
 
                     {{-- Paket Keluarga (POPULAR) --}}
                     <div id="card-paket-keluarga"
-                        class="card bg-primary text-primary-content border border-primary/50 relative sm:col-span-2 lg:col-span-1 lg:scale-105">
+                        class="card bg-primary text-primary-content border border-primary/50 relative lg:-mt-4 lg:mb-4">
                         <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
                             <div
                                 class="badge bg-warning text-warning-content font-bold px-4 py-3 rounded-full border border-warning/30 text-xs tracking-wide">
@@ -460,7 +460,7 @@
 
 
                 <p
-                    class="font-bold text-center text-md sm:text-sm  rounded-xl p-2 mt-10 bg-yellow-400 flex w-100 items-center justify-center gap-2 mx-auto">
+                    class="font-bold text-center text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
