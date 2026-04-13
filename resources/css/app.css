@@ -62,19 +62,18 @@
 
 /*
  * Hero section — background image per theme
+ * Selector menggunakan #hero-section (id) sesuai welcome.blade.php
  */
-.hero-section {
+#hero-section {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-[data-theme="light"] .hero-section {
+[data-theme="light"] #hero-section {
     background-image: url('/backgroundherolightmode.webp');
 }
 
-[data-theme="dark"] .hero-section {
+[data-theme="dark"] #hero-section {
     background-image: url('/backgroundherodarkmode.webp');
 }
-
-

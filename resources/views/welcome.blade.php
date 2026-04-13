@@ -34,7 +34,6 @@
                     class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-300">
                     <li><a href="#fitur">Fitur</a></li>
                     <li><a href="#harga">Harga</a></li>
-                    <li><a href="#komunitas">Komunitas</a></li>
                     <li><a href="#kontak">Kontak</a></li>
                 </ul>
             </div>
@@ -50,7 +49,6 @@
             <ul class="menu menu-horizontal px-1 gap-1 text-sm font-semibold">
                 <li><a href="#fitur" class="rounded-lg hover:bg-primary/10 hover:text-primary">Fitur</a></li>
                 <li><a href="#harga" class="rounded-lg hover:bg-primary/10 hover:text-primary">Harga</a></li>
-                <li><a href="#komunitas" class="rounded-lg hover:bg-primary/10 hover:text-primary">Komunitas</a></li>
                 <li><a href="#kontak" class="rounded-lg hover:bg-primary/10 hover:text-primary">Kontak</a></li>
             </ul>
         </div>
@@ -70,8 +68,8 @@
             </label>
 
             <a href="/daftar" id="btn-daftar-nav"
-                class="btn btn-primary btn-sm rounded-xl border border-primary/50 font-semibold">
-                Mulai Sekarang
+                class="btn btn-primary btn-sm rounded-md border-primary/50 font-semibold">
+                Daftar
             </a>
         </div>
     </nav>
@@ -97,7 +95,7 @@
 
     <main>
         {{-- ==================== SECTION 1: HERO ==================== --}}
-        <header class="hero min-h-[80vh] hero-section">
+        <header class="hero min-h-[80vh] " id="hero-section">
             <div class="hero-content text-center px-4 py-16">
                 <div class="max-w-2xl">
                     {{-- Logo Hero (light = white, dark = black) --}}
@@ -119,7 +117,7 @@
                             class="btn btn-primary btn-lg rounded-2xl font-bold px-8">
                             Daftar Sekarang
                         </a>
-                        <a href="#fitur" id="btn-pelajari"
+                        <a href="#harga" id="btn-pelajari"
                             class="btn btn-outline btn-primary btn-lg rounded-2xl font-bold px-8">
                             Pilihan Paket
                         </a>
@@ -146,7 +144,7 @@
         </header>
 
         {{-- ==================== SECTION 2: FITUR ==================== --}}
-        <section class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 max-w-7xl mx-auto">
+        <section id="fitur" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 max-w-7xl mx-auto">
             <div class="text-center mb-12 sm:mb-16">
                 <div
                     class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-primary/20">
@@ -221,8 +219,7 @@
         </section>
 
         {{-- ==================== SECTION 3: HARGA ==================== --}}
-        <section id="harga" id="fitur"
-            class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
+        <section id="harga" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12 sm:mb-16">
                     <div
@@ -461,7 +458,7 @@
 
 
                 <p
-                    class="font-bold text-center text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
+                    class="font-bold text-center text-black text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
@@ -500,7 +497,6 @@
                         <a href="#" class="link link-hover">Tentang Kami</a>
                         <a href="https://wa.me/6281373242673" id="link-whatsapp-footer" target="_blank"
                             rel="noopener noreferrer" class="link link-hover">Kontak</a>
-                        <a href="#komunitas" class="link link-hover">Komunitas</a>
                     </nav>
                     <nav class="flex flex-col gap-2">
                         <h6 class="footer-title">Legal</h6>
@@ -521,14 +517,26 @@
         const checkbox = document.getElementById('theme-checkbox');
         const THEME_KEY = 'rnet-theme';
 
+        // Set hero background image berdasarkan theme aktif
+        // (dilakukan via JS agar tidak diproses/di-transform oleh Vite)
+        function updateHeroBg(theme) {
+            const hero = document.getElementById('hero-section');
+            if (!hero) return;
+            hero.style.backgroundImage = theme === 'dark'
+                ? "url('/backgroundherodarkmode.webp')"
+                : "url('/backgroundherolightmode.webp')";
+        }
+
         const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
         html.setAttribute('data-theme', savedTheme);
         checkbox.checked = savedTheme === 'dark';
+        updateHeroBg(savedTheme);
 
         checkbox.addEventListener('change', () => {
             const t = checkbox.checked ? 'dark' : 'light';
             html.setAttribute('data-theme', t);
             localStorage.setItem(THEME_KEY, t);
+            updateHeroBg(t);
         });
 
         // ── Smooth scroll (native CSS preferred, JS fallback) ────
