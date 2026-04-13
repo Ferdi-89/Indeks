@@ -146,7 +146,7 @@
         </header>
 
         {{-- ==================== SECTION 2: FITUR ==================== --}}
-        <section id="fitur" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 max-w-7xl mx-auto">
+        <section class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 max-w-7xl mx-auto">
             <div class="text-center mb-12 sm:mb-16">
                 <div
                     class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-primary/20">
@@ -221,7 +221,8 @@
         </section>
 
         {{-- ==================== SECTION 3: HARGA ==================== --}}
-        <section id="harga" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
+        <section id="harga" id="fitur"
+            class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12 sm:mb-16">
                     <div
@@ -490,7 +491,7 @@
                 <div class="flex flex-row flex-wrap gap-10 lg:gap-16">
                     <nav class="flex flex-col gap-2">
                         <h6 class="footer-title">Layanan</h6>
-                        <a href="#fitur" class="link link-hover">Fitur Kami</a>
+                        <a class="link link-hover">Fitur Kami</a>
                         <a href="#harga" class="link link-hover">Paket Harga</a>
                         <a href="/daftar" class="link link-hover">Daftar Pelanggan</a>
                     </nav>
