@@ -458,7 +458,7 @@
 
 
                 <p
-                    class="font-bold text-center text-black text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
+                    class="font-bold text-center text-warning-content text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
