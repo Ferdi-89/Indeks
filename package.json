@@ -18,6 +18,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "browser-image-compression": "^2.0.2"
+        "browser-image-compression": "^2.0.2",
+        "pgsql": "^1.0.0"
     }
 }

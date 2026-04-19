@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengumumans', function (Blueprint $table) {
-            $table->string('id_pengumuman', 5)->primary();
-            $table->string('text_pengumuman', 255);
-            $table->string('tema',10);
-            $table->dateTime('valid_start');
-            $table->dateTime('valid_end');
+        Schema::create('pakets', function (Blueprint $table) {
+            $table->string('id_paket', 5)->primary();
+            $table->string('title_paket', 50);
+            $table->integer('harga_paket');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengumumans');
+        Schema::dropIfExists('pakets');
     }
 };

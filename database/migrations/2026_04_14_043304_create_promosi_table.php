@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('promosis', function (Blueprint $table) {
-            $table->varchar('id_promosi', 5)->primary();
-            $table->integer('value_promosi', 10);
-            $table->varchar('text_promosi', 255);
-            $table->integer('tema', 2);
+        Schema::create('promosis', function (Blueprint $table) {
+            $table->string('id_promosi', 5)->primary();
+            $table->integer('value_promosi');
+            $table->string('text_promosi', 255);
+            $table->integer('tema');
             $table->dateTime('valid_start');
             $table->dateTime('valid_end');
             $table->timestamps();
@@ -27,8 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('promosis', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('promosis');
     }
 };
