@@ -26,3 +26,7 @@ Route::get('/', function () {
     }
     return view('welcome',compact('pengumuman','famili','ekonomi','premium'));
 });
+
+Route::get('/daftar', function () {
+    return view('daftar');
+});
