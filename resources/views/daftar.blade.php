@@ -31,19 +31,28 @@
                     <p class="text-base-content/60 text-sm">Lengkapi formulir di bawah untuk berlangganan internet cepat.</p>
                 </div>
                 <div class="divider my-0"></div>
-                <form action="#" method="POST" class="space-y-4">
+                <form action="/daftar" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
                     <div class="form-control">
                         <label class="label"><span class="label-text font-semibold">Nama Lengkap</span></label>
-                        <input type="text" placeholder="Masukkan nama" class="input input-bordered focus:input-primary" required />
+                        <input type="text" name="nama" placeholder="Masukkan nama" class="input input-bordered focus:input-primary" required />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-semibold">Email</span></label>
+                        <input type="email" name="email" placeholder="email@contoh.com" class="input input-bordered focus:input-primary" required />
                     </div>
                     <div class="form-control">
                         <label class="label"><span class="label-text font-semibold">Nomor WhatsApp</span></label>
-                        <input type="tel" placeholder="0812xxxx" class="input input-bordered focus:input-primary" required />
+                        <input type="tel" name="nomor_telp" placeholder="0812xxxx" class="input input-bordered focus:input-primary" required />
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text font-semibold">Alamat Lengkap</span></label>
-                        <textarea class="textarea textarea-bordered h-24 focus:textarea-primary" placeholder="Masukkan alamat pemasangan"></textarea>
+                        <label class="label"><span class="label-text font-semibold">Foto Lokasi (Opsional)</span></label>
+                        <input type="file" name="path_gambar" class="file-input file-input-bordered file-input-primary w-full" />
                     </div>
+                    {{-- Hidden fields for location, normally populated by JS --}}
+                    <input type="hidden" name="latitude" value="0">
+                    <input type="hidden" name="longitude" value="0">
+
                     <div class="form-control pt-4">
                         <button type="submit" class="btn btn-primary btn-block text-white font-bold h-12">Submit Pendaftaran</button>
                     </div>
