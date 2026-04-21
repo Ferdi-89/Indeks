@@ -6,6 +6,8 @@ use App\Models\pengumuman;
 use App\Models\paket;
 use Illuminate\Support\Str;
 
+// Routing landing page
+// Cache dan Minimalisir Query Database
 Route::get('/', function () {
 
     $data = Cache::remember('landing_page_data',60*60*24, function () {
@@ -32,6 +34,7 @@ Route::get('/daftar', function () {
     return view('daftar');
 });
 
+// Routing Page Pendaftaran
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
     // 1. Validasi data
     $validated = $request->validate([
