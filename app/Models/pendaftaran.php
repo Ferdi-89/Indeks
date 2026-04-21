@@ -11,7 +11,7 @@ class pendaftaran extends Model
     public $incrementing = false;
     protected $keyType = "string";
     protected $fillable = [
-        'id_pendaftar',
+        'id_pendaftaran',
         'nama',
         'alamat',
         'latitude',

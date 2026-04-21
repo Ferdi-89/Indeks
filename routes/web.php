@@ -40,10 +40,10 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     $validated = $request->validate([
         'nama' => 'required|string|max:255',
         'email' => 'required|email',
-        'nomor_telp' => 'required',
+        'nomor_tlpn' => 'required',
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'latitude' => 'nullable',
-        'longitude' => 'nullable',
+        'longtitude' => 'nullable',
         'alamat' => 'required|string|max:255',
     ]);
 
@@ -57,13 +57,13 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
 
     // 3. Simpan ke Database
     App\Models\pendaftaran::create([
-        'id_pendaftar' => 'USR-' . strtoupper(Str::random(8)), // Contoh generate ID
+        'id_pendaftaran' => 'USR-' . strtoupper(Str::random(8)), // Contoh generate ID
         'nama' => $validated['nama'],
         'alamat' => $validated['alamat'],
         'email' => $validated['email'],
-        'nomor_telp' => $validated['nomor_telp'],
+        'nomor_tlpn' => $validated['nomor_telp'],
         'latitude' => $validated['latitude'] ?? 0,
-        'longitude' => $validated['longitude'] ?? 0,
+        'longtitude' => $validated['longitude'] ?? 0,
         'path_gambar' => $filePath,
 
     ]);
