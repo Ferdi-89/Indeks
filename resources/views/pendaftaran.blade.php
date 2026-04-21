@@ -134,6 +134,22 @@
                         </div>
                     </div>
 
+                    <!-- Bagian Alamat Lengkap yang baru ditambahkan -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-700 flex items-center">
+                            Alamat Lengkap<span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <textarea name="alamat" rows="3" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 resize-none text-sm outline-none"
+                            placeholder="Alamat jalan, RT/RW, kelurahan, kecamatan, kota, kode pos">{{ old('alamat') }}</textarea>
+                        @error('alamat') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                        <p class="text-[11px] text-slate-400 mt-2">
+                            Gunakan map di atas untuk otomatis mengisi atau mencari lokasi rumah kediaman Anda lebih
+                            cepat.
+                        </p>
+                    </div>
+
+
                     <!-- Foto Properti -->
                     <div class="space-y-6 pt-6 border-t border-slate-100">
                         <div class="flex items-center gap-3">

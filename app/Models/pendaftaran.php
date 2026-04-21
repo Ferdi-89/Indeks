@@ -13,10 +13,12 @@ class pendaftaran extends Model
     protected $fillable = [
         'id_pendaftar',
         'nama',
+        'alamat',
         'latitude',
-        'longitude',
+        'longtitude',
         'email',
-        'nomor_telp',
+        'nomor_tlpn',
         'path_gambar'
+
     ];
 }
