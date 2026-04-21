@@ -77,19 +77,22 @@
     {{-- ==================== MARQUEE PENGUMUMAN ==================== --}}
     <div id="marquee-bar" class="bg-primary overflow-hidden h-9 flex items-center border-b border-primary/30">
         <div class="marquee-track text-white text-sm font-medium gap-16" id="marquee-content">
-            @php
-                $announcements = [
-                    '📢 Promo! Daftar bulan ini gratis instalasi.',
-                    '⚡ Nikmati internet no-FUP, unlimited quota, tanpa gangguan.',
-                    '📞 CS kami siap melayani 24/7 — WhatsApp 0813-7324-2673.',
-                ];
-            @endphp
-            @foreach ($announcements as $ann)
+            @foreach ($pengumuman as $ann)
                 <span class="shrink-0">{{ $ann }}</span>
             @endforeach
-            @foreach ($announcements as $ann)
+            @foreach ($pengumuman as $ann)
                 <span class="shrink-0">{{ $ann }}</span>
             @endforeach
+            @foreach ($pengumuman as $ann)
+                <span class="shrink-0">{{ $ann }}</span>
+            @endforeach
+            @foreach ($pengumuman as $ann)
+                <span class="shrink-0">{{ $ann }}</span>
+            @endforeach
+            @foreach ($pengumuman as $ann)
+                <span class="shrink-0">{{ $ann }}</span>
+            @endforeach
+
         </div>
     </div>
 
@@ -219,11 +222,12 @@
         </section>
 
         {{-- ==================== SECTION 3: HARGA ==================== --}}
-        <section id="harga" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
+        <section id="harga"
+            class="py-16 sm:py-24 bg-gradient-to-r px-5 sm:px-8 lg:px-16 bg-base-200 border-t border-base-300">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12 sm:mb-16">
                     <div
-                        class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-primary/20">
+                        class="inline-flex items-center gap-2 bg-primary/10 element-adaptive px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-white">
                         Pilihan Paket
                     </div>
                     <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4">Pilih Paket Anda</h2>
@@ -236,7 +240,7 @@
 
                     {{-- Paket Dasar (Ekonomi) --}}
                     <div id="card-paket-ekonomi"
-                        class="card bg-base-100 border border-base-300 hover:border-primary/40 transition-colors duration-200">
+                        class="card bg-base-100 border border-base-200 hover:border-primary/100 transition-colors duration-200">
                         <div class="card-body text-center gap-4 p-6">
                             <div
                                 class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto">
@@ -247,11 +251,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold">Paket Ekonomi</h3>
+                                <h3 class="text-xl font-bold">{{ $ekonomi['title_paket']  }}</h3>
                                 <p class="text-base-content/50 text-sm mt-1">Sempurna untuk rumah kecil</p>
                             </div>
                             <div class="flex items-end justify-center gap-1">
-                                <span class="text-4xl font-extrabold text-primary">165K</span>
+                                <span
+                                    class="text-4xl font-extrabold text-primary">{{ $ekonomi['harga_paket'] / 1000}}K</span>
                                 <span class="text-base-content/50 mb-1 text-sm">/bulan</span>
                             </div>
                             <div class="divider my-0"></div>
@@ -307,7 +312,7 @@
 
                     {{-- Paket Keluarga (POPULAR) --}}
                     <div id="card-paket-keluarga"
-                        class="card bg-primary text-primary-content border border-primary/50 relative lg:-mt-4 lg:mb-4">
+                        class="card bg-primary text-primary-content border border-primary/10    0 relative lg:-mt-4 lg:mb-4">
                         <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
                             <div
                                 class="badge bg-warning text-warning-content font-bold px-4 py-3 rounded-full border border-warning/30 text-xs tracking-wide">
@@ -324,11 +329,11 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold">Paket Keluarga</h3>
+                                <h3 class="text-xl font-bold">{{ $famili['title_paket'] }}</h3>
                                 <p class="text-white/70 text-sm mt-1">Ideal untuk keluarga</p>
                             </div>
                             <div class="flex items-end justify-center gap-1">
-                                <span class="text-4xl font-extrabold">200K</span>
+                                <span class="text-4xl font-extrabold">{{ $famili['harga_paket'] / 1000 }}K</span>
                                 <span class="text-white/70 mb-1 text-sm">/bulan</span>
                             </div>
                             <div class="border-t border-white/20 my-0"></div>
@@ -395,11 +400,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold">Paket Premium</h3>
+                                <h3 class="text-xl font-bold">{{ $premium['title_paket'] }}</h3>
                                 <p class="text-base-content/50 text-sm mt-1">Untuk seluruh anggota keluarga</p>
                             </div>
                             <div class="flex items-end justify-center gap-1">
-                                <span class="text-4xl font-extrabold text-primary">250K</span>
+                                <span
+                                    class="text-4xl font-extrabold text-primary">{{ $premium['harga_paket'] / 1000 }}K</span>
                                 <span class="text-base-content/50 mb-1 text-sm">/bulan</span>
                             </div>
                             <div class="divider my-0"></div>
@@ -458,7 +464,7 @@
 
 
                 <p
-                    class="font-bold text-center text-warning-content text-sm sm:text-base rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-md items-center justify-center gap-2 mx-auto">
+                    class="font-bold text-center text-xl text-warning-content rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-sm items-center justify-center gap-2 mx-auto border-b-amber-600">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
