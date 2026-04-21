@@ -35,6 +35,9 @@ Route::get('/daftar', function () {
 })->name('pendaftaran');
 
 // Routing Page Pendaftaran
+
+
+
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
     // 1. Validasi data
     $validated = $request->validate([
@@ -47,6 +50,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
+
     // 2. Handle Upload File
     $filePath = null;
     if ($request->hasFile('path_gambar')) {
@@ -57,7 +61,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
 
     // 3. Simpan ke Database
     App\Models\pendaftaran::create([
-        'id_pendaftaran' => 'USR-' . strtoupper(Str::random(8)), // Contoh generate ID
+        'id_pendaftaran' =>strtoupper(Str::random(5)), // Contoh generate ID
         'nama' => $validated['nama'],
         'alamat' => $validated['alamat'],
         'latitude' => $validated['latitude'] ?? 0,

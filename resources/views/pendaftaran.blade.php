@@ -13,6 +13,17 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    @if ($errors->any())
+        <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl mb-6">
+            <ul class="list-disc pl-5 text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -91,11 +102,11 @@
                                         class="flex border border-slate-200 rounded-xl overflow-hidden focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500 transition">
                                         <span
                                             class="flex items-center px-4 bg-slate-100 border-r border-slate-200 text-sm text-slate-500 font-bold">+62</span>
-                                        <input type="tel" name="nomor_telp" placeholder="812-3456-7890"
-                                            value="{{ old('nomor_telp') }}" required
+                                        <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
+                                            value="{{ old('nomor_tlpn') }}" required
                                             class="w-full px-4 py-3.5 outline-none text-sm bg-slate-50 focus:bg-white transition">
                                     </div>
-                                    @error('nomor_telp') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                    @error('nomor_tlpn') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
 
@@ -127,7 +138,7 @@
                                 <div id="map"
                                     class="h-72 rounded-2xl border border-slate-200 shadow-inner overflow-hidden"></div>
                                 <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -6.2) }}">
-                                <input type="hidden" name="longitude" id="long" value="{{ old('longitude', 106.8) }}">
+                                <input type="hidden" name="longtitude" id="long" value="{{ old('longtitude', 106.8) }}">
                                 <p class="text-[11px] text-slate-400 mt-2 italic">Geser pin merah pada peta ke lokasi
                                     rumah Anda secara tepat.</p>
                             </div>

@@ -18,7 +18,9 @@ class pendaftaran extends Model
         'longtitude',
         'email',
         'nomor_tlpn',
-        'path_gambar'
+        'path_gambar',
+        'created_at',
+        'updated_at',
 
     ];
 }

@@ -677,6 +677,8 @@ namespace App\Models {
     /**
      * App\Models\pendaftaran
      *
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property \Illuminate\Support\Carbon|null $updated_at
      * @property string $path_gambar
      * @property string $nomor_tlpn
      * @property string $email
@@ -684,8 +686,8 @@ namespace App\Models {
      * @property float $latitude
      * @property string $alamat
      * @property string $nama
-     * @property string $id_pendataran
-     * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereIdPendataran($value)
+     * @property string $id_pendaftaran
+     * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereIdPendaftaran($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereNama($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereAlamat($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereLatitude($value)
@@ -693,6 +695,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereNomorTlpn($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran wherePathGambar($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran query()
