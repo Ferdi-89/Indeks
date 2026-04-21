@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class pendaftaran extends Model
 {
     protected $table = "pendaftarans";
-    protected $primaryKey = "id_pendaftar";
+    protected $primaryKey = "id_pendaftaran";
     public $incrementing = false;
     protected $keyType = "string";
     protected $fillable = [
