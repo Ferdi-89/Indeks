@@ -31,8 +31,8 @@ Route::get('/', function () {
 });
 
 Route::get('/daftar', function () {
-    return view('daftar');
-});
+    return view('pendaftaran');
+})->name('pendaftaran');
 
 // Routing Page Pendaftaran
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
@@ -66,4 +66,4 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     ]);
 
     return redirect('/')->with('success', 'Pendaftaran berhasil dikirim!');
-});
+})->name('pendaftaran.store');
