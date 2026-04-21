@@ -51,12 +51,12 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     if ($request->hasFile('path_gambar')) {
         $file = $request->file('path_gambar');
         $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('pendaftaran', $fileName, 'public');
+        $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
     }
 
     // 3. Simpan ke Database
     App\Models\pendaftaran::create([
-        'id_pendaftar' => 'REG-' . strtoupper(Str::random(8)), // Contoh generate ID
+        'id_pendaftar' => 'USR-' . strtoupper(Str::random(8)), // Contoh generate ID
         'nama' => $validated['nama'],
         'email' => $validated['email'],
         'nomor_telp' => $validated['nomor_telp'],

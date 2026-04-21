@@ -529,7 +529,7 @@ class Builder implements BuilderContract
     {
         $columns = func_get_args();
 
-        if (count($columns) > 0) {
+        if ($columns !== []) {
             $this->distinct = is_array($columns[0]) || is_bool($columns[0]) ? $columns[0] : $columns;
         } else {
             $this->distinct = true;
@@ -3069,6 +3069,36 @@ class Builder implements BuilderContract
     }
 
     /**
+     * Add an "order by" clause to order results by a given sequence of values.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  \Illuminate\Contracts\Support\Arrayable|array  $values
+     * @return $this
+     */
+    public function inOrderOf($column, $values)
+    {
+        if ($values instanceof Arrayable) {
+            $values = $values->toArray();
+        }
+
+        $values = array_values($values);
+
+        if (empty($values)) {
+            return $this;
+        }
+
+        $this->{$this->unions ? 'unionOrders' : 'orders'}[] = [
+            'type' => 'InOrderOf',
+            'column' => $column,
+            'values' => $values,
+        ];
+
+        $this->addBinding($this->cleanBindings($values), $this->unions ? 'unionOrder' : 'order');
+
+        return $this;
+    }
+
+    /**
      * Add a raw "order by" clause to the query.
      *
      * @param  literal-string  $sql
@@ -3469,7 +3499,7 @@ class Builder implements BuilderContract
     {
         $result = (array) $this->first([$column]);
 
-        return count($result) > 0 ? array_first($result) : null;
+        return $result !== [] ? array_first($result) : null;
     }
 
     /**
@@ -3482,7 +3512,7 @@ class Builder implements BuilderContract
     {
         $result = (array) $this->selectRaw($expression, $bindings)->first();
 
-        return count($result) > 0 ? array_first($result) : null;
+        return $result !== [] ? array_first($result) : null;
     }
 
     /**
@@ -4156,13 +4186,13 @@ class Builder implements BuilderContract
     }
 
     /**
-     * Insert new records into the database while ignoring specific conflicts and returning specified columns.
+     * Insert new records into the database and returning specified columns with optional ignoring specific conflicts.
      *
-     * @param  non-empty-string|non-empty-array<non-empty-string>  $uniqueBy
      * @param  non-empty-array<non-empty-string>  $returning
+     * @param  non-empty-string|non-empty-array<non-empty-string>|null  $uniqueBy
      * @return \Illuminate\Support\Collection
      */
-    public function insertOrIgnoreReturning(array $values, array|string $uniqueBy, array $returning = ['*'])
+    public function insertOrIgnoreReturning(array $values, array $returning = ['*'], array|string|null $uniqueBy = null)
     {
         if (empty($values)) {
             return new Collection;
@@ -4188,7 +4218,7 @@ class Builder implements BuilderContract
 
         $this->applyBeforeQueryCallbacks();
 
-        $sql = $this->grammar->compileInsertOrIgnoreReturning($this, $values, (array) $uniqueBy, $returning);
+        $sql = $this->grammar->compileInsertOrIgnoreReturning($this, $values, $returning, $uniqueBy === null ? null : Arr::wrap($uniqueBy));
 
         $result = new Collection(
             $this->connection->selectFromWriteConnection($sql, $this->cleanBindings(Arr::flatten($values, 1)))
