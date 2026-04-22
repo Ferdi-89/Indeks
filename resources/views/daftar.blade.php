@@ -136,57 +136,8 @@
                                     Koordinat Lokasi<span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <div class="w-full">
-                                    <div
-                                        class="rounded-xl overflow-hidden border border-slate-200 shadow-sm z-0 w-full mb-2">
-                                        <div class="relative h-[20rem] md:h-[24rem] w-full z-0 block">
-                                            <div id="map" class="h-full w-full"></div>
-                                            <!-- Fixed Center Pin overlay -->
-                                            <div
-                                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full z-[400] drop-shadow-md pointer-events-none flex flex-col items-center">
-                                                <div id="map-loading-indicator"
-                                                    class="hidden absolute -top-8 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-md font-medium whitespace-nowrap mb-1 shadow">
-                                                    Mencari alamat...
-                                                </div>
-                                                <div id="map-pin-icon"
-                                                    class="transition-transform duration-200 ease-in-out translate-y-0">
-                                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="#ef4444"
-                                                        stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                                        <circle cx="12" cy="10" r="3" fill="white"></circle>
-                                                    </svg>
-                                                </div>
-                                                <div id="map-pin-shadow"
-                                                    class="w-2.5 h-1 bg-black/30 rounded-full mt-1 blur-[1px] transition-opacity duration-200 opacity-100">
-                                                </div>
-                                            </div>
-                                            <!-- Use GPS Button -->
-                                            <button id="btn-gps" title="Gunakan Lokasi Saat Ini (GPS)" type="button"
-                                                class="absolute bottom-4 right-4 z-[400] bg-white p-3 rounded-full shadow-lg border border-slate-100 text-slate-700 hover:text-blue-600 hover:bg-slate-50 transition">
-                                                <i data-lucide="navigation" class="w-5 h-5"></i>
-                                            </button>
-                                        </div>
-                                        <!-- Footer Konfirmasi -->
-                                        <div
-                                            class="bg-white p-4 md:px-5 md:py-4 z-10 shrink-0 flex flex-col md:flex-row gap-4 md:items-center relative border-t border-slate-200">
-                                            <div class="flex items-start gap-3 flex-1 min-w-0">
-                                                <i data-lucide="map-pin"
-                                                    class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i>
-                                                <div class="flex-1 min-w-0">
-                                                    <p
-                                                        class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5 md:mb-1">
-                                                        Alamat Terpilih</p>
-                                                    <p id="temp-address-display"
-                                                        class="text-sm font-medium text-slate-800 line-clamp-2 leading-snug">
-                                                        Geser peta untuk menentukan area
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <button id="btn-confirm-address" type="button" disabled
-                                                class="w-full md:w-auto bg-[#1e40af] text-white py-2.5 px-6 rounded-lg font-semibold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm md:shrink-0 text-center">
-                                                Konfirmasi Alamat
-                                            </button>
-                                        </div>
+                                    <div id="map"
+                                        class="h-72 rounded-lg border border-slate-200 shadow-inner overflow-hidden">
                                     </div>
                                     <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -6.2) }}">
                                     <input type="hidden" name="longtitude" id="long"
@@ -209,8 +160,6 @@
                             </div>
                         </div>
                     </div>
-
-
 
                     <!-- Foto Properti Section -->
                     <div class="space-y-5 pt-4 border-t border-slate-100">
@@ -266,7 +215,7 @@
                     <!-- Submit Section -->
                     <div class="pt-8">
                         <button type="submit" id="submit-btn"
-                            class="w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm flex items-center justify-center">
+                            class="w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm disabled:opacity-70 flex items-center justify-center">
                             Kirim Pendaftaran
                         </button>
                         <p class="text-[11px] text-center text-slate-500 font-medium mt-4">
@@ -313,137 +262,55 @@
         lucide.createIcons();
 
         // ── Leaflet Map ────────────────────────────────────────────────────
-        // ── Leaflet Map (MapPicker React behavior port) ────────────
         var defaultLat = parseFloat(document.getElementById('lat').value) || -6.2;
         var defaultLong = parseFloat(document.getElementById('long').value) || 106.8;
-        var map = L.map('map', { zoomControl: false }).setView([defaultLat, defaultLong], 14);
+
+        var map = L.map('map').setView([defaultLat, defaultLong], 13);
+        var marker = L.marker([defaultLat, defaultLong], { draggable: false }).addTo(map);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        setTimeout(() => map.invalidateSize(), 250);
+        function syncLatLng(latlng) {
+            document.getElementById('lat').value = latlng.lat;
+            document.getElementById('long').value = latlng.lng;
+        }
 
-        var tempCenter = { lat: defaultLat, lng: defaultLong };
-        var tempAddr = '';
+        // Handler to set address specifically requested from the map interaction
         var isMapSelected = false;
+        function handleSetAddressMap(addr, isFromMap) {
+            if (isFromMap) {
+                isMapSelected = true;
+                document.getElementById('alamat-input').value = addr;
 
-        var pinIcon = document.getElementById('map-pin-icon');
-        var pinShadow = document.getElementById('map-pin-shadow');
-        var loadingObj = document.getElementById('map-loading-indicator');
-        var displayAddr = document.getElementById('temp-address-display');
-        var btnConfirm = document.getElementById('btn-confirm-address');
-        var alamatInput = document.getElementById('alamat-input');
-
-        function setMapLoading(loading) {
-            loadingObj.classList.toggle('hidden', !loading);
-            btnConfirm.disabled = loading || !tempAddr;
-            if (loading) displayAddr.textContent = "Mencari lokasi di peta...";
-            else displayAddr.textContent = tempAddr || "Geser peta untuk menentukan area";
+                // Release the flag after a buffer to allow future manual typings
+                setTimeout(function () {
+                    isMapSelected = false;
+                }, 5000); // Wait 5 seconds to stop jumpy backwards API fetches
+            }
         }
 
-        async function fetchAddress(lat, lon) {
-            setMapLoading(true);
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&email=admin@r-net.com`, {
-                    headers: { 'Accept-Language': 'id-ID,id;q=0.9' }
-                });
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                const data = await res.json();
+        // Click on map to move marker + reverse-geocode → handleSetAddressMap
+        map.on('click', function (e) {
+            marker.setLatLng(e.latlng);
+            syncLatLng(e.latlng);
 
-                if (data && data.address) {
-                    const addr = data.address;
-                    const parts = [];
-
-                    const localName = addr.road || addr.hamlet || addr.neighbourhood || addr.residential;
-                    if (localName) parts.push(localName);
-
-                    const village = addr.village || addr.suburb || addr.town;
-                    if (village && village !== localName) parts.push(village);
-
-                    const district = addr.city_district || addr.county;
-                    if (district) parts.push(district.toLowerCase().includes('kec') ? district : `Kec. ${district}`);
-
-                    const city = addr.city || addr.municipality || addr.state_district;
-                    if (city && (!parts.length || !parts[parts.length - 1].includes(city))) parts.push(city);
-
-                    const state = addr.state || addr.region;
-                    if (state) parts.push(state);
-
-                    let formatted = parts.filter(Boolean).join(', ');
-                    if (addr.postcode) formatted += ` ${addr.postcode}`;
-                    if (!formatted) formatted = data.display_name;
-
-                    tempAddr = formatted;
-                } else if (data && data.display_name) {
-                    tempAddr = data.display_name;
-                } else {
-                    tempAddr = 'Gagal memuat alamat. Pastikan Anda tersambung internet.';
-                }
-            } catch (err) {
-                console.warn("Geocoding API blocked (trying fallback):", err);
-                try {
-                    const fallbackRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=id`);
-                    const fallData = await fallbackRes.json();
-                    if (fallData && (fallData.locality || fallData.city)) {
-                        const parts = [fallData.locality, fallData.city, fallData.principalSubdivision, fallData.countryName].filter(Boolean);
-                        tempAddr = parts.join(', ');
-                    } else {
-                        tempAddr = "Pencarian lokasi gagal";
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`, {
+                headers: { 'Accept-Language': 'id-ID,id;q=0.9' }
+            })
+                .then(function (r) {
+                    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+                    return r.json();
+                })
+                .then(function (data) {
+                    if (data && data.display_name) {
+                        handleSetAddressMap(data.display_name, true);
                     }
-                } catch (fallbackError) {
-                    tempAddr = "Pencarian lokasi gagal (Koneksi jaringan terganggu)";
-                }
-            } finally {
-                setMapLoading(false);
-            }
-        }
-
-        // Fetch initial
-        fetchAddress(defaultLat, defaultLong);
-
-        map.on('movestart zoomstart', function () {
-            pinIcon.classList.remove('translate-y-0');
-            pinIcon.classList.add('-translate-y-3');
-            pinShadow.classList.remove('opacity-100');
-            pinShadow.classList.add('opacity-50');
-        });
-
-        map.on('moveend', function () {
-            pinIcon.classList.add('translate-y-0');
-            pinIcon.classList.remove('-translate-y-3');
-            pinShadow.classList.add('opacity-100');
-            pinShadow.classList.remove('opacity-50');
-
-            var center = map.getCenter();
-            tempCenter = { lat: center.lat, lng: center.lng };
-            fetchAddress(center.lat, center.lng);
-        });
-
-        document.getElementById('btn-gps').addEventListener('click', function (e) {
-            e.preventDefault();
-            setMapLoading(true);
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (pos) {
-                        map.flyTo([pos.coords.latitude, pos.coords.longitude], 17);
-                    },
-                    function () {
-                        alert("Akses lokasi ditolak atau tidak tersedia pada perangkat Anda.");
-                        setMapLoading(false);
-                    },
-                    { enableHighAccuracy: true }
-                );
-            }
-        });
-
-        btnConfirm.addEventListener('click', function () {
-            document.getElementById('lat').value = tempCenter.lat;
-            document.getElementById('long').value = tempCenter.lng;
-            alamatInput.value = tempAddr;
-
-            isMapSelected = true;
-            setTimeout(function () { isMapSelected = false; }, 5000);
+                })
+                .catch(function (err) {
+                    console.warn("Geocode lookup gracefully aborted (rate limit/network issue):", err);
+                });
         });
 
         // Auto tracking: Move map automatically if user typed something in Alamat Lengkap

@@ -679,7 +679,7 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon|null $updated_at
-     * @property string $path_gambar
+     * @property string|null $path_gambar
      * @property string $nomor_tlpn
      * @property string $email
      * @property float $longtitude
