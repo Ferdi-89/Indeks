@@ -24,574 +24,702 @@
 
 <body class="min-h-screen bg-[#f1f5f9] font-sans pb-20 antialiased">
 
-    @if ($errors->any())
-        <div class="max-w-7xl mx-auto px-4 md:px-8 pt-4">
-            <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl">
-                <ul class="list-disc pl-5 text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
+    {{-- ============================================================ --}}
+    {{-- TAMPILAN KONFIRMASI: Muncul setelah pendaftaran berhasil     --}}
+    {{-- Dipicu oleh: return redirect()->back()->with('sukses', true) --}}
+    {{-- ============================================================ --}}
+    @if (session('sukses'))
+        <div class="min-h-screen bg-[#f1f5f9] font-sans flex flex-col">
 
-    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-6 md:pt-10 grid lg:grid-cols-12 gap-6 md:gap-10">
-
-        <!-- Left Column (Info Panel) -->
-        <div class="lg:col-span-4 space-y-4 md:space-y-6">
-
-            <div class="space-y-2">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
-                    Daftar Layanan
-                </h1>
-            </div>
-
-            <div class="space-y-3 text-[15px] md:text-base text-slate-600 leading-relaxed max-w-[22rem]">
-                <p>Isi formulir pendaftaran di samping untuk mulai menggunakan layanan internet berkecepatan tinggi dari
-                    R-NET (Internet Rakyat).</p>
-                <p>Dapatkan pengalaman berselancar tanpa batas dengan dukungan fiber optik mutakhir kami yang menjangkau
-                    rumah Anda.</p>
-            </div>
-
-            <div class="bg-white p-4 text-slate-700 text-sm shadow-sm border border-slate-200 rounded-xl mt-6">
-                <p class="font-semibold mb-1 text-slate-900">Petunjuk Lokasi Peta:</p>
-                <p class="opacity-90 leading-relaxed text-xs md:text-sm">Geser peta untuk mencari lokasi Anda yang
-                    paling tepat, lalu tekan tombol "Konfirmasi Alamat".</p>
-            </div>
-        </div>
-
-        <!-- Right Column (The Form) -->
-        <div class="lg:col-span-8 space-y-6 mb-10">
-
-            <div class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-slate-200">
-                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
-                    class="space-y-8">
-                    @csrf
-
-                    <!-- Informasi Pribadi Section -->
-                    <div class="space-y-5">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="user" class="w-5 h-5"></i>
+            {{-- Navbar Minimalis --}}
+            <nav
+                class="border-b border-slate-200 px-4 md:px-8 py-3 flex items-center justify-between bg-white sticky top-0 z-50 shadow-sm">
+                <div class="flex items-center gap-6 text-sm font-medium">
+                    <div class="flex flex-col items-start leading-none cursor-pointer mr-2">
+                        <div class="flex items-center gap-1 font-bold text-2xl tracking-tighter">
+                            <div class="relative flex items-center justify-center">
+                                <span class="text-[#4a4a4a] text-3xl leading-none">R</span>
+                                <div class="absolute top-0 right-[-4px] flex flex-col items-end opacity-90">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        stroke="#2b99d8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                        class="transform translate-x-1.5 -translate-y-1">
+                                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                        <circle cx="12" cy="20" r="2" fill="#2b99d8" stroke="none">
+                                        </circle>
+                                    </svg>
+                                </div>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Informasi Pribadi</h3>
+                            <div class="flex tracking-tight text-[#4a4a4a] ml-3">
+                                <span>N</span>
+                                <span class="text-[#2b99d8]">E</span>
+                                <span>T</span>
+                            </div>
                         </div>
+                        <span class="text-[9px] font-bold tracking-[0.05em] text-slate-500 mt-1 uppercase">Internet
+                            Rakyat</span>
+                    </div>
+                </div>
+            </nav>
 
-                        <div class="space-y-5 md:pl-2">
-                            <div class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Nama Lengkap<span class="text-red-500 ml-1">*</span>
-                                </label>
-                                <input type="text" name="nama" placeholder="Masukkan nama lengkap Anda"
-                                    value="{{ old('nama') }}" required
-                                    class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
-                                @error('nama') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            {{-- Panel Konfirmasi Sukses --}}
+            <div class="flex-1 flex items-center justify-center p-4">
+                <div
+                    class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-200 max-w-lg w-full text-center space-y-6">
+
+                    {{-- Ikon Centang Hijau --}}
+                    <div
+                        class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+
+                    <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Pendaftaran Berhasil!</h2>
+
+                    <p class="text-slate-600 leading-relaxed text-[15px]">
+                        Terima kasih, data pendaftaran Anda telah kami terima.
+                        Teknisi kami akan segera menghubungi Anda melalui nomor telepon/ WhatsApp
+                        yang didaftarkan untuk mengatur jadwal survei dan instalasi.
+                    </p>
+
+                    <div class="pt-6">
+                        <a href="{{ url('/') }}"
+                            class="block w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-xl hover:bg-[#1e3a8a] transition shadow text-sm text-center">
+                            Kembali ke Beranda
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    @else
+        @if ($errors->any())
+            <div class="max-w-7xl mx-auto px-4 md:px-8 pt-4">
+                <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl">
+                    <ul class="list-disc pl-5 text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+
+        <main class="max-w-7xl mx-auto px-4 md:px-8 pt-6 md:pt-10 grid lg:grid-cols-12 gap-6 md:gap-10">
+
+            <!-- Left Column (Info Panel) -->
+            <div class="lg:col-span-4 space-y-4 md:space-y-6">
+
+                <div class="space-y-2">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+                        Daftar Layanan
+                    </h1>
+                </div>
+
+                <div class="space-y-3 text-[15px] md:text-base text-slate-600 leading-relaxed max-w-[22rem]">
+                    <p>Isi formulir pendaftaran di samping untuk mulai menggunakan layanan internet berkecepatan tinggi
+                        dari
+                        R-NET (Internet Rakyat).</p>
+                    <p>Dapatkan pengalaman berselancar tanpa batas dengan dukungan fiber optik mutakhir kami yang
+                        menjangkau
+                        rumah Anda.</p>
+                </div>
+
+                <div class="bg-white p-4 text-slate-700 text-sm shadow-sm border border-slate-200 rounded-xl mt-6">
+                    <p class="font-semibold mb-1 text-slate-900">Petunjuk Lokasi Peta:</p>
+                    <p class="opacity-90 leading-relaxed text-xs md:text-sm">Geser peta untuk mencari lokasi Anda yang
+                        paling tepat, lalu tekan tombol "Konfirmasi Alamat".</p>
+                </div>
+            </div>
+
+            <!-- Right Column (The Form) -->
+            <div class="lg:col-span-8 space-y-6 mb-10">
+
+                <div class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
+                        class="space-y-8">
+                        @csrf
+
+                        <!-- Informasi Pribadi Section -->
+                        <div class="space-y-5">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-800">Informasi Pribadi</h3>
                             </div>
 
-                            <div class="grid md:grid-cols-2 gap-5">
+                            <div class="space-y-5 md:pl-2">
                                 <div class="space-y-1.5">
                                     <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                        Nomor Telepon<span class="text-red-500 ml-1">*</span>
+                                        Nama Lengkap<span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <div
-                                        class="flex w-full bg-[#f8fafc] border border-slate-200 rounded-lg overflow-hidden focus-within:ring-1 focus-within:bg-white focus-within:ring-blue-500 focus-within:border-blue-500 transition">
-                                        <span
-                                            class="flex items-center justify-center px-3 bg-slate-50 border-r border-slate-200 text-sm text-slate-500 font-semibold shadow-inner">
-                                            +62
-                                        </span>
-                                        <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
-                                            value="{{ old('nomor_tlpn') }}" required minlength="8"
-                                            class="w-full px-3 py-3 outline-none text-sm bg-transparent">
-                                    </div>
-                                    @error('nomor_tlpn') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                    <input type="text" name="nama" placeholder="Masukkan nama lengkap Anda"
+                                        value="{{ old('nama') }}" required
+                                        class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
+                                    @error('nama')
+                                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
 
+                                <div class="grid md:grid-cols-2 gap-5">
+                                    <div class="space-y-1.5">
+                                        <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                            Nomor Telepon<span class="text-red-500 ml-1">*</span>
+                                        </label>
+                                        <div
+                                            class="flex w-full bg-[#f8fafc] border border-slate-200 rounded-lg overflow-hidden focus-within:ring-1 focus-within:bg-white focus-within:ring-blue-500 focus-within:border-blue-500 transition">
+                                            <span
+                                                class="flex items-center justify-center px-3 bg-slate-50 border-r border-slate-200 text-sm text-slate-500 font-semibold shadow-inner">
+                                                +62
+                                            </span>
+                                            <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
+                                                value="{{ old('nomor_tlpn') }}" required minlength="8"
+                                                class="w-full px-3 py-3 outline-none text-sm bg-transparent">
+                                        </div>
+                                        @error('nomor_tlpn')
+                                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                            Email Utama<span class="text-red-500 ml-1">*</span>
+                                        </label>
+                                        <input type="email" name="email" placeholder="email@anda.com"
+                                            value="{{ old('email') }}" maxlength="100" required
+                                            class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
+                                        @error('email')
+                                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pilihan Paket Section -->
+                        <div class="space-y-5 pt-4 border-t border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                                    <i data-lucide="package" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-800">Pilihan Paket</h3>
+                            </div>
+
+                            <div class="space-y-2 md:pl-2">
+                                <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                    Paket Internet<span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <input type="hidden" name="id_paket" id="selected-paket"
+                                    value="{{ old('id_paket', request('paket')) }}" required>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    @foreach ($pakets as $paket)
+                                        <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
+                                            onclick="selectPaket(this)"
+                                            class="paket-card group relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                                                            ? 'border-[#1e40af] bg-[#eef2ff] ring-1 ring-[#1e40af]/30'
+                                                                            : 'border-slate-200 bg-[#f8fafc] hover:border-slate-300 hover:bg-white' }}">
+
+                                            {{-- Check indicator --}}
+                                            <div
+                                                class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200
+                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                                                            ? 'bg-[#1e40af] text-white scale-100'
+                                                                            : 'border-2 border-slate-300 scale-90' }}">
+                                                <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
+                                                    fill="none" stroke="currentColor" stroke-width="3"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7">
+                                                    </path>
+                                                </svg>
+                                            </div>
+
+                                            <p class="text-sm font-bold text-slate-800 mt-1">
+                                                {{ $paket['title_paket'] }}</p>
+                                            <p class="text-[#1e40af] font-extrabold text-lg leading-tight mt-1.5">
+                                                Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
+                                            </p>
+                                            <p class="text-[11px] text-slate-500 font-medium">/bulan</p>
+                                        </button>
+                                    @endforeach
+                                </div>
+                                @error('id_paket')
+                                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Informasi Alamat Section -->
+                        <div class="space-y-5 pt-4 border-t border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-800">Informasi Alamat</h3>
+                            </div>
+
+                            <div class="space-y-5 md:pl-2">
+                                <div class="space-y-1.5 flex flex-col">
+                                    <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                        Koordinat Lokasi<span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <div class="w-full">
+                                        <div
+                                            class="rounded-xl overflow-hidden border border-slate-200 shadow-sm z-0 w-full mb-2">
+                                            <div class="relative h-[20rem] md:h-[24rem] w-full z-0 block">
+                                                <div id="map" class="h-full w-full"></div>
+                                                <!-- Fixed Center Pin overlay -->
+                                                <div
+                                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full z-[400] drop-shadow-md pointer-events-none flex flex-col items-center">
+                                                    <div id="map-loading-indicator"
+                                                        class="hidden absolute -top-8 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-md font-medium whitespace-nowrap mb-1 shadow">
+                                                        Mencari alamat...
+                                                    </div>
+                                                    <div id="map-pin-icon"
+                                                        class="transition-transform duration-200 ease-in-out translate-y-0">
+                                                        <svg width="42" height="42" viewBox="0 0 24 24"
+                                                            fill="#ef4444" stroke="white" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z">
+                                                            </path>
+                                                            <circle cx="12" cy="10" r="3"
+                                                                fill="white"></circle>
+                                                        </svg>
+                                                    </div>
+                                                    <div id="map-pin-shadow"
+                                                        class="w-2.5 h-1 bg-black/30 rounded-full mt-1 blur-[1px] transition-opacity duration-200 opacity-100">
+                                                    </div>
+                                                </div>
+                                                <!-- Use GPS Button -->
+                                                <button id="btn-gps" title="Gunakan Lokasi Saat Ini (GPS)"
+                                                    type="button"
+                                                    class="absolute bottom-4 right-4 z-[400] bg-white p-3 rounded-full shadow-lg border border-slate-100 text-slate-700 hover:text-blue-600 hover:bg-slate-50 transition">
+                                                    <i data-lucide="navigation" class="w-5 h-5"></i>
+                                                </button>
+                                            </div>
+                                            <!-- Footer Konfirmasi -->
+                                            <div
+                                                class="bg-white p-4 md:px-5 md:py-4 z-10 shrink-0 flex flex-col md:flex-row gap-4 md:items-center relative border-t border-slate-200">
+                                                <div class="flex items-start gap-3 flex-1 min-w-0">
+                                                    <i data-lucide="map-pin"
+                                                        class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p
+                                                            class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5 md:mb-1">
+                                                            Alamat Terpilih</p>
+                                                        <p id="temp-address-display"
+                                                            class="text-sm font-medium text-slate-800 line-clamp-2 leading-snug">
+                                                            Geser peta untuk menentukan area
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <button id="btn-confirm-address" type="button" disabled
+                                                    class="w-full md:w-auto bg-[#1e40af] text-white py-2.5 px-6 rounded-lg font-semibold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm md:shrink-0 text-center">
+                                                    Konfirmasi Alamat
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="latitude" id="lat"
+                                            value="{{ old('latitude', -2.0337714) }}">
+                                        <input type="hidden" name="longtitude" id="long"
+                                            value="{{ old('longtitude', 101.3963373) }}">
+                                    </div>
+                                </div>
+
                                 <div class="space-y-1.5">
                                     <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                        Email Utama<span class="text-red-500 ml-1">*</span>
+                                        Alamat Lengkap<span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <input type="email" name="email" placeholder="email@anda.com"
-                                        value="{{ old('email') }}" maxlength="100" required
-                                        class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
-                                    @error('email') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                                    <textarea id="alamat-input" name="alamat" rows="3" required
+                                        class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 resize-none text-sm outline-none"
+                                        placeholder="Contoh: Jl. Panglima Sudirman No. 12, RT 01/RW 02, Kelurahan Melati, Kode Pos 15810">{{ old('alamat') }}</textarea>
+                                    @error('alamat')
+                                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                    <p class="text-[11px] text-slate-500 leading-relaxed mt-2 italic">
+                                        Jika Anda mengubah teks ini dengan alamat/kota yang spesifik, peta di atas
+                                        otomatis
+                                        akan bergeser ke lokasi tersebut.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Pilihan Paket Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="package" class="w-5 h-5"></i>
+
+
+                        <!-- Foto Properti Section -->
+                        <div class="space-y-5 pt-4 border-t border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                                    <i data-lucide="home" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-800">Foto Properti</h3>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Pilihan Paket</h3>
-                        </div>
 
-                        <div class="space-y-2 md:pl-2">
-                            <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                Paket Internet<span class="text-red-500 ml-1">*</span>
-                            </label>
-                            <input type="hidden" name="id_paket" id="selected-paket"
-                                value="{{ old('id_paket', request('paket')) }}" required>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                @foreach ($pakets as $paket)
-                                                            <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
-                                                                onclick="selectPaket(this)"
-                                                                class="paket-card group relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
-                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
-                                    ? 'border-[#1e40af] bg-[#eef2ff] ring-1 ring-[#1e40af]/30'
-                                    : 'border-slate-200 bg-[#f8fafc] hover:border-slate-300 hover:bg-white' }}">
-
-                                                                {{-- Check indicator --}}
-                                                                <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200
-                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
-                                    ? 'bg-[#1e40af] text-white scale-100'
-                                    : 'border-2 border-slate-300 scale-90' }}">
-                                                                    <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
-                                                                        fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7">
-                                                                        </path>
-                                                                    </svg>
-                                                                </div>
-
-                                                                <p class="text-sm font-bold text-slate-800 mt-1">{{ $paket['title_paket'] }}</p>
-                                                                <p class="text-[#1e40af] font-extrabold text-lg leading-tight mt-1.5">
-                                                                    Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
-                                                                </p>
-                                                                <p class="text-[11px] text-slate-500 font-medium">/bulan</p>
-                                                            </button>
-                                @endforeach
-                            </div>
-                            @error('id_paket') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-
-                    <!-- Informasi Alamat Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="map-pin" class="w-5 h-5"></i>
-                            </div>
-                            <h3 class="font-bold text-lg text-slate-800">Informasi Alamat</h3>
-                        </div>
-
-                        <div class="space-y-5 md:pl-2">
-                            <div class="space-y-1.5 flex flex-col">
+                            <div class="space-y-1.5 md:pl-2">
                                 <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Koordinat Lokasi<span class="text-red-500 ml-1">*</span>
+                                    Upload Foto Rumah<span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <div class="w-full">
-                                    <div
-                                        class="rounded-xl overflow-hidden border border-slate-200 shadow-sm z-0 w-full mb-2">
-                                        <div class="relative h-[20rem] md:h-[24rem] w-full z-0 block">
-                                            <div id="map" class="h-full w-full"></div>
-                                            <!-- Fixed Center Pin overlay -->
-                                            <div
-                                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full z-[400] drop-shadow-md pointer-events-none flex flex-col items-center">
-                                                <div id="map-loading-indicator"
-                                                    class="hidden absolute -top-8 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-md font-medium whitespace-nowrap mb-1 shadow">
-                                                    Mencari alamat...
-                                                </div>
-                                                <div id="map-pin-icon"
-                                                    class="transition-transform duration-200 ease-in-out translate-y-0">
-                                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="#ef4444"
-                                                        stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                                        <circle cx="12" cy="10" r="3" fill="white"></circle>
-                                                    </svg>
-                                                </div>
-                                                <div id="map-pin-shadow"
-                                                    class="w-2.5 h-1 bg-black/30 rounded-full mt-1 blur-[1px] transition-opacity duration-200 opacity-100">
-                                                </div>
-                                            </div>
-                                            <!-- Use GPS Button -->
-                                            <button id="btn-gps" title="Gunakan Lokasi Saat Ini (GPS)" type="button"
-                                                class="absolute bottom-4 right-4 z-[400] bg-white p-3 rounded-full shadow-lg border border-slate-100 text-slate-700 hover:text-blue-600 hover:bg-slate-50 transition">
-                                                <i data-lucide="navigation" class="w-5 h-5"></i>
-                                            </button>
-                                        </div>
-                                        <!-- Footer Konfirmasi -->
-                                        <div
-                                            class="bg-white p-4 md:px-5 md:py-4 z-10 shrink-0 flex flex-col md:flex-row gap-4 md:items-center relative border-t border-slate-200">
-                                            <div class="flex items-start gap-3 flex-1 min-w-0">
-                                                <i data-lucide="map-pin"
-                                                    class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i>
-                                                <div class="flex-1 min-w-0">
-                                                    <p
-                                                        class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5 md:mb-1">
-                                                        Alamat Terpilih</p>
-                                                    <p id="temp-address-display"
-                                                        class="text-sm font-medium text-slate-800 line-clamp-2 leading-snug">
-                                                        Geser peta untuk menentukan area
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <button id="btn-confirm-address" type="button" disabled
-                                                class="w-full md:w-auto bg-[#1e40af] text-white py-2.5 px-6 rounded-lg font-semibold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm md:shrink-0 text-center">
-                                                Konfirmasi Alamat
-                                            </button>
+
+                                <div
+                                    class="relative border border-slate-200 rounded-xl transition hover:border-blue-400 bg-[#f8fafc] overflow-hidden">
+                                    <!-- Preview area (hidden until file is chosen) -->
+                                    <div id="preview-container"
+                                        class="hidden items-center p-4 border-b border-slate-200 bg-white">
+                                        <img id="image-preview" src="#" alt="Preview"
+                                            class="w-20 h-20 object-cover rounded shadow border border-slate-200">
+                                        <div class="flex-1 ml-4">
+                                            <p class="text-sm font-semibold text-slate-800">Gambar berhasil dipilih</p>
+                                            <p class="text-xs text-slate-500 mt-1">Gunakan tombol di bawah untuk
+                                                mengganti.
+                                            </p>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="latitude" id="lat"
-                                        value="{{ old('latitude', -2.0337714) }}">
-                                    <input type="hidden" name="longtitude" id="long"
-                                        value="{{ old('longtitude', 101.3963373) }}">
-                                </div>
-                            </div>
 
-                            <div class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Alamat Lengkap<span class="text-red-500 ml-1">*</span>
-                                </label>
-                                <textarea id="alamat-input" name="alamat" rows="3" required
-                                    class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 resize-none text-sm outline-none"
-                                    placeholder="Contoh: Jl. Panglima Sudirman No. 12, RT 01/RW 02, Kelurahan Melati, Kode Pos 15810">{{ old('alamat') }}</textarea>
-                                @error('alamat') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                                <p class="text-[11px] text-slate-500 leading-relaxed mt-2 italic">
-                                    Jika Anda mengubah teks ini dengan alamat/kota yang spesifik, peta di atas otomatis
-                                    akan bergeser ke lokasi tersebut.
+                                    <label for="file-input"
+                                        class="flex flex-col items-center justify-center p-6 md:p-8 cursor-pointer hover:bg-slate-50 transition">
+                                        <div
+                                            class="bg-[#eef2ff] p-3 rounded-xl mb-4 text-[#1e40af] shadow-sm font-semibold">
+                                            <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                                        </div>
+                                        <p class="text-sm font-bold text-slate-700 mb-1" id="upload-label">
+                                            Klik untuk upload foto rumah
+                                        </p>
+                                        <p class="text-xs text-slate-500 font-medium">PNG, JPG maksimal 1 MB</p>
+                                    </label>
+
+                                    <input type="file" id="file-input" name="path_gambar"
+                                        accept=".png,.jpg,.jpeg" class="hidden" required>
+                                </div>
+                                @error('path_gambar')
+                                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                                <p class="text-xs text-slate-500 leading-relaxed mt-2">
+                                    Upload foto tampak depan rumah yang jelas untuk membantu teknisi menemukan lokasi
+                                    properti Anda.
                                 </p>
                             </div>
                         </div>
-                    </div>
 
-
-
-                    <!-- Foto Properti Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="home" class="w-5 h-5"></i>
-                            </div>
-                            <h3 class="font-bold text-lg text-slate-800">Foto Properti</h3>
-                        </div>
-
-                        <div class="space-y-1.5 md:pl-2">
-                            <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                Upload Foto Rumah<span class="text-red-500 ml-1">*</span>
-                            </label>
-
-                            <div
-                                class="relative border border-slate-200 rounded-xl transition hover:border-blue-400 bg-[#f8fafc] overflow-hidden">
-                                <!-- Preview area (hidden until file is chosen) -->
-                                <div id="preview-container"
-                                    class="hidden items-center p-4 border-b border-slate-200 bg-white">
-                                    <img id="image-preview" src="#" alt="Preview"
-                                        class="w-20 h-20 object-cover rounded shadow border border-slate-200">
-                                    <div class="flex-1 ml-4">
-                                        <p class="text-sm font-semibold text-slate-800">Gambar berhasil dipilih</p>
-                                        <p class="text-xs text-slate-500 mt-1">Gunakan tombol di bawah untuk mengganti.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <label for="file-input"
-                                    class="flex flex-col items-center justify-center p-6 md:p-8 cursor-pointer hover:bg-slate-50 transition">
-                                    <div
-                                        class="bg-[#eef2ff] p-3 rounded-xl mb-4 text-[#1e40af] shadow-sm font-semibold">
-                                        <i data-lucide="upload-cloud" class="w-6 h-6"></i>
-                                    </div>
-                                    <p class="text-sm font-bold text-slate-700 mb-1" id="upload-label">
-                                        Klik untuk upload foto rumah
-                                    </p>
-                                    <p class="text-xs text-slate-500 font-medium">PNG, JPG maksimal 1 MB</p>
-                                </label>
-
-                                <input type="file" id="file-input" name="path_gambar" accept=".png,.jpg,.jpeg"
-                                    class="hidden" required>
-                            </div>
-                            @error('path_gambar') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                            <p class="text-xs text-slate-500 leading-relaxed mt-2">
-                                Upload foto tampak depan rumah yang jelas untuk membantu teknisi menemukan lokasi
-                                properti Anda.
+                        <!-- Submit Section -->
+                        <div class="pt-8">
+                            <button type="submit" id="submit-btn"
+                                class="w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm flex items-center justify-center">
+                                Kirim Pendaftaran
+                            </button>
+                            <p class="text-[11px] text-center text-slate-500 font-medium mt-4">
+                                Dengan mengirim formulir ini, Anda setuju dengan <br class="hidden sm:block">
+                                <span class="text-blue-600 hover:underline cursor-pointer">Syarat Layanan</span> dan
+                                <span class="text-blue-600 hover:underline cursor-pointer">Kebijakan Privasi</span>
+                                kami.
                             </p>
                         </div>
-                    </div>
 
-                    <!-- Submit Section -->
-                    <div class="pt-8">
-                        <button type="submit" id="submit-btn"
-                            class="w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm flex items-center justify-center">
-                            Kirim Pendaftaran
-                        </button>
-                        <p class="text-[11px] text-center text-slate-500 font-medium mt-4">
-                            Dengan mengirim formulir ini, Anda setuju dengan <br class="hidden sm:block">
-                            <span class="text-blue-600 hover:underline cursor-pointer">Syarat Layanan</span> dan
-                            <span class="text-blue-600 hover:underline cursor-pointer">Kebijakan Privasi</span> kami.
-                        </p>
-                    </div>
-
-                </form>
-            </div>
-
-            <!-- Contact Support Container directly below the form card -->
-            <div
-                class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col sm:flex-row gap-5 items-start sm:items-center mt-6">
-                <div class="bg-[#eef2ff] p-3 md:p-4 rounded-xl text-[#1e40af] shrink-0">
-                    <i data-lucide="headphones" class="w-6 h-6 md:w-8 md:h-8"></i>
+                    </form>
                 </div>
-                <div>
-                    <h4 class="font-bold text-slate-800 text-base">Butuh Bantuan?</h4>
-                    <p class="text-sm text-slate-500 mt-1 mb-3">Tim layanan pelanggan kami tersedia 24/7 untuk membantu
-                        proses instalasi Anda.</p>
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 text-sm font-semibold">
-                        <a href="tel:+6281373242873"
-                            class="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
-                            0813-7324-2873
-                        </a>
-                        <a href="#" class="flex items-center gap-2 text-green-600 hover:text-green-700 transition">
-                            <i data-lucide="message-square" class="w-4 h-4"></i>
-                            Dukungan WhatsApp
-                        </a>
+
+                <!-- Contact Support Container directly below the form card -->
+                <div
+                    class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col sm:flex-row gap-5 items-start sm:items-center mt-6">
+                    <div class="bg-[#eef2ff] p-3 md:p-4 rounded-xl text-[#1e40af] shrink-0">
+                        <i data-lucide="headphones" class="w-6 h-6 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-base">Butuh Bantuan?</h4>
+                        <p class="text-sm text-slate-500 mt-1 mb-3">Tim layanan pelanggan kami tersedia 24/7 untuk
+                            membantu
+                            proses instalasi Anda.</p>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 text-sm font-semibold">
+                            <a href="tel:+6281373242873"
+                                class="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition">
+                                <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                                0813-7324-2873
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-2 text-green-600 hover:text-green-700 transition">
+                                <i data-lucide="message-square" class="w-4 h-4"></i>
+                                Dukungan WhatsApp
+                            </a>
+                        </div>
                     </div>
                 </div>
+
             </div>
+        </main>
 
-        </div>
-    </main>
+        <!-- Scripts -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            // ── Init Lucide Icons ──────────────────────────────────────────────
+            lucide.createIcons();
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // ── Init Lucide Icons ──────────────────────────────────────────────
-        lucide.createIcons();
+            // ── Paket Card Selector ───────────────────────────────────────────
+            function selectPaket(el) {
+                var id = el.getAttribute('data-paket-id');
+                document.getElementById('selected-paket').value = id;
 
-        // ── Paket Card Selector ───────────────────────────────────────────
-        function selectPaket(el) {
-            var id = el.getAttribute('data-paket-id');
-            document.getElementById('selected-paket').value = id;
+                document.querySelectorAll('.paket-card').forEach(function(card) {
+                    var indicator = card.querySelector('div');
+                    var checkSvg = card.querySelector('svg');
 
-            document.querySelectorAll('.paket-card').forEach(function (card) {
-                var indicator = card.querySelector('div');
-                var checkSvg = card.querySelector('svg');
-
-                if (card.getAttribute('data-paket-id') === id) {
-                    card.className = card.className
-                        .replace('border-slate-200', 'border-[#1e40af]')
-                        .replace('bg-[#f8fafc]', 'bg-[#eef2ff]')
-                        .replace('hover:border-slate-300', '')
-                        .replace('hover:bg-white', '');
-                    card.classList.add('ring-1', 'ring-[#1e40af]/30');
-                    indicator.className = indicator.className
-                        .replace('border-2', '').replace('border-slate-300', '')
-                        .replace('scale-90', 'scale-100');
-                    indicator.classList.add('bg-[#1e40af]', 'text-white');
-                    checkSvg.classList.remove('hidden');
-                } else {
-                    card.className = card.className
-                        .replace('border-[#1e40af]', 'border-slate-200')
-                        .replace('bg-[#eef2ff]', 'bg-[#f8fafc]');
-                    card.classList.remove('ring-1', 'ring-[#1e40af]/30');
-                    card.classList.add('hover:border-slate-300', 'hover:bg-white');
-                    indicator.classList.remove('bg-[#1e40af]', 'text-white');
-                    indicator.className = indicator.className
-                        .replace('scale-100', 'scale-90');
-                    indicator.classList.add('border-2', 'border-slate-300');
-                    checkSvg.classList.add('hidden');
-                }
-            });
-        }
-
-        // ── Leaflet Map ────────────────────────────────────────────────────
-        // ── Leaflet Map (MapPicker React behavior port) ────────────
-        var defaultLat = parseFloat(document.getElementById('lat').value) || -2.0337714;
-        var defaultLong = parseFloat(document.getElementById('long').value) || 101.3963373;
-        var map = L.map('map', { zoomControl: false }).setView([defaultLat, defaultLong], 14);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-
-        setTimeout(() => map.invalidateSize(), 250);
-
-        var tempCenter = { lat: defaultLat, lng: defaultLong };
-        var tempAddr = '';
-        var isMapSelected = false;
-
-        var pinIcon = document.getElementById('map-pin-icon');
-        var pinShadow = document.getElementById('map-pin-shadow');
-        var loadingObj = document.getElementById('map-loading-indicator');
-        var displayAddr = document.getElementById('temp-address-display');
-        var btnConfirm = document.getElementById('btn-confirm-address');
-        var alamatInput = document.getElementById('alamat-input');
-
-        function setMapLoading(loading) {
-            loadingObj.classList.toggle('hidden', !loading);
-            btnConfirm.disabled = loading || !tempAddr;
-            if (loading) displayAddr.textContent = "Mencari lokasi di peta...";
-            else displayAddr.textContent = tempAddr || "Geser peta untuk menentukan area";
-        }
-
-        async function fetchAddress(lat, lon) {
-            setMapLoading(true);
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&email=admin@r-net.com`, {
-                    headers: { 'Accept-Language': 'id-ID,id;q=0.9' }
-                });
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                const data = await res.json();
-
-                if (data && data.address) {
-                    const addr = data.address;
-                    const parts = [];
-
-                    const localName = addr.road || addr.hamlet || addr.neighbourhood || addr.residential;
-                    if (localName) parts.push(localName);
-
-                    const village = addr.village || addr.suburb || addr.town;
-                    if (village && village !== localName) parts.push(village);
-
-                    const district = addr.city_district || addr.county;
-                    if (district) parts.push(district.toLowerCase().includes('kec') ? district : `Kec. ${district}`);
-
-                    const city = addr.city || addr.municipality || addr.state_district;
-                    if (city && (!parts.length || !parts[parts.length - 1].includes(city))) parts.push(city);
-
-                    const state = addr.state || addr.region;
-                    if (state) parts.push(state);
-
-                    let formatted = parts.filter(Boolean).join(', ');
-                    if (addr.postcode) formatted += ` ${addr.postcode}`;
-                    if (!formatted) formatted = data.display_name;
-
-                    tempAddr = formatted;
-                } else if (data && data.display_name) {
-                    tempAddr = data.display_name;
-                } else {
-                    tempAddr = 'Gagal memuat alamat. Pastikan Anda tersambung internet.';
-                }
-            } catch (err) {
-                console.warn("Geocoding API blocked (trying fallback):", err);
-                try {
-                    const fallbackRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=id`);
-                    const fallData = await fallbackRes.json();
-                    if (fallData && (fallData.locality || fallData.city)) {
-                        const parts = [fallData.locality, fallData.city, fallData.principalSubdivision, fallData.countryName].filter(Boolean);
-                        tempAddr = parts.join(', ');
+                    if (card.getAttribute('data-paket-id') === id) {
+                        card.className = card.className
+                            .replace('border-slate-200', 'border-[#1e40af]')
+                            .replace('bg-[#f8fafc]', 'bg-[#eef2ff]')
+                            .replace('hover:border-slate-300', '')
+                            .replace('hover:bg-white', '');
+                        card.classList.add('ring-1', 'ring-[#1e40af]/30');
+                        indicator.className = indicator.className
+                            .replace('border-2', '').replace('border-slate-300', '')
+                            .replace('scale-90', 'scale-100');
+                        indicator.classList.add('bg-[#1e40af]', 'text-white');
+                        checkSvg.classList.remove('hidden');
                     } else {
-                        tempAddr = "Pencarian lokasi gagal";
+                        card.className = card.className
+                            .replace('border-[#1e40af]', 'border-slate-200')
+                            .replace('bg-[#eef2ff]', 'bg-[#f8fafc]');
+                        card.classList.remove('ring-1', 'ring-[#1e40af]/30');
+                        card.classList.add('hover:border-slate-300', 'hover:bg-white');
+                        indicator.classList.remove('bg-[#1e40af]', 'text-white');
+                        indicator.className = indicator.className
+                            .replace('scale-100', 'scale-90');
+                        indicator.classList.add('border-2', 'border-slate-300');
+                        checkSvg.classList.add('hidden');
                     }
-                } catch (fallbackError) {
-                    tempAddr = "Pencarian lokasi gagal (Koneksi jaringan terganggu)";
-                }
-            } finally {
-                setMapLoading(false);
+                });
             }
-        }
 
-        // Fetch initial
-        fetchAddress(defaultLat, defaultLong);
+            // ── Leaflet Map ────────────────────────────────────────────────────
+            // ── Leaflet Map (MapPicker React behavior port) ────────────
+            var defaultLat = parseFloat(document.getElementById('lat').value) || -2.0337714;
+            var defaultLong = parseFloat(document.getElementById('long').value) || 101.3963373;
+            var map = L.map('map', {
+                zoomControl: false
+            }).setView([defaultLat, defaultLong], 14);
 
-        map.on('movestart zoomstart', function () {
-            pinIcon.classList.remove('translate-y-0');
-            pinIcon.classList.add('-translate-y-3');
-            pinShadow.classList.remove('opacity-100');
-            pinShadow.classList.add('opacity-50');
-        });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
 
-        map.on('moveend', function () {
-            pinIcon.classList.add('translate-y-0');
-            pinIcon.classList.remove('-translate-y-3');
-            pinShadow.classList.add('opacity-100');
-            pinShadow.classList.remove('opacity-50');
+            setTimeout(() => map.invalidateSize(), 250);
 
-            var center = map.getCenter();
-            tempCenter = { lat: center.lat, lng: center.lng };
-            fetchAddress(center.lat, center.lng);
-        });
+            var tempCenter = {
+                lat: defaultLat,
+                lng: defaultLong
+            };
+            var tempAddr = '';
+            var isMapSelected = false;
 
-        document.getElementById('btn-gps').addEventListener('click', function (e) {
-            e.preventDefault();
-            setMapLoading(true);
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (pos) {
-                        map.flyTo([pos.coords.latitude, pos.coords.longitude], 17);
-                    },
-                    function () {
-                        alert("Akses lokasi ditolak atau tidak tersedia pada perangkat Anda.");
-                        setMapLoading(false);
-                    },
-                    { enableHighAccuracy: true }
-                );
+            var pinIcon = document.getElementById('map-pin-icon');
+            var pinShadow = document.getElementById('map-pin-shadow');
+            var loadingObj = document.getElementById('map-loading-indicator');
+            var displayAddr = document.getElementById('temp-address-display');
+            var btnConfirm = document.getElementById('btn-confirm-address');
+            var alamatInput = document.getElementById('alamat-input');
+
+            function setMapLoading(loading) {
+                loadingObj.classList.toggle('hidden', !loading);
+                btnConfirm.disabled = loading || !tempAddr;
+                if (loading) displayAddr.textContent = "Mencari lokasi di peta...";
+                else displayAddr.textContent = tempAddr || "Geser peta untuk menentukan area";
             }
-        });
 
-        btnConfirm.addEventListener('click', function () {
-            document.getElementById('lat').value = tempCenter.lat;
-            document.getElementById('long').value = tempCenter.lng;
-            alamatInput.value = tempAddr;
-
-            isMapSelected = true;
-            setTimeout(function () { isMapSelected = false; }, 5000);
-        });
-
-        // Auto tracking: Move map automatically if user typed something in Alamat Lengkap
-        var typingTimer = null;
-        document.getElementById('alamat-input').addEventListener('input', async function () {
-            var alamatValue = this.value;
-
-            // Don't auto map if less than some characters or if change was caused by map click
-            if (isMapSelected || !alamatValue || alamatValue.length < 10) return;
-
-            if (typingTimer) clearTimeout(typingTimer);
-            var timer = setTimeout(async function () {
+            async function fetchAddress(lat, lon) {
+                setMapLoading(true);
                 try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(alamatValue)}&limit=1&email=admin@r-net.com`, {
-                        headers: { 'Accept-Language': 'id-ID,id;q=0.9' }
-                    });
+                    const res = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&email=admin@r-net.com`, {
+                            headers: {
+                                'Accept-Language': 'id-ID,id;q=0.9'
+                            }
+                        });
                     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                     const data = await res.json();
-                    if (data && data.length > 0) {
-                        const { lat, lon } = data[0];
-                        map.setView([parseFloat(lat), parseFloat(lon)], 15);
-                        marker.setLatLng([parseFloat(lat), parseFloat(lon)]);
-                        syncLatLng({ lat: parseFloat(lat), lng: parseFloat(lon) });
+
+                    if (data && data.address) {
+                        const addr = data.address;
+                        const parts = [];
+
+                        const localName = addr.road || addr.hamlet || addr.neighbourhood || addr.residential;
+                        if (localName) parts.push(localName);
+
+                        const village = addr.village || addr.suburb || addr.town;
+                        if (village && village !== localName) parts.push(village);
+
+                        const district = addr.city_district || addr.county;
+                        if (district) parts.push(district.toLowerCase().includes('kec') ? district : `Kec. ${district}`);
+
+                        const city = addr.city || addr.municipality || addr.state_district;
+                        if (city && (!parts.length || !parts[parts.length - 1].includes(city))) parts.push(city);
+
+                        const state = addr.state || addr.region;
+                        if (state) parts.push(state);
+
+                        let formatted = parts.filter(Boolean).join(', ');
+                        if (addr.postcode) formatted += ` ${addr.postcode}`;
+                        if (!formatted) formatted = data.display_name;
+
+                        tempAddr = formatted;
+                    } else if (data && data.display_name) {
+                        tempAddr = data.display_name;
+                    } else {
+                        tempAddr = 'Gagal memuat alamat. Pastikan Anda tersambung internet.';
                     }
                 } catch (err) {
-                    console.warn("Geocode lookup gracefully aborted (rate limit/network issue):", err);
+                    console.warn("Geocoding API blocked (trying fallback):", err);
+                    try {
+                        const fallbackRes = await fetch(
+                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=id`
+                        );
+                        const fallData = await fallbackRes.json();
+                        if (fallData && (fallData.locality || fallData.city)) {
+                            const parts = [fallData.locality, fallData.city, fallData.principalSubdivision, fallData
+                                .countryName
+                            ].filter(Boolean);
+                            tempAddr = parts.join(', ');
+                        } else {
+                            tempAddr = "Pencarian lokasi gagal";
+                        }
+                    } catch (fallbackError) {
+                        tempAddr = "Pencarian lokasi gagal (Koneksi jaringan terganggu)";
+                    }
+                } finally {
+                    setMapLoading(false);
                 }
-            }, 2000); // Wait 2 seconds after typing stops
-            typingTimer = timer;
-        });
-
-        // ── Image Preview ──────────────────────────────────────────────────
-        var fileInput = document.getElementById('file-input');
-        var previewContainer = document.getElementById('preview-container');
-        var previewImage = document.getElementById('image-preview');
-        var uploadLabel = document.getElementById('upload-label');
-
-        fileInput.addEventListener('change', function () {
-            var file = fileInput.files[0];
-            if (!file) return;
-
-            // 1 MB guard
-            if (file.size > 1048576) {
-                alert('Ukuran file maksimal 1 MB.');
-                fileInput.value = '';
-                return;
             }
 
-            previewImage.src = URL.createObjectURL(file);
-            previewContainer.classList.remove('hidden');
-            previewContainer.classList.add('flex');
-            uploadLabel.textContent = 'Klik untuk mengganti gambar';
-        });
+            // Fetch initial
+            fetchAddress(defaultLat, defaultLong);
 
-        // ── Submit loading state ───────────────────────────────────────────
-        document.querySelector('form').addEventListener('submit', function () {
-            var btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.textContent = 'Memproses Data...';
-            btn.classList.add('opacity-70');
-        });
-    </script>
+            map.on('movestart zoomstart', function() {
+                pinIcon.classList.remove('translate-y-0');
+                pinIcon.classList.add('-translate-y-3');
+                pinShadow.classList.remove('opacity-100');
+                pinShadow.classList.add('opacity-50');
+            });
+
+            map.on('moveend', function() {
+                pinIcon.classList.add('translate-y-0');
+                pinIcon.classList.remove('-translate-y-3');
+                pinShadow.classList.add('opacity-100');
+                pinShadow.classList.remove('opacity-50');
+
+                var center = map.getCenter();
+                tempCenter = {
+                    lat: center.lat,
+                    lng: center.lng
+                };
+                fetchAddress(center.lat, center.lng);
+            });
+
+            document.getElementById('btn-gps').addEventListener('click', function(e) {
+                e.preventDefault();
+                setMapLoading(true);
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(pos) {
+                            map.flyTo([pos.coords.latitude, pos.coords.longitude], 17);
+                        },
+                        function() {
+                            alert("Akses lokasi ditolak atau tidak tersedia pada perangkat Anda.");
+                            setMapLoading(false);
+                        }, {
+                            enableHighAccuracy: true
+                        }
+                    );
+                }
+            });
+
+            btnConfirm.addEventListener('click', function() {
+                document.getElementById('lat').value = tempCenter.lat;
+                document.getElementById('long').value = tempCenter.lng;
+                alamatInput.value = tempAddr;
+
+                isMapSelected = true;
+                setTimeout(function() {
+                    isMapSelected = false;
+                }, 5000);
+            });
+
+            // Auto tracking: Move map automatically if user typed something in Alamat Lengkap
+            var typingTimer = null;
+            document.getElementById('alamat-input').addEventListener('input', async function() {
+                var alamatValue = this.value;
+
+                // Don't auto map if less than some characters or if change was caused by map click
+                if (isMapSelected || !alamatValue || alamatValue.length < 10) return;
+
+                if (typingTimer) clearTimeout(typingTimer);
+                var timer = setTimeout(async function() {
+                    try {
+                        const res = await fetch(
+                            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(alamatValue)}&limit=1&email=admin@r-net.com`, {
+                                headers: {
+                                    'Accept-Language': 'id-ID,id;q=0.9'
+                                }
+                            });
+                        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                        const data = await res.json();
+                        if (data && data.length > 0) {
+                            const {
+                                lat,
+                                lon
+                            } = data[0];
+                            map.setView([parseFloat(lat), parseFloat(lon)], 15);
+                            marker.setLatLng([parseFloat(lat), parseFloat(lon)]);
+                            syncLatLng({
+                                lat: parseFloat(lat),
+                                lng: parseFloat(lon)
+                            });
+                        }
+                    } catch (err) {
+                        console.warn("Geocode lookup gracefully aborted (rate limit/network issue):",
+                            err);
+                    }
+                }, 2000); // Wait 2 seconds after typing stops
+                typingTimer = timer;
+            });
+
+            // ── Image Preview ──────────────────────────────────────────────────
+            var fileInput = document.getElementById('file-input');
+            var previewContainer = document.getElementById('preview-container');
+            var previewImage = document.getElementById('image-preview');
+            var uploadLabel = document.getElementById('upload-label');
+
+            fileInput.addEventListener('change', function() {
+                var file = fileInput.files[0];
+                if (!file) return;
+
+                // 1 MB guard
+                if (file.size > 1048576) {
+                    alert('Ukuran file maksimal 1 MB.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                previewImage.src = URL.createObjectURL(file);
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+                uploadLabel.textContent = 'Klik untuk mengganti gambar';
+            });
+
+            // ── Submit loading state ───────────────────────────────────────────
+            document.querySelector('form').addEventListener('submit', function() {
+                var btn = document.getElementById('submit-btn');
+                btn.disabled = true;
+                btn.textContent = 'Memproses Data...';
+                btn.classList.add('opacity-70');
+            });
+        </script>
+
+    @endif {{-- end @else dari @if (session('sukses')) --}}
+
 </body>
 
 </html>

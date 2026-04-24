@@ -78,5 +78,5 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'id_paket' => $validated['id_paket'],
     ]);
 
-    return redirect('/')->with('success', 'Pendaftaran berhasil dikirim!');
+    return redirect('/daftar')->with('sukses', true);
 })->name('pendaftaran.store');

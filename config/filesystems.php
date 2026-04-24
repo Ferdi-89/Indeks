@@ -58,6 +58,9 @@ return [
             'use_path_style_endpoint' => env('S3_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => true,  // Aktifkan agar error S3 bisa ditangkap try-catch
             'report' => true,
+            'http' => [
+                'verify' => false,
+            ],
         ],
 
     ],
