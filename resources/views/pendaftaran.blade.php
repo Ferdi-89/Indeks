@@ -188,9 +188,9 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -6.2) }}">
+                                    <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -2.0337714) }}">
                                     <input type="hidden" name="longtitude" id="long"
-                                        value="{{ old('longtitude', 106.8) }}">
+                                        value="{{ old('longtitude', 101.3963373) }}">
                                 </div>
                             </div>
 
@@ -314,8 +314,8 @@
 
         // ── Leaflet Map ────────────────────────────────────────────────────
         // ── Leaflet Map (MapPicker React behavior port) ────────────
-        var defaultLat = parseFloat(document.getElementById('lat').value) || -6.2;
-        var defaultLong = parseFloat(document.getElementById('long').value) || 106.8;
+        var defaultLat = parseFloat(document.getElementById('lat').value) || -2.0337714;
+        var defaultLong = parseFloat(document.getElementById('long').value) || 101.3963373;
         var map = L.map('map', { zoomControl: false }).setView([defaultLat, defaultLong], 14);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
