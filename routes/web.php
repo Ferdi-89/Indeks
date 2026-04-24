@@ -45,38 +45,51 @@ Route::get('/daftar', function () {
 // ─── Proses Pendaftaran (POST) ──────────────────────────────────────────
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
 
-    // 1. Validasi data
+    // 1. Validasi data (max length disesuaikan dengan schema database Supabase)
     $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'alamat' => 'required|string|max:255',
-        'latitude' => 'nullable',
-        'longtitude' => 'nullable',
-        'email' => 'required|email',
-        'nomor_tlpn' => 'required',
+        'nama' => 'required|string|max:50',
+        'alamat' => 'required|string|max:100',
+        'latitude' => 'nullable|numeric',
+        'longtitude' => 'nullable|numeric',
+        'email' => 'required|email|max:100',
+        'nomor_tlpn' => 'required|string|max:20',
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'id_paket' => 'required|string|max:5'
     ]);
 
-    // 2. Handle Upload File
-    $filePath = null;
-    if ($request->hasFile('path_gambar')) {
-        $file = $request->file('path_gambar');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
+    // 2. Generate ID unik (hindari collision)
+    do {
+        $idPendaftaran = strtoupper(Str::random(5));
+    } while (App\Models\pendaftaran::where('id_pendaftaran', $idPendaftaran)->exists());
+
+    try {
+        // 3. Handle Upload File ke Supabase Storage
+        $filePath = null;
+        if ($request->hasFile('path_gambar')) {
+            $file = $request->file('path_gambar');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
+        }
+
+        // 4. Simpan ke Database
+        App\Models\pendaftaran::create([
+            'id_pendaftaran' => $idPendaftaran,
+            'nama' => $validated['nama'],
+            'alamat' => $validated['alamat'],
+            'latitude' => $validated['latitude'] ?? 0,
+            'longtitude' => $validated['longtitude'] ?? 0,
+            'email' => $validated['email'],
+            'nomor_tlpn' => $validated['nomor_tlpn'],
+            'path_gambar' => $filePath,
+            'id_paket' => $validated['id_paket'],
+        ]);
+
+        return redirect('/daftar')->with('sukses', true);
+
+    } catch (\Exception $e) {
+        return back()->withInput()->withErrors([
+            'error' => 'Terjadi kesalahan saat memproses pendaftaran: ' . $e->getMessage()
+        ]);
     }
-
-    // 3. Simpan ke Database
-    App\Models\pendaftaran::create([
-        'id_pendaftaran' => strtoupper(Str::random(5)),
-        'nama' => $validated['nama'],
-        'alamat' => $validated['alamat'],
-        'latitude' => $validated['latitude'] ?? 0,
-        'longtitude' => $validated['longtitude'] ?? 0,
-        'email' => $validated['email'],
-        'nomor_tlpn' => $validated['nomor_tlpn'],
-        'path_gambar' => $filePath,
-        'id_paket' => $validated['id_paket'],
-    ]);
-
-    return redirect('/daftar')->with('sukses', true);
 })->name('pendaftaran.store');
+
