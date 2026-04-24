@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description"
-            content="R-NET - Penyedia layanan internet cepat, stabil, tanpa FUP. Nikmati koneksi unlimited dengan harga terjangkau untuk rumah dan keluarga Anda.">
-        <title>R-NET - Internet Cepat & Stabil</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="R-NET - Penyedia layanan internet cepat, stabil, tanpa FUP. Nikmati koneksi unlimited dengan harga terjangkau untuk rumah dan keluarga Anda.">
+    <title>R-NET - Internet Cepat & Stabil</title>
 
-        <!-- Google Fonts: Poppins -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
 
 <body class="font-sans bg-base-100 text-base-content antialiased">
 
@@ -464,7 +466,7 @@
 
 
                 <p
-                    class="font-bold text-center text-xl text-warning-content rounded-xl p-3 sm:p-4 mt-10 bg-yellow-400 flex w-11/12 max-w-sm items-center justify-center gap-2 mx-auto border-b-amber-600">
+                    class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-5 py-2 rounded-full text-sm font-bold mx-auto w-fit border border-yellow-500 mt-10 shadow-sm">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
@@ -494,7 +496,7 @@
                 <div class="flex flex-row flex-wrap gap-10 lg:gap-16">
                     <nav class="flex flex-col gap-2">
                         <h6 class="footer-title">Layanan</h6>
-                        <a class="link link-hover">Fitur Kami</a>
+                        <a href="#fitur" class="link link-hover">Fitur Kami</a>
                         <a href="#harga" class="link link-hover">Paket Harga</a>
                         <a href="/daftar" class="link link-hover">Daftar Pelanggan</a>
                     </nav>
@@ -572,6 +574,8 @@
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3500);
         });
+        // ── Init Lucide Icons ──────────────────────────────────────────────
+        lucide.createIcons();
     </script>
 </body>
 

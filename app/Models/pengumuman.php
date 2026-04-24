@@ -18,3 +18,4 @@ class pengumuman extends Model
         'valid_end'
     ];
 }
+

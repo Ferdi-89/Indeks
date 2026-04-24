@@ -677,6 +677,7 @@ namespace App\Models {
     /**
      * App\Models\pendaftaran
      *
+     * @property string $id_paket
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property string|null $path_gambar
@@ -697,6 +698,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran wherePathGambar($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran whereIdPaket($value)
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<pendaftaran>|pendaftaran query()

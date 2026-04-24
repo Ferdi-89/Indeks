@@ -19,8 +19,8 @@ class pendaftaran extends Model
         'email',
         'nomor_tlpn',
         'path_gambar',
+        'id_paket',
         'created_at',
         'updated_at',
-
     ];
 }

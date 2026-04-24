@@ -121,6 +121,55 @@
                         </div>
                     </div>
 
+                    <!-- Pilihan Paket Section -->
+                    <div class="space-y-5 pt-4 border-t border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                                <i data-lucide="package" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800">Pilihan Paket</h3>
+                        </div>
+
+                        <div class="space-y-2 md:pl-2">
+                            <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                Paket Internet<span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <input type="hidden" name="id_paket" id="selected-paket"
+                                value="{{ old('id_paket', request('paket')) }}" required>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                @foreach ($pakets as $paket)
+                                                            <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
+                                                                onclick="selectPaket(this)"
+                                                                class="paket-card group relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                    ? 'border-[#1e40af] bg-[#eef2ff] ring-1 ring-[#1e40af]/30'
+                                    : 'border-slate-200 bg-[#f8fafc] hover:border-slate-300 hover:bg-white' }}">
+
+                                                                {{-- Check indicator --}}
+                                                                <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200
+                                                                        {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                    ? 'bg-[#1e40af] text-white scale-100'
+                                    : 'border-2 border-slate-300 scale-90' }}">
+                                                                    <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
+                                                                        fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+
+                                                                <p class="text-sm font-bold text-slate-800 mt-1">{{ $paket['title_paket'] }}</p>
+                                                                <p class="text-[#1e40af] font-extrabold text-lg leading-tight mt-1.5">
+                                                                    Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
+                                                                </p>
+                                                                <p class="text-[11px] text-slate-500 font-medium">/bulan</p>
+                                                            </button>
+                                @endforeach
+                            </div>
+                            @error('id_paket') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
                     <!-- Informasi Alamat Section -->
                     <div class="space-y-5 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-3">
@@ -188,7 +237,8 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -2.0337714) }}">
+                                    <input type="hidden" name="latitude" id="lat"
+                                        value="{{ old('latitude', -2.0337714) }}">
                                     <input type="hidden" name="longtitude" id="long"
                                         value="{{ old('longtitude', 101.3963373) }}">
                                 </div>
@@ -311,6 +361,42 @@
     <script>
         // ── Init Lucide Icons ──────────────────────────────────────────────
         lucide.createIcons();
+
+        // ── Paket Card Selector ───────────────────────────────────────────
+        function selectPaket(el) {
+            var id = el.getAttribute('data-paket-id');
+            document.getElementById('selected-paket').value = id;
+
+            document.querySelectorAll('.paket-card').forEach(function (card) {
+                var indicator = card.querySelector('div');
+                var checkSvg = card.querySelector('svg');
+
+                if (card.getAttribute('data-paket-id') === id) {
+                    card.className = card.className
+                        .replace('border-slate-200', 'border-[#1e40af]')
+                        .replace('bg-[#f8fafc]', 'bg-[#eef2ff]')
+                        .replace('hover:border-slate-300', '')
+                        .replace('hover:bg-white', '');
+                    card.classList.add('ring-1', 'ring-[#1e40af]/30');
+                    indicator.className = indicator.className
+                        .replace('border-2', '').replace('border-slate-300', '')
+                        .replace('scale-90', 'scale-100');
+                    indicator.classList.add('bg-[#1e40af]', 'text-white');
+                    checkSvg.classList.remove('hidden');
+                } else {
+                    card.className = card.className
+                        .replace('border-[#1e40af]', 'border-slate-200')
+                        .replace('bg-[#eef2ff]', 'bg-[#f8fafc]');
+                    card.classList.remove('ring-1', 'ring-[#1e40af]/30');
+                    card.classList.add('hover:border-slate-300', 'hover:bg-white');
+                    indicator.classList.remove('bg-[#1e40af]', 'text-white');
+                    indicator.className = indicator.className
+                        .replace('scale-100', 'scale-90');
+                    indicator.classList.add('border-2', 'border-slate-300');
+                    checkSvg.classList.add('hidden');
+                }
+            });
+        }
 
         // ── Leaflet Map ────────────────────────────────────────────────────
         // ── Leaflet Map (MapPicker React behavior port) ────────────

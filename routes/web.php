@@ -1,44 +1,50 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Cache;
 use App\Models\pengumuman;
 use App\Models\paket;
 use Illuminate\Support\Str;
 
-// Routing landing page
-// Cache dan Minimalisir Query Database
+/*
+|--------------------------------------------------------------------------
+| Strategi Data — Direct Query (Tanpa Cache)
+|--------------------------------------------------------------------------
+|
+| Data paket (3 baris) dan pengumuman di-query langsung dari Supabase
+| setiap request. Untuk dataset sekecil ini, query langsung ~50-100ms
+| sudah sangat cepat dan menjamin data SELALU sinkron dengan database.
+|
+| Cache tidak digunakan karena data sering diubah langsung di Supabase
+| Dashboard, di luar kontrol Laravel — sehingga cache invalidation
+| tidak bisa dipicu otomatis.
+|
+*/
+
+// ─── Landing Page ───────────────────────────────────────────────────────
 Route::get('/', function () {
 
-    $data = Cache::remember('landing_page_data',60*60*24, function () {
-        return[
-            'pengumuman' => pengumuman::pluck('text_pengumuman')->toArray(),
-            'pakets' => paket::all()->toArray()
-        ];
-    });
+    $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
+    $pakets = paket::all();
 
-    $pengumuman = $data['pengumuman'];
-    $pakets = collect($data['pakets']);
+    $ekonomi = $pakets->where('id_paket', 'p001')->first();
+    $famili  = $pakets->where('id_paket', 'p002')->first();
+    $premium = $pakets->where('id_paket', 'p003')->first();
 
-    $ekonomi = $pakets->where('id_paket','p001')->first();
-    $famili = $pakets->where('id_paket','p002')->first();
-    $premium = $pakets->where('id_paket','p003')->first();
-
-    if(empty($pengumuman)){
+    if (empty($pengumuman)) {
         $pengumuman = ['Selamat datang dan Pilihlah paket anda :> '];
     }
-    return view('welcome',compact('pengumuman','famili','ekonomi','premium'));
+    return view('welcome', compact('pengumuman', 'famili', 'ekonomi', 'premium'));
 });
 
+// ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
 Route::get('/daftar', function () {
-    return view('pendaftaran');
+    $pakets = paket::all();
+    return view('pendaftaran', compact('pakets'));
 })->name('pendaftaran');
 
-// Routing Page Pendaftaran
-
-
-
+// ─── Proses Pendaftaran (POST) ──────────────────────────────────────────
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
+
     // 1. Validasi data
     $validated = $request->validate([
         'nama' => 'required|string|max:255',
@@ -48,8 +54,8 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'email' => 'required|email',
         'nomor_tlpn' => 'required',
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'id_paket' => 'required|string|max:5'
     ]);
-
 
     // 2. Handle Upload File
     $filePath = null;
@@ -61,7 +67,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
 
     // 3. Simpan ke Database
     App\Models\pendaftaran::create([
-        'id_pendaftaran' =>strtoupper(Str::random(5)), // Contoh generate ID
+        'id_pendaftaran' => strtoupper(Str::random(5)),
         'nama' => $validated['nama'],
         'alamat' => $validated['alamat'],
         'latitude' => $validated['latitude'] ?? 0,
@@ -69,7 +75,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'email' => $validated['email'],
         'nomor_tlpn' => $validated['nomor_tlpn'],
         'path_gambar' => $filePath,
-
+        'id_paket' => $validated['id_paket'],
     ]);
 
     return redirect('/')->with('success', 'Pendaftaran berhasil dikirim!');

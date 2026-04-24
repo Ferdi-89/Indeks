@@ -18,3 +18,4 @@ class paket extends Model
         'updated_at'
     ];
 }
+
