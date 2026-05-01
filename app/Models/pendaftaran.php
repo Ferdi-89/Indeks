@@ -20,6 +20,7 @@ class pendaftaran extends Model
         'nomor_tlpn',
         'path_gambar',
         'id_paket',
+        'status',
         'created_at',
         'updated_at',
     ];

@@ -37,7 +37,7 @@
     @endif
 
     {{-- Modal Konfirmasi Pendaftaran Berhasil --}}
-    @if (session('sukses'))
+    @if (session('sukses') || session('success'))
         <div id="success-overlay"
             class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
             style="animation: fadeIn 0.3s ease-out;">
