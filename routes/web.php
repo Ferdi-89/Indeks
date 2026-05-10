@@ -64,12 +64,62 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     } while (App\Models\pendaftaran::where('id_pendaftaran', $idPendaftaran)->exists());
 
     try {
-        // 3. Handle Upload File ke Supabase Storage
+        // 3. Handle Upload File ke Supabase Storage dengan Kompresi Gambar
         $filePath = null;
         if ($request->hasFile('path_gambar')) {
             $file = $request->file('path_gambar');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
+            $originalName = $file->getClientOriginalName();
+            $extension = strtolower($file->getClientOriginalExtension());
+            
+            // Coba kompresi hanya jika format gambar didukung (jpg, jpeg, png)
+            if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                $fileName = time() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+                $image = @imagecreatefromstring(file_get_contents($file->getRealPath()));
+                
+                if ($image !== false) {
+                    $width = imagesx($image);
+                    $height = imagesy($image);
+                    
+                    // Batasi dimensi maksimum 1920px (Full HD) agar size < 1MB tapi tidak buram
+                    $maxDim = 1920;
+                    if ($width > $maxDim || $height > $maxDim) {
+                        if ($width > $height) {
+                            $newWidth = $maxDim;
+                            $newHeight = intval($height * ($maxDim / $width));
+                        } else {
+                            $newHeight = $maxDim;
+                            $newWidth = intval($width * ($maxDim / $height));
+                        }
+                        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                        
+                        // Isi background putih untuk mencegah black background pada PNG transparan
+                        $white = imagecolorallocate($newImage, 255, 255, 255);
+                        imagefill($newImage, 0, 0, $white);
+                        
+                        imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        imagedestroy($image);
+                        $image = $newImage;
+                    }
+                    
+                    // Simpan output JPEG ke dalam buffer memori dengan kualitas 82%
+                    ob_start();
+                    imagejpeg($image, null, 82); 
+                    $imageContent = ob_get_clean();
+                    imagedestroy($image);
+                    
+                    // Upload file hasil kompresi ke Supabase S3
+                    Illuminate\Support\Facades\Storage::disk('s3')->put('pendaftaran/' . $fileName, $imageContent);
+                    $filePath = 'pendaftaran/' . $fileName;
+                } else {
+                    // Fallback jika GD gagal membaca file gambar
+                    $fileName = time() . '_' . $originalName;
+                    $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
+                }
+            } else {
+                // Fallback untuk file tipe lain
+                $fileName = time() . '_' . $originalName;
+                $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
+            }
         }
 
         // 4. Simpan ke Database
@@ -85,6 +135,11 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
             'id_paket' => $validated['id_paket'],
         ]);
 
+        // Buat notifikasi admin otomatis
+        try {
+            App\Models\AdminNotification::createFromPendaftaran($idPendaftaran, $validated['nama']);
+        } catch (\Exception $ignored) {}
+
         return redirect('/daftar')->with('sukses', true);
 
     } catch (\Exception $e) {
@@ -94,9 +149,35 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     }
 })->name('pendaftaran.store');
 
+// ─── Otentikasi Admin ───────────────────────────────────────────────────
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login')->middleware('guest');
 
+Route::post('/login', function (Illuminate\Http\Request $request) {
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-Route::prefix('admin')->name('admin.')->group(function () {
+    if (Illuminate\Support\Facades\Auth::attempt($credentials, $request->boolean('remember'))) {
+        $request->session()->regenerate();
+        return redirect()->intended('/admin');
+    }
+
+    return back()->withErrors([
+        'email' => 'Email atau password salah.',
+    ])->onlyInput('email');
+});
+
+Route::post('/logout', function (Illuminate\Http\Request $request) {
+    Illuminate\Support\Facades\Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
+
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // --- Pendaftaran ---
     Route::patch('/pendaftaran/{id}/status', function (Illuminate\Http\Request $request, $id) {
         $validated = $request->validate([
@@ -206,61 +287,183 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return redirect()->back()->with('success', 'Promosi dihapus.');
     })->name('promosi.destroy');
 
-    // --- Profil Admin ---
-    Route::put('/profil', function(Illuminate\Http\Request $request) {
-        $data = $request->except(['_token', '_method']);
+    // ──────────────────────────────────────────────────────────────────
+    // Helper: kembalikan JSON jika XHR, redirect jika request biasa
+    // ──────────────────────────────────────────────────────────────────
+    $jsonOrRedirect = fn($request, $msg) => $request->ajax()
+        ? response()->json(['success' => true, 'message' => $msg])
+        : redirect()->back()->with('success', $msg);
+
+    $jsonOrError = fn($request, $errors) => $request->ajax()
+        ? response()->json(['success' => false, 'errors' => $errors], 422)
+        : redirect()->back()->withErrors($errors);
+
+    // --- Profil Admin: Update Info ---
+    Route::put('/profil', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $data = $request->validate([
+            'nama_lengkap' => 'required|string|max:100',
+            'email'        => 'required|email|max:100',
+            'phone'        => 'nullable|string|max:20',
+            'alamat'       => 'nullable|string|max:500',
+        ]);
         $profil = App\Models\AdminProfile::first();
         if ($profil) {
             $profil->update($data);
         } else {
-            App\Models\AdminProfile::create($data);
+            App\Models\AdminProfile::create(array_merge($data, ['username' => 'admin']));
         }
-        return redirect()->back()->with('success', 'Profil admin diperbarui.');
+        return $jsonOrRedirect($request, 'Profil admin berhasil diperbarui.');
     })->name('profil.update');
 
-    // --- Pengaturan Perusahaan ---
-    Route::put('/pengaturan', function(Illuminate\Http\Request $request) {
-        $data = $request->except(['_token', '_method']);
-        $company = App\Models\CompanySetting::getInstance();
-        $company->update($data);
-        return redirect()->back()->with('success', 'Pengaturan perusahaan diperbarui.');
+    // --- Profil Admin: Ubah Password ---
+    Route::put('/profil/password', function(Illuminate\Http\Request $request) use ($jsonOrRedirect, $jsonOrError) {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password'     => 'required|string|min:8|confirmed',
+        ]);
+        $user = Illuminate\Support\Facades\Auth::user();
+        if (!Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+            return $jsonOrError($request, ['current_password' => ['Kata sandi saat ini tidak sesuai.']]);
+        }
+        $user->update(['password' => Illuminate\Support\Facades\Hash::make($request->new_password)]);
+        return $jsonOrRedirect($request, 'Kata sandi berhasil diubah.');
+    })->name('profil.password');
+
+    // --- Profil Admin: Preferensi Tampilan ---
+    Route::put('/profil/preferences', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $profil = App\Models\AdminProfile::first();
+        if ($profil) {
+            $profil->update([
+                'dark_mode'   => $request->has('dark_mode'),
+                'email_notif' => $request->has('email_notif'),
+                'sound_notif' => $request->has('sound_notif'),
+            ]);
+        }
+        return $jsonOrRedirect($request, 'Preferensi tampilan disimpan.');
+    })->name('profil.preferences');
+
+    // --- Profil Admin: Upload Avatar ---
+    Route::post('/profil/avatar', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $request->validate(['avatar' => 'required|image|mimes:jpg,jpeg,png|max:2048']);
+        $profil = App\Models\AdminProfile::first();
+        if (!$profil) {
+            return $request->ajax()
+                ? response()->json(['success' => false, 'message' => 'Profil tidak ditemukan.'], 404)
+                : back()->withErrors(['avatar' => 'Profil tidak ditemukan.']);
+        }
+        if ($profil->avatar_path) {
+            Illuminate\Support\Facades\Storage::disk('s3')->delete($profil->avatar_path);
+        }
+        $path = $request->file('avatar')->store('avatars', 's3');
+        $url  = Illuminate\Support\Facades\Storage::disk('s3')->url($path);
+        $profil->update(['avatar_path' => $url]);
+        return $request->ajax()
+            ? response()->json(['success' => true, 'message' => 'Foto profil berhasil diperbarui.', 'avatar_url' => $url])
+            : redirect()->back()->with('success', 'Foto profil berhasil diperbarui.');
+    })->name('profil.avatar');
+
+    // --- Pengaturan Perusahaan: Info Utama ---
+    Route::put('/pengaturan', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $data = $request->validate([
+            'nama_perusahaan'    => 'required|string|max:100',
+            'email_perusahaan'   => 'nullable|email|max:100',
+            'telepon_perusahaan' => 'nullable|string|max:30',
+            'alamat_perusahaan'  => 'nullable|string',
+            'website'            => 'nullable|url|max:255',
+            'npwp'               => 'nullable|string|max:30',
+        ]);
+        App\Models\CompanySetting::getInstance()->update($data);
+        return $jsonOrRedirect($request, 'Informasi perusahaan berhasil diperbarui.');
     })->name('pengaturan.update');
 
-    // --- Area Layanan ---
-    Route::post('/area', function(Illuminate\Http\Request $request) {
+    // --- Pengaturan: Media Sosial ---
+    Route::put('/pengaturan/social', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
         $data = $request->validate([
-            'nama_area' => 'required|string'
+            'facebook'  => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:100',
+            'whatsapp'  => 'nullable|string|max:20',
         ]);
-        App\Models\AreaLayanan::create($data);
+        App\Models\CompanySetting::getInstance()->update($data);
+        return $jsonOrRedirect($request, 'Media sosial berhasil diperbarui.');
+    })->name('pengaturan.social');
+
+    // --- Pengaturan: Jam Operasional ---
+    Route::put('/pengaturan/hours', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $data = $request->validate([
+            'jam_buka_weekday'  => 'nullable|date_format:H:i',
+            'jam_tutup_weekday' => 'nullable|date_format:H:i',
+            'jam_buka_sabtu'    => 'nullable|date_format:H:i',
+            'jam_tutup_sabtu'   => 'nullable|date_format:H:i',
+        ]);
+        $data['buka_minggu'] = $request->has('buka_minggu');
+        App\Models\CompanySetting::getInstance()->update($data);
+        return $jsonOrRedirect($request, 'Jam operasional berhasil diperbarui.');
+    })->name('pengaturan.hours');
+
+    // --- Pengaturan: Upload Logo ---
+    Route::post('/pengaturan/logo', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $request->validate(['logo' => 'required|image|mimes:jpg,jpeg,png|max:2048']);
+        $company = App\Models\CompanySetting::getInstance();
+        if ($company->logo_path) {
+            Illuminate\Support\Facades\Storage::disk('s3')->delete(
+                ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/')
+            );
+        }
+        $path = $request->file('logo')->store('logos', 's3');
+        $url  = Illuminate\Support\Facades\Storage::disk('s3')->url($path);
+        $company->update(['logo_path' => $url]);
+        return $request->ajax()
+            ? response()->json(['success' => true, 'message' => 'Logo berhasil diperbarui.', 'logo_url' => $url])
+            : redirect()->back()->with('success', 'Logo perusahaan berhasil diperbarui.');
+    })->name('pengaturan.logo');
+
+    // --- Pengaturan: Hapus Logo ---
+    Route::delete('/pengaturan/logo', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $company = App\Models\CompanySetting::getInstance();
+        if ($company->logo_path) {
+            Illuminate\Support\Facades\Storage::disk('s3')->delete(
+                ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/')
+            );
+            $company->update(['logo_path' => null]);
+        }
+        return $jsonOrRedirect($request, 'Logo perusahaan berhasil dihapus.');
+    })->name('pengaturan.logo.delete');
+
+    // --- Area Layanan ---
+    Route::post('/area', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        $data = $request->validate(['nama_area' => 'required|string|max:100']);
+        $area = App\Models\AreaLayanan::create(array_merge($data, ['is_active' => true]));
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Area layanan ditambahkan.', 'area' => $area]);
+        }
         return redirect()->back()->with('success', 'Area layanan ditambahkan.');
     })->name('area.store');
 
-    Route::put('/area/{id}', function(Illuminate\Http\Request $request, $id) {
-        $data = $request->validate([
-            'nama_area' => 'required|string',
-            'is_active' => 'boolean'
-        ]);
+    Route::put('/area/{id}', function(Illuminate\Http\Request $request, $id) use ($jsonOrRedirect) {
+        $data = $request->validate(['nama_area' => 'required|string', 'is_active' => 'boolean']);
         App\Models\AreaLayanan::findOrFail($id)->update($data);
-        return redirect()->back()->with('success', 'Area layanan diperbarui.');
+        return $jsonOrRedirect($request, 'Area layanan diperbarui.');
     })->name('area.update');
 
-    Route::delete('/area/{id}', function($id) {
+    Route::delete('/area/{id}', function(Illuminate\Http\Request $request, $id) use ($jsonOrRedirect) {
         App\Models\AreaLayanan::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Area layanan dihapus.');
+        return $jsonOrRedirect($request, 'Area layanan dihapus.');
     })->name('area.destroy');
 
-    Route::get('/', function () {
-        // Ambil semua data sekaligus untuk SPA
-        $pendaftaran = App\Models\pendaftaran::latest('created_at')->take(100)->get(); // Ambil 100 terbaru
-        $totalPendaftaran = App\Models\pendaftaran::count();
+    Route::get('/', function (Illuminate\Http\Request $request) {
+        // Pendaftaran: paginasi 10 data, totalPendaftaran diambil dari paginator (bukan query count terpisah)
+        $pendaftaran = App\Models\pendaftaran::latest('created_at')->paginate(10)->fragment('pendaftaran');
+        $totalPendaftaran = $pendaftaran->total(); // Gunakan hasil dari paginator, bukan ::count() terpisah
         
-        $paket = App\Models\paket::all();
-        $totalPaket = App\Models\paket::count();
+        // Paket: limit 100, count dari collection (bukan query terpisah)
+        $paket = App\Models\paket::orderBy('id_paket')->limit(100)->get();
+        $totalPaket = $paket->count();
         
-        $pengumuman = App\Models\pengumuman::all();
-        $totalPengumuman = App\Models\pengumuman::count();
+        // Pengumuman: limit 50 terbaru, count dari collection
+        $pengumuman = App\Models\pengumuman::latest('valid_start')->limit(50)->get();
+        $totalPengumuman = $pengumuman->count();
         
-        // Data for Chart (Last 7 Days)
+        // Data for Chart (Last 7 Days) — 1 query tunggal
         $chartData = App\Models\pendaftaran::selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->where('created_at', '>=', now()->subDays(6)->startOfDay())
             ->groupBy('date')
@@ -279,80 +482,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         $chartLabels = json_encode($dates);
         $chartValues = json_encode($counts);
         
-        // Data untuk tab Promosi
-        $promosi = App\Models\promosi::all();
+        // Promosi: limit 50
+        $promosi = App\Models\promosi::latest()->limit(50)->get();
         
-        // Data untuk tab Profil Admin
+        // Profil Admin
         $adminProfile = App\Models\AdminProfile::first();
         
-        // Data untuk tab Pengaturan Perusahaan
+        // Pengaturan Perusahaan + Area Layanan
         $company = App\Models\CompanySetting::getInstance();
         $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
-        
-        // ═══════════════════════════════════════════
-        // Data untuk tab Monitoring
-        // ═══════════════════════════════════════════
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
-        
-        // Enable query log to count queries
-        Illuminate\Support\Facades\DB::enableQueryLog();
-        
-        $monitoring = [];
-        
-        // PHP Info
-        $monitoring['php_version'] = phpversion();
-        $monitoring['laravel_version'] = app()->version();
-        $monitoring['php_memory'] = round(memory_get_usage(true) / 1024 / 1024, 2) . ' MB';
-        $monitoring['php_memory_peak'] = round(memory_get_peak_usage(true) / 1024 / 1024, 2) . ' MB';
-        $monitoring['server_os'] = php_uname('s') . ' ' . php_uname('r');
-        $monitoring['server_software'] = $_SERVER['SERVER_SOFTWARE'] ?? 'CLI';
-        
-        // Database Stats (PostgreSQL)
-        try {
-            $dbSizeRaw = Illuminate\Support\Facades\DB::select("SELECT pg_database_size(current_database()) as size")[0]->size ?? 0;
-            $dbSizeMB = round($dbSizeRaw / 1024 / 1024, 2);
-            $monitoring['db_size'] = $dbSizeMB . ' MB';
-            $monitoring['db_size_pct'] = round(($dbSizeMB / 500) * 100, 1); // 500MB free tier
-            
-            $monitoring['db_connections'] = Illuminate\Support\Facades\DB::select("SELECT count(*) as cnt FROM pg_stat_activity")[0]->cnt ?? 0;
-            $monitoring['db_max_connections'] = Illuminate\Support\Facades\DB::select("SHOW max_connections")[0]->max_connections ?? 100;
-            
-            // Table stats
-            $monitoring['table_stats'] = Illuminate\Support\Facades\DB::select("
-                SELECT 
-                    relname as table_name,
-                    n_live_tup as row_count,
-                    pg_size_pretty(pg_table_size(quote_ident(relname))) as table_size,
-                    pg_size_pretty(pg_indexes_size(quote_ident(relname))) as index_size,
-                    pg_size_pretty(pg_total_relation_size(quote_ident(relname))) as total_size
-                FROM pg_stat_user_tables
-                ORDER BY pg_total_relation_size(quote_ident(relname)) DESC
-            ");
-        } catch (\Exception $e) {
-            $monitoring['db_size'] = 'Error';
-            $monitoring['db_size_pct'] = 0;
-            $monitoring['db_connections'] = 0;
-            $monitoring['db_max_connections'] = 100;
-            $monitoring['table_stats'] = [];
-        }
-        
-        // Storage (S3 Bucket) Stats
-        try {
-            $files = Illuminate\Support\Facades\Storage::disk('s3')->files('pendaftaran');
-            $monitoring['storage_file_count'] = count($files);
-            $monitoring['storage_connected'] = true;
-        } catch (\Exception $e) {
-            $monitoring['storage_file_count'] = 0;
-            $monitoring['storage_connected'] = false;
-        }
-        
-        // Query stats
-        $queryLog = Illuminate\Support\Facades\DB::getQueryLog();
-        $monitoring['query_count'] = count($queryLog);
-        $monitoring['query_time'] = round(collect($queryLog)->sum('time'), 2);
-        
-        // Load time
-        $monitoring['load_time'] = round((microtime(true) - $startTime) * 1000) . ' ms';
         
         return view('admin.index', compact(
             'pendaftaran', 'totalPendaftaran', 
@@ -361,8 +499,155 @@ Route::prefix('admin')->name('admin.')->group(function () {
             'chartLabels', 'chartValues',
             'promosi',
             'adminProfile',
-            'company', 'areaLayanan',
-            'monitoring'
+            'company', 'areaLayanan'
         ));
     })->name('index');
+
+    // --- API Monitoring (Async) ---
+    Route::get('/api/monitoring', function () {
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
+        Illuminate\Support\Facades\DB::enableQueryLog();
+        $monitoring = [];
+
+        // ── Info PHP & Server (selalu tersedia) ──────────────────────
+        $monitoring['php_version']      = phpversion();
+        $monitoring['laravel_version']  = app()->version();
+        $monitoring['php_memory']       = round(memory_get_usage(true) / 1024 / 1024, 2) . ' MB';
+        $monitoring['php_memory_peak']  = round(memory_get_peak_usage(true) / 1024 / 1024, 2) . ' MB';
+        $monitoring['server_os']        = php_uname('s') . ' ' . php_uname('r');
+        $monitoring['server_software']  = $_SERVER['SERVER_SOFTWARE'] ?? 'CLI';
+
+        // ── Supabase Management API → ambil status project saja ──────
+        $supabaseToken = env('EXPERIMENTAL_SUPABASE_API');
+        $projectRef    = explode('.', env('DB_USERNAME', ''))[1] ?? null;
+        $supabaseStatus = 'unknown';
+
+        if ($supabaseToken && $projectRef) {
+            try {
+                $ch = curl_init("https://api.supabase.com/v1/projects/{$projectRef}");
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT        => 6,
+                    CURLOPT_HTTPHEADER     => [
+                        "Authorization: Bearer {$supabaseToken}",
+                        "Content-Type: application/json",
+                    ],
+                ]);
+                $pBody = curl_exec($ch);
+                $pStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+                if ($pStatus === 200 && $pBody) {
+                    $pData = json_decode($pBody, true);
+                    $supabaseStatus = $pData['status'] ?? 'unknown';
+                }
+            } catch (\Exception $e) { /* silent */ }
+        }
+        $monitoring['supabase_status'] = $supabaseStatus;
+
+        // ── DB Size & Connections via PostgreSQL langsung ─────────────
+        try {
+            $dbStats = Illuminate\Support\Facades\Cache::remember('admin_db_stats_v3', 300, function () {
+                $sizeRow = Illuminate\Support\Facades\DB::selectOne(
+                    "SELECT pg_database_size(current_database()) AS size"
+                );
+                $bytes = $sizeRow->size ?? 0;
+                $mb    = round($bytes / 1024 / 1024, 2);
+
+                $connRow = Illuminate\Support\Facades\DB::selectOne(
+                    "SELECT count(*) AS cnt FROM pg_stat_activity WHERE datname = current_database()"
+                );
+
+                return [
+                    'db_size'            => $mb . ' MB',
+                    'db_size_pct'        => round(($mb / 500) * 100, 1),   // free tier 500 MB
+                    'db_size_bytes'      => $bytes,
+                    'db_connections'     => $connRow->cnt ?? 0,
+                    'db_max_connections' => 60,   // Supabase free tier pooler limit
+                ];
+            });
+            $monitoring = array_merge($monitoring, $dbStats);
+        } catch (\Exception $e) {
+            $monitoring['db_size']        = 'Error';
+            $monitoring['db_size_pct']    = 0;
+            $monitoring['db_size_bytes']  = 0;
+            $monitoring['db_connections'] = 0;
+            $monitoring['db_max_connections'] = 60;
+        }
+
+        // ── Storage Size: hitung semua file di S3 bucket ─────────────
+        try {
+            $storageStats = Illuminate\Support\Facades\Cache::remember('admin_storage_stats_v2', 600, function () {
+                $disk      = Illuminate\Support\Facades\Storage::disk('s3');
+                $allFiles  = $disk->allFiles();   // rekursif semua folder
+                $totalBytes = 0;
+                foreach ($allFiles as $file) {
+                    try { $totalBytes += $disk->size($file); } catch (\Exception $e) {}
+                }
+                $totalMB  = round($totalBytes / 1024 / 1024, 3);
+                return [
+                    'storage_file_count'  => count($allFiles),
+                    'storage_bytes'       => $totalBytes,
+                    'storage_mb'          => $totalMB,
+                    'storage_pct'         => round(($totalMB / 1024) * 100, 2), // free tier 1 GB
+                    'storage_connected'   => true,
+                ];
+            });
+            $monitoring = array_merge($monitoring, $storageStats);
+        } catch (\Exception $e) {
+            $monitoring['storage_file_count'] = 0;
+            $monitoring['storage_bytes']      = 0;
+            $monitoring['storage_mb']         = 0;
+            $monitoring['storage_pct']        = 0;
+            $monitoring['storage_connected']  = false;
+        }
+
+        // ── Query log & load time ──────────────────────────────────
+        $queryLog = Illuminate\Support\Facades\DB::getQueryLog();
+        $monitoring['query_count'] = count($queryLog);
+        $monitoring['query_time']  = round(collect($queryLog)->sum('time'), 2);
+        $monitoring['load_time']   = round((microtime(true) - $startTime) * 1000) . ' ms';
+
+        return view('admin.partials.monitoring', compact('monitoring'));
+    })->name('api.monitoring');
+
+    // ─── API Notifikasi ─────────────────────────────────────────────────
+
+    // GET: ambil daftar 20 notifikasi terbaru + jumlah unread
+    Route::get('/api/notifications', function () {
+        $notifications = App\Models\AdminNotification::recent(20)->get()->map(fn($n) => [
+            'id'       => $n->id,
+            'type'     => $n->type,
+            'title'    => $n->title,
+            'body'     => $n->body,
+            'icon'     => $n->icon,
+            'link_tab' => $n->link_tab,
+            'ref_id'   => $n->ref_id,
+            'is_read'  => !is_null($n->read_at),
+            'time_ago' => $n->created_at->diffForHumans(),
+        ]);
+        $unread = App\Models\AdminNotification::unread()->count();
+        return response()->json(['notifications' => $notifications, 'unread' => $unread]);
+    })->name('api.notifications');
+
+    // PATCH: tandai satu notifikasi sebagai sudah dibaca
+    Route::patch('/api/notifications/{id}/read', function ($id) {
+        $notif = App\Models\AdminNotification::findOrFail($id);
+        $notif->markRead();
+        $unread = App\Models\AdminNotification::unread()->count();
+        return response()->json(['success' => true, 'unread' => $unread]);
+    })->name('api.notifications.read');
+
+    // PATCH: tandai semua sebagai sudah dibaca
+    Route::patch('/api/notifications/read-all', function () {
+        App\Models\AdminNotification::unread()->update(['read_at' => now()]);
+        return response()->json(['success' => true, 'unread' => 0]);
+    })->name('api.notifications.read_all');
+
+    // DELETE: hapus semua notifikasi yang sudah dibaca
+    Route::delete('/api/notifications/clear', function () {
+        App\Models\AdminNotification::whereNotNull('read_at')->delete();
+        $unread = App\Models\AdminNotification::unread()->count();
+        return response()->json(['success' => true, 'unread' => $unread]);
+    })->name('api.notifications.clear');
 });
+

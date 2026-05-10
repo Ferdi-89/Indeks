@@ -7,15 +7,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>R-NET Admin - @yield('title', 'Dasbor')</title>
 
-    <!-- DaisyUI 4 + Tailwind CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Preconnect hints untuk CDN yang digunakan -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://a.tile.openstreetmap.org" crossorigin>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.min.css">
-    
-    <!-- Leaflet JS for Maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Google Fonts: Inter (diload dari Google, bukan Fontsource CDN) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind + DaisyUI: dikompilasi lokal via Vite (menggantikan CDN) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Leaflet: TIDAK diload di sini, lazy-loaded via JS saat modal Detail dibuka -->
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -46,26 +50,41 @@
             </div>
 
             <div class="flex-none gap-2">
-                <!-- Notifications -->
-                <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                <!-- ═══ Notifikasi Live ═══ -->
+                <div class="dropdown dropdown-end" id="notif-dropdown">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle" id="notif-bell-btn" onclick="notifOpen()">
                         <div class="indicator">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                            <span class="badge badge-sm badge-error indicator-item text-white">3</span>
+                            <span id="notif-badge" class="badge badge-xs badge-error indicator-item text-white hidden">0</span>
                         </div>
                     </div>
-                    <div tabindex="0"
-                        class="mt-3 z-[1] card card-compact dropdown-content w-72 md:w-80 bg-base-100 shadow-xl border border-base-200">
-                        <div class="card-body">
-                            <span class="font-bold text-lg">Notifikasi</span>
-                            <ul class="menu p-0">
-                                <li><a>Pendaftaran baru dari Budi</a></li>
-                                <li><a>Sistem berjalan normal</a></li>
-                            </ul>
+                    <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-80 bg-base-100 shadow-xl border border-base-200" id="notif-panel">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between px-4 pt-4 pb-2 border-b border-base-200">
+                            <span class="font-bold text-base">Notifikasi</span>
+                            <div class="flex gap-1">
+                                <button onclick="notifReadAll()" class="btn btn-ghost btn-xs text-primary" title="Tandai semua dibaca">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Baca semua
+                                </button>
+                                <button onclick="notifClear()" class="btn btn-ghost btn-xs text-base-content/40" title="Hapus yang sudah dibaca">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- List -->
+                        <div id="notif-list" class="max-h-72 overflow-y-auto divide-y divide-base-200">
+                            <div class="flex flex-col items-center justify-center py-8 text-base-content/40" id="notif-empty">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                <p class="text-xs mt-2">Tidak ada notifikasi</p>
+                            </div>
+                        </div>
+                        <!-- Footer -->
+                        <div class="px-4 py-2 border-t border-base-200 text-center">
+                            <span id="notif-footer-text" class="text-xs text-base-content/40">Memuat...</span>
                         </div>
                     </div>
                 </div>
@@ -74,11 +93,11 @@
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost flex items-center gap-2">
                         <div class="text-right hidden sm:block">
-                            <p class="font-bold text-sm leading-none">Admin R-NET</p>
+                            <p class="font-bold text-sm leading-none" id="navbar-admin-name">Admin R-NET</p>
                         </div>
                         <div class="avatar placeholder">
-                            <div class="bg-primary text-primary-content rounded-full w-10">
-                                <span class="font-bold">AR</span>
+                            <div class="bg-primary text-primary-content rounded-full w-10" id="navbar-avatar">
+                                <span class="font-bold" id="navbar-initials">AR</span>
                             </div>
                         </div>
                     </div>
@@ -86,10 +105,16 @@
                         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-base-200">
                         <li><a href="#profil" data-tab="profil" class="admin-nav-link">Edit Profil</a></li>
                         <li><a href="#pengaturan" data-tab="pengaturan" class="admin-nav-link">Pengaturan</a></li>
-                        <li><a class="text-error mt-2">Keluar</a></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="p-0 m-0 w-full mt-2" data-no-ajax>
+                                @csrf
+                                <button type="submit" class="text-error w-full text-left py-2 px-4 hover:bg-base-200">Keluar</button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
+
         </div>
 
         <!-- Page Content -->
@@ -218,6 +243,159 @@
 
 @yield('scripts')
 
-</body>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// Notification Engine — R-NET Admin
+// ═══════════════════════════════════════════════════════════════
+const NOTIF_API      = '{{ route("admin.api.notifications") }}';
+const NOTIF_READ_ALL = '{{ route("admin.api.notifications.read_all") }}';
+const NOTIF_CLEAR    = '{{ route("admin.api.notifications.clear") }}';
+const CSRF_TOKEN     = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
+let _notifData     = [];
+let _notifLoaded   = false;
+let _pollInterval  = null;
+
+// Icon SVG map
+const NOTIF_ICONS = {
+    'user-plus': `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`,
+    'alert':     `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    'bell':      `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+};
+
+const NOTIF_TYPE_COLORS = {
+    info:    'text-info    bg-info/10',
+    success: 'text-success bg-success/10',
+    warning: 'text-warning bg-warning/10',
+    danger:  'text-error   bg-error/10',
+};
+
+// ── Fetch notifikasi dari server ──
+async function notifFetch(silent = false) {
+    try {
+        const res  = await fetch(NOTIF_API, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const data = await res.json();
+        _notifData   = data.notifications || [];
+        _notifLoaded = true;
+        notifRender(_notifData, data.unread);
+    } catch (e) {
+        if (!silent) {
+            document.getElementById('notif-footer-text').textContent = 'Gagal memuat notifikasi.';
+        }
+    }
+}
+
+// ── Render daftar notifikasi ──
+function notifRender(items, unread) {
+    const badge    = document.getElementById('notif-badge');
+    const list     = document.getElementById('notif-list');
+    const empty    = document.getElementById('notif-empty');
+    const footer   = document.getElementById('notif-footer-text');
+
+    // Badge
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.classList.remove('hidden');
+        badge.classList.add('animate-bounce');
+        setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+    } else {
+        badge.classList.add('hidden');
+    }
+
+    // Footer count
+    footer.textContent = unread > 0
+        ? `${unread} notifikasi belum dibaca`
+        : items.length > 0 ? 'Semua sudah dibaca' : '';
+
+    if (items.length === 0) {
+        list.innerHTML = '';
+        list.appendChild(empty);
+        return;
+    }
+
+    // Render items
+    list.innerHTML = items.map(n => {
+        const icon    = NOTIF_ICONS[n.icon] || NOTIF_ICONS.bell;
+        const color   = NOTIF_TYPE_COLORS[n.type] || NOTIF_TYPE_COLORS.info;
+        const readCls = n.is_read ? 'opacity-60' : 'bg-primary/5 font-medium';
+        const dot     = n.is_read ? '' : '<span class="w-2 h-2 rounded-full bg-primary shrink-0 mt-1"></span>';
+        const tabAttr = n.link_tab ? `data-tab="${n.link_tab}"` : '';
+
+        return `<div class="flex gap-3 px-4 py-3 cursor-pointer hover:bg-base-200 transition-colors ${readCls}"
+                     onclick="notifMarkRead(${n.id}, '${n.link_tab || ''}')" ${tabAttr}>
+            <div class="shrink-0 w-9 h-9 rounded-full flex items-center justify-center ${color}">${icon}</div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm leading-snug truncate">${n.title}</p>
+                <p class="text-xs text-base-content/50 truncate mt-0.5">${n.body || ''}</p>
+                <p class="text-xs text-base-content/30 mt-0.5">${n.time_ago}</p>
+            </div>
+            ${dot}
+        </div>`;
+    }).join('');
+}
+
+// ── Buka dropdown & fetch ──
+function notifOpen() {
+    if (!_notifLoaded) notifFetch();
+    // Auto-refresh saat dibuka
+    else notifFetch(true);
+}
+
+// ── Tandai satu sebagai dibaca & navigasi ke tab ──
+async function notifMarkRead(id, tab) {
+    // Update lokal dulu (optimistik)
+    _notifData = _notifData.map(n => n.id === id ? { ...n, is_read: true } : n);
+    const unread = _notifData.filter(n => !n.is_read).length;
+    notifRender(_notifData, unread);
+
+    // Tutup dropdown
+    document.activeElement?.blur();
+
+    // Navigasi ke tab
+    if (tab && typeof switchTab === 'function') switchTab(tab);
+
+    // Kirim ke server
+    try {
+        await fetch(`/admin/api/notifications/${id}/read`, {
+            method: 'PATCH',
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'X-Requested-With': 'XMLHttpRequest' }
+        });
+    } catch (e) { /* silent */ }
+}
+
+// ── Tandai semua dibaca ──
+async function notifReadAll() {
+    _notifData = _notifData.map(n => ({ ...n, is_read: true }));
+    notifRender(_notifData, 0);
+    try {
+        await fetch(NOTIF_READ_ALL, {
+            method: 'PATCH',
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'X-Requested-With': 'XMLHttpRequest' }
+        });
+    } catch (e) { /* silent */ }
+}
+
+// ── Hapus notifikasi yang sudah dibaca ──
+async function notifClear() {
+    _notifData = _notifData.filter(n => !n.is_read);
+    const unread = _notifData.filter(n => !n.is_read).length;
+    notifRender(_notifData, unread);
+    try {
+        await fetch(NOTIF_CLEAR, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'X-Requested-With': 'XMLHttpRequest' }
+        });
+    } catch (e) { /* silent */ }
+}
+
+// ── Auto-polling setiap 60 detik ──
+document.addEventListener('DOMContentLoaded', () => {
+    // Fetch awal (count saja, silent)
+    notifFetch(true);
+    // Poll
+    _pollInterval = setInterval(() => notifFetch(true), 60_000);
+});
+</script>
+
+</body>
 </html>

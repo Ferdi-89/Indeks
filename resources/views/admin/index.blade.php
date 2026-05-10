@@ -42,15 +42,53 @@
 
     <!-- Tab Monitoring -->
     <div class="admin-tab-panel" id="panel-monitoring" style="display:none;">
-        @include('admin.partials.monitoring')
+        <div class="flex flex-col items-center justify-center py-20 text-center" id="monitoring-loader">
+            <span class="loading loading-spinner loading-lg text-primary mb-4"></span>
+            <p class="text-base-content/70 font-medium">Memuat data monitoring sistem...</p>
+        </div>
+        <div id="monitoring-content"></div>
     </div>
 
 </div>
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // ═══════════════════════════════════════════
+    // Lazy-load helper
+    // ═══════════════════════════════════════════
+    function loadScript(src, onload) {
+        if (document.querySelector(`script[src="${src}"]`)) { onload && onload(); return; }
+        const s = document.createElement('script'); s.src = src; s.onload = onload; document.head.appendChild(s);
+    }
+    function loadStyle(href) {
+        if (document.querySelector(`link[href="${href}"]`)) return;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l);
+    }
+
+    // ═══════════════════════════════════════════
+    // Global Toast Helper (dipakai seluruh SPA)
+    // ═══════════════════════════════════════════
+    function spaToast(message, type = 'success') {
+        const existing = document.getElementById('_spa_toast');
+        if (existing) existing.remove();
+        const alertClass = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : type === 'warning' ? 'alert-warning' : 'alert-info';
+        const iconPath   = type === 'error'
+            ? 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+            : 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z';
+        const t = document.createElement('div');
+        t.id = '_spa_toast';
+        t.className = 'toast toast-end toast-bottom z-[9999]';
+        t.innerHTML = `<div class="alert ${alertClass} shadow-lg max-w-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${iconPath}"/></svg>
+            <span class="text-sm">${message}</span></div>`;
+        document.body.appendChild(t);
+        setTimeout(() => t.style.opacity = '0', 3000);
+        setTimeout(() => t.remove(), 3400);
+    }
+    // Alias lama (dipakai di beberapa partial)
+    window.showToast = spaToast;
+
     // ═══════════════════════════════════════════
     // Admin SPA Tab Controller (Vanilla JS)
     // ═══════════════════════════════════════════
@@ -69,16 +107,11 @@
     function switchTab(tabName) {
         if (!VALID_TABS.includes(tabName)) tabName = 'dashboard';
 
-        // Hide all panels
-        document.querySelectorAll('.admin-tab-panel').forEach(p => {
-            p.style.display = 'none';
-        });
+        document.querySelectorAll('.admin-tab-panel').forEach(p => { p.style.display = 'none'; });
 
-        // Show target panel
         const target = document.getElementById('panel-' + tabName);
         if (target) target.style.display = '';
 
-        // Update sidebar active state
         document.querySelectorAll('.admin-nav-link').forEach(link => {
             const linkTab = link.getAttribute('data-tab');
             if (linkTab === tabName) {
@@ -90,22 +123,97 @@
             }
         });
 
-        // Update navbar title
         const titleEl = document.getElementById('navbar-title');
         if (titleEl) titleEl.textContent = TAB_TITLES[tabName] || 'Dasbor';
-
-        // Update URL hash
         window.location.hash = tabName;
 
-        // Re-init chart if switching to dashboard
-        if (tabName === 'dashboard' && window.initDashboardChart) {
-            setTimeout(() => window.initDashboardChart(), 150);
+        // Lazy-load Chart.js hanya saat Dashboard pertama kali dibuka
+        if (tabName === 'dashboard') {
+            if (typeof Chart !== 'undefined') {
+                setTimeout(() => window.initDashboardChart && window.initDashboardChart(), 150);
+            } else {
+                loadScript('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js', () => {
+                    setTimeout(() => window.initDashboardChart && window.initDashboardChart(), 150);
+                });
+            }
+        }
+
+        // Async load monitoring
+        if (tabName === 'monitoring' && !window.monitoringLoaded) {
+            _loadMonitoring();
         }
     }
 
+    // ── Fungsi load/refresh monitoring panel ──
+    function _loadMonitoring() {
+        const loader  = document.getElementById('monitoring-loader');
+        const content = document.getElementById('monitoring-content');
+        if (loader)  loader.style.display = '';
+        if (content) content.innerHTML = '';
+        fetch("{{ route('admin.api.monitoring') }}")
+            .then(res => res.text())
+            .then(html => {
+                if (content) content.innerHTML = html;
+                if (loader)  loader.style.display = 'none';
+                window.monitoringLoaded = true;
+            })
+            .catch(() => {
+                if (loader) loader.innerHTML = '<p class="text-error font-medium">Gagal memuat data monitoring.</p>';
+            });
+    }
+
+    // Tombol refresh di monitoring partial (tanpa reload halaman)
+    window.monitoringRefresh = function() {
+        window.monitoringLoaded = false;
+        const btn  = document.getElementById('monitoring-refresh-btn');
+        const icon = document.getElementById('monitoring-refresh-icon');
+        if (btn)  btn.disabled = true;
+        if (icon) icon.classList.add('animate-spin');
+        _loadMonitoring();
+        setTimeout(() => {
+            if (btn)  btn.disabled = false;
+            if (icon) icon.classList.remove('animate-spin');
+        }, 2000);
+    };
+
+    // ═══════════════════════════════════════════
+    // Lazy-load Leaflet saat modal Detail dibuka
+    // ═══════════════════════════════════════════
+    const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    const LEAFLET_JS  = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+
+    window.openDetailModal = function(modalId, lat, lng, mapId, imgId, imgSrc) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        // Lazy-load gambar
+        const img = document.getElementById(imgId);
+        if (img && !img.src) img.src = img.getAttribute('data-src') || imgSrc;
+
+        modal.showModal();
+
+        // Lazy-load Leaflet + render peta
+        if (!window['map_init_' + mapId]) {
+            loadStyle(LEAFLET_CSS);
+            loadScript(LEAFLET_JS, () => {
+                setTimeout(() => {
+                    const mapEl = document.getElementById(mapId);
+                    if (!mapEl) return;
+                    const map = L.map(mapId).setView([lat, lng], 15);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19, attribution: '© OpenStreetMap'
+                    }).addTo(map);
+                    L.marker([lat, lng]).addTo(map).bindPopup('Lokasi Pendaftar').openPopup();
+                    window['map_init_' + mapId] = true;
+                }, 200);
+            });
+        }
+    };
+
+    // ═══════════════════════════════════════════
     // Init on page load
+    // ═══════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
-        // Bind sidebar clicks
         document.querySelectorAll('.admin-nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -113,9 +221,107 @@
             });
         });
 
-        // Read initial hash
         const hash = window.location.hash.substring(1);
         switchTab(VALID_TABS.includes(hash) ? hash : 'dashboard');
+
+        // --- UNIVERSAL AJAX HANDLER ---
+
+        // 1. Intercept Pagination Links (SPA no-reload)
+        document.addEventListener('click', async function(e) {
+            const link = e.target.closest('nav[role="navigation"] a');
+            if (link) {
+                e.preventDefault();
+                const panel = link.closest('.admin-tab-panel');
+                if (panel) {
+                    panel.style.opacity = '0.5';
+                    try {
+                        const response = await fetch(link.href);
+                        const html = await response.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const newPanel = doc.getElementById(panel.id);
+                        if (newPanel) {
+                            panel.innerHTML = newPanel.innerHTML;
+                            if (typeof STATUS_COLORS !== 'undefined') {
+                                document.querySelectorAll('.status-select').forEach(el => {
+                                    const val = el.value;
+                                    Object.values(STATUS_COLORS).forEach(c => el.classList.remove(c));
+                                    el.classList.add(STATUS_COLORS[val] || '');
+                                    el.setAttribute('data-prev', val);
+                                });
+                            }
+                        }
+                    } catch (err) { console.error('Pagination Error:', err); }
+                    finally { panel.style.opacity = '1'; }
+                }
+            }
+        });
+
+        // 2. Intercept Form Submissions (SPA no-reload)
+        document.addEventListener('submit', async function(e) {
+            if (e.target.closest('.admin-tab-panel') && !e.target.hasAttribute('data-no-ajax')) {
+                e.preventDefault();
+                const form = e.target;
+                const panel = form.closest('.admin-tab-panel');
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.innerHTML : '';
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="loading loading-spinner loading-xs"></span>';
+                }
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: form.method.toUpperCase(),
+                        body: form.method.toUpperCase() === 'GET' ? null : formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/html' }
+                    });
+
+                    // ── JSON response: hanya tampilkan toast, panel tidak di-reload ──
+                    const contentType = response.headers.get('Content-Type') || '';
+                    if (contentType.includes('application/json')) {
+                        const json = await response.json();
+                        if (response.ok && json.success) {
+                            spaToast(json.message || 'Berhasil disimpan.', 'success');
+                            // Reset password form jika ada
+                            if (form.id === 'passwordForm') form.reset();
+                        } else {
+                            const errMsg = json.message || (json.errors ? Object.values(json.errors).flat().join(' ') : 'Terjadi kesalahan.');
+                            spaToast(errMsg, 'error');
+                            // Tampilkan inline error jika ada
+                            if (json.errors) {
+                                Object.entries(json.errors).forEach(([field, msgs]) => {
+                                    const input = form.querySelector(`[name="${field}"]`);
+                                    if (input) {
+                                        input.classList.add('input-error', 'textarea-error');
+                                        let errEl = input.parentNode.querySelector('.spa-field-error');
+                                        if (!errEl) { errEl = document.createElement('span'); errEl.className = 'text-error text-xs mt-1 spa-field-error'; input.parentNode.appendChild(errEl); }
+                                        errEl.textContent = msgs[0];
+                                        input.addEventListener('input', () => { input.classList.remove('input-error', 'textarea-error'); errEl.remove(); }, { once: true });
+                                    }
+                                });
+                            }
+                        }
+                        return; // jangan replace panel
+                    }
+
+                    // ── HTML response: replace panel (untuk tab CRUD) ──
+                    const html = await response.text();
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const newPanel = doc.getElementById(panel.id);
+                    if (newPanel) {
+                        panel.innerHTML = newPanel.innerHTML;
+                        if (typeof showToast === 'function') showToast('Aksi berhasil dilakukan', 'success');
+                        document.querySelectorAll('dialog.modal').forEach(m => m.close());
+                    }
+                } catch (err) {
+                    console.error('AJAX Form Error:', err);
+                    if (typeof showToast === 'function') showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                } finally {
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                }
+            }
+        });
     });
 
     // Handle browser back/forward
@@ -125,15 +331,12 @@
     });
 
     // ═══════════════════════════════════════════
-    // Chart.js Initialization
+    // Chart.js Initialization (dipanggil setelah lazy-load)
     // ═══════════════════════════════════════════
     window.initDashboardChart = function() {
         const canvas = document.getElementById('regChart');
-        if (!canvas) return;
-        
-        if (window.regChartInstance) {
-            window.regChartInstance.destroy();
-        }
+        if (!canvas || typeof Chart === 'undefined') return;
+        if (window.regChartInstance) window.regChartInstance.destroy();
 
         const ctx = canvas.getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
@@ -173,3 +376,4 @@
     };
 </script>
 @endsection
+

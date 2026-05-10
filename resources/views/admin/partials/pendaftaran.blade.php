@@ -53,25 +53,14 @@
                     <td>
                         <div class="flex justify-center gap-2">
                             <!-- Detail Button -->
-                            <button onclick="
-                                const img = document.getElementById('img_detail_{{ $item->id_pendaftaran }}');
-                                if (img && !img.src) img.src = img.getAttribute('data-src');
-                                
-                                document.getElementById('modal_detail_{{ $item->id_pendaftaran }}').showModal();
-                                
-                                if (typeof L !== 'undefined' && !window['map_init_{{ $item->id_pendaftaran }}']) {
-                                    setTimeout(() => {
-                                        var map = L.map('map_{{ $item->id_pendaftaran }}').setView([{{ $item->latitude }}, {{ $item->longtitude }}], 15);
-                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                            maxZoom: 19,
-                                            attribution: '© OpenStreetMap'
-                                        }).addTo(map);
-                                        L.marker([{{ $item->latitude }}, {{ $item->longtitude }}]).addTo(map)
-                                            .bindPopup('Lokasi Pendaftar').openPopup();
-                                        window['map_init_{{ $item->id_pendaftaran }}'] = true;
-                                    }, 200);
-                                }
-                            " class="btn btn-sm btn-square btn-ghost text-info" title="Detail">
+                            <button onclick="openDetailModal(
+                                'modal_detail_{{ $item->id_pendaftaran }}',
+                                {{ $item->latitude }},
+                                {{ $item->longtitude }},
+                                'map_{{ $item->id_pendaftaran }}',
+                                'img_detail_{{ $item->id_pendaftaran }}',
+                                ''
+                            )" class="btn btn-sm btn-square btn-ghost text-info" title="Detail">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                             <!-- Delete Button -->
@@ -88,6 +77,11 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    
+    <!-- Pagination Links -->
+    <div class="p-4 border-t border-base-200">
+        {{ $pendaftaran->links('pagination::tailwind') }}
     </div>
 </div>
 

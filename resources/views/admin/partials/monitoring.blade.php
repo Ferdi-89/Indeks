@@ -2,12 +2,12 @@
 <div class="flex justify-between items-center mb-6">
     <div>
         <h3 class="text-2xl font-bold text-base-content">Monitoring Sistem</h3>
-        <p class="text-sm text-base-content/70 mt-1">Pantau penggunaan resource Laravel & Supabase secara real-time</p>
+        <p class="text-sm text-base-content/70 mt-1">Pantau penggunaan resource Laravel &amp; Supabase secara real-time</p>
     </div>
-    <a href="{{ route('admin.index') }}#monitoring" class="btn btn-outline btn-sm gap-2" onclick="location.reload()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    <button onclick="monitoringRefresh()" class="btn btn-outline btn-sm gap-2" id="monitoring-refresh-btn">
+        <svg id="monitoring-refresh-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         Refresh Data
-    </a>
+    </button>
 </div>
 
 <!-- Server & Laravel Info Cards -->
@@ -73,6 +73,19 @@
 <h4 class="font-bold text-lg mb-4 text-base-content flex items-center gap-2">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
     Database (Supabase PostgreSQL)
+    @php
+        $spStatus = $monitoring['supabase_status'] ?? 'unknown';
+        $spBadge  = match($spStatus) {
+            'ACTIVE_HEALTHY'  => ['badge-success', 'Healthy'],
+            'ACTIVE_UNHEALTHY'=> ['badge-warning', 'Unhealthy'],
+            'COMING_UP'       => ['badge-info',    'Coming Up'],
+            'PAUSING'         => ['badge-warning', 'Pausing'],
+            'PAUSED'          => ['badge-error',   'Paused'],
+            'RESTORING'       => ['badge-info',    'Restoring'],
+            default           => ['badge-ghost',   $spStatus !== 'unknown' ? $spStatus : 'N/A'],
+        };
+    @endphp
+    <span class="badge {{ $spBadge[0] }} badge-sm ml-1">{{ $spBadge[1] }}</span>
 </h4>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
     <!-- DB Size -->
@@ -135,6 +148,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if(isset($monitoring['table_stats_error']) && empty($monitoring['table_stats']))
+                    <tr>
+                        <td colspan="5" class="text-center py-6">
+                            <div class="text-warning text-sm">⚠ Query tabel gagal: tidak dapat mengakses <code>pg_stat_user_tables</code> melalui pooler.</div>
+                            <div class="text-base-content/40 text-xs mt-1">Gunakan direct connection (port 5432) bukan pooler (port 6543).</div>
+                        </td>
+                    </tr>
+                    @else
                     @forelse($monitoring['table_stats'] ?? [] as $tbl)
                     <tr>
                         <td class="font-mono text-sm font-medium">{{ $tbl->table_name }}</td>
@@ -145,9 +166,10 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center py-6 text-base-content/50">Tidak dapat mengambil data tabel.</td>
+                        <td colspan="5" class="text-center py-6 text-base-content/50">Tidak ada tabel yang ditemukan.</td>
                     </tr>
                     @endforelse
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -158,50 +180,73 @@
 <h4 class="font-bold text-lg mb-4 text-base-content flex items-center gap-2">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
     Supabase Storage (S3 Bucket)
+    @if($monitoring['storage_connected'] ?? false)
+    <span class="badge badge-success badge-sm">Terhubung</span>
+    @else
+    <span class="badge badge-error badge-sm">Terputus</span>
+    @endif
 </h4>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-    <!-- Bucket Info -->
+    <!-- Storage Used -->
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body p-5">
-            <span class="text-sm font-medium text-base-content/60 mb-2 block">Bucket</span>
-            <p class="text-xl font-bold text-secondary">{{ env('S3_BUCKET', '-') }}</p>
-            <p class="text-xs text-base-content/50 mt-2">Endpoint: {{ Str::limit(env('S3_ENDPOINT', '-'), 40) }}</p>
+            <span class="text-sm font-medium text-base-content/60 mb-2 block">Penyimpanan Terpakai</span>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-bold text-secondary">{{ $monitoring['storage_mb'] ?? '0' }}</span>
+                <span class="text-sm text-base-content/50 mb-1">MB</span>
+            </div>
+            <div class="mt-3">
+                @php
+                    $storagePct = $monitoring['storage_pct'] ?? 0;
+                    $storageColor = $storagePct > 80 ? 'progress-error' : ($storagePct > 50 ? 'progress-warning' : 'progress-secondary');
+                @endphp
+                <progress class="progress {{ $storageColor }} w-full" value="{{ $storagePct }}" max="100"></progress>
+                <span class="text-xs text-base-content/50">{{ $storagePct }}% dari 1 GB (Supabase Free Tier)</span>
+            </div>
         </div>
     </div>
 
     <!-- File Count -->
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body p-5">
-            <span class="text-sm font-medium text-base-content/60 mb-2 block">Jumlah File (Pendaftaran)</span>
+            <span class="text-sm font-medium text-base-content/60 mb-2 block">Jumlah File</span>
             <div class="flex items-end gap-2">
-                <span class="text-3xl font-bold text-secondary">{{ $monitoring['storage_file_count'] ?? '-' }}</span>
+                <span class="text-3xl font-bold text-secondary">{{ $monitoring['storage_file_count'] ?? 0 }}</span>
                 <span class="text-sm text-base-content/50 mb-1">files</span>
             </div>
-            <p class="text-xs text-base-content/50 mt-3">Di folder <code class="bg-base-200 px-1 rounded">pendaftaran/</code></p>
+            <p class="text-xs text-base-content/50 mt-3">
+                Rata-rata: {{ $monitoring['storage_file_count'] > 0
+                    ? round(($monitoring['storage_mb'] ?? 0) / $monitoring['storage_file_count'], 3)
+                    : 0 }} MB / file
+            </p>
+            <p class="text-xs text-base-content/40 mt-1">Bucket: <code class="bg-base-200 px-1 rounded">{{ env('S3_BUCKET', '-') }}</code></p>
         </div>
     </div>
 
-    <!-- Storage Status -->
+    <!-- Bucket Info -->
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body p-5">
-            <span class="text-sm font-medium text-base-content/60 mb-2 block">Status Koneksi S3</span>
-            @if($monitoring['storage_connected'] ?? false)
-            <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-success animate-pulse"></div>
-                <span class="text-lg font-bold text-success">Terhubung</span>
+            <span class="text-sm font-medium text-base-content/60 mb-2 block">Info Bucket</span>
+            <p class="text-base font-bold text-secondary">{{ env('S3_BUCKET', '-') }}</p>
+            <p class="text-xs text-base-content/50 mt-2 truncate" title="{{ env('S3_ENDPOINT', '-') }}">
+                {{ Str::limit(env('S3_ENDPOINT', '-'), 42) }}
+            </p>
+            <p class="text-xs text-base-content/40 mt-1">Region: {{ env('S3_REGION', '-') }}</p>
+            <div class="mt-3 flex items-center gap-1.5">
+                @if($monitoring['storage_connected'] ?? false)
+                <div class="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                <span class="text-xs text-success font-medium">Koneksi OK</span>
+                @else
+                <div class="w-2 h-2 rounded-full bg-error"></div>
+                <span class="text-xs text-error font-medium">Tidak terhubung</span>
+                @endif
             </div>
-            @else
-            <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-error"></div>
-                <span class="text-lg font-bold text-error">Tidak Terhubung</span>
-            </div>
-            @endif
-            <p class="text-xs text-base-content/50 mt-3">Region: {{ env('S3_REGION', '-') }}</p>
         </div>
     </div>
 </div>
 
 <!-- Laravel Config Section -->
+
 <h4 class="font-bold text-lg mb-4 text-base-content flex items-center gap-2">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-error"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
     Konfigurasi Laravel

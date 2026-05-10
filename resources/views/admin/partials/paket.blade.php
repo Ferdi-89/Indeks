@@ -48,7 +48,7 @@
 <dialog id="modal_tambah_paket" class="modal">
   <div class="modal-box">
     <h3 class="font-bold text-lg mb-4">Tambah Paket Baru</h3>
-    <form action="#" method="POST">
+    <form action="{{ route('admin.paket.store') }}" method="POST">
         @csrf
         <div class="form-control mb-4">
             <label class="label"><span class="label-text">ID Paket</span></label>
@@ -65,7 +65,7 @@
         
         <div class="modal-action">
             <button type="button" class="btn" onclick="document.getElementById('modal_tambah_paket').close()">Batal</button>
-            <button type="button" class="btn btn-primary" onclick="alert('Route POST belum dikonfigurasi')">Simpan</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
     </form>
   </div>
@@ -79,7 +79,7 @@
 <dialog id="modal_edit_{{ $item->id_paket }}" class="modal">
   <div class="modal-box">
     <h3 class="font-bold text-lg mb-4">Edit Paket: {{ $item->title_paket }}</h3>
-    <form action="#" method="POST">
+    <form action="{{ route('admin.paket.update', $item->id_paket) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-control mb-4">
@@ -93,7 +93,7 @@
         
         <div class="modal-action">
             <button type="button" class="btn" onclick="document.getElementById('modal_edit_{{ $item->id_paket }}').close()">Batal</button>
-            <button type="button" class="btn btn-success text-white" onclick="alert('Route PUT belum dikonfigurasi')">Simpan Perubahan</button>
+            <button type="submit" class="btn btn-success text-white">Simpan Perubahan</button>
         </div>
     </form>
   </div>
@@ -114,10 +114,10 @@
       <form method="dialog">
         <button class="btn mr-2">Batal</button>
       </form>
-      <form action="#" method="POST">
+      <form action="{{ route('admin.paket.destroy', $item->id_paket) }}" method="POST">
         @csrf
         @method('DELETE')
-        <button type="button" class="btn btn-error" onclick="alert('Route DELETE belum dikonfigurasi')">Hapus</button>
+        <button type="submit" class="btn btn-error">Hapus</button>
       </form>
     </div>
   </div>

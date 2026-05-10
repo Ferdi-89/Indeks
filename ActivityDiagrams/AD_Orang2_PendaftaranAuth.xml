@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>Enterprise Architect</XMI.exporter>
+			<XMI.exporterVersion>2.5</XMI.exporterVersion>
+		</XMI.documentation>
+	</XMI.header>
+	<XMI.content>
+		<UML:Model name="EA Model" xmi.id="MX_EA_Model">
+			<UML:Namespace.ownedElement>
+				<UML:Class name="EARootClass" xmi.id="EAID_11111111_5487_4080_A7F4_41526CB0AA00" isRoot="true" isLeaf="false" isAbstract="false"/>
+				<UML:Package name="Activity Diagrams - Orang2_PendaftaranAuth" xmi.id="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" isRoot="false" isLeaf="false" isAbstract="false" visibility="public">
+					<UML:ModelElement.taggedValue>
+						<UML:TaggedValue tag="ea_stype" value="Public"/>
+					</UML:ModelElement.taggedValue>
+					<UML:Namespace.ownedElement>
+<UML:ActivityModel name="AD_UC07_Melakukan Login" xmi.id="EAID_28CAD7D9_3645_3B0E_6658_4F90A5F8BAC8" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_31528219_972F_5559_E8DA_D3AE8DF694A9" source="EAID_B9BB3C5C_B826_DF6B_4C81_52ABFE0E6BD3" target="EAID_87F0C912_7A40_83F7_2839_89400DDBEDF1" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_2A5D7CD8_EF71_B7A8_488A_4ABB6B025659" source="EAID_87F0C912_7A40_83F7_2839_89400DDBEDF1" target="EAID_5C990C0B_A554_4D1D_2000_08938BCB66C4" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_828E942D_0AAA_485B_26BC_05890D1FAB70" source="EAID_5C990C0B_A554_4D1D_2000_08938BCB66C4" target="EAID_144E7465_F19C_5EFE_EF0B_7BE5EBFC6EC3" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_7105EAE7_1D0C_CFAC_F82E_0F310D692A6B" source="EAID_144E7465_F19C_5EFE_EF0B_7BE5EBFC6EC3" target="EAID_42168522_ACCE_C36F_BDB7_C616AF576885" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_BF79B5B7_FCAD_88C3_3DA4_2B5E27627C0A" source="EAID_42168522_ACCE_C36F_BDB7_C616AF576885" target="EAID_268D0AFD_A2CA_9795_6424_35B3CBB1B67E" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_788F4FCF_939D_F5AC_CAE3_00DAA17B8CCA">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_B9BB3C5C_B826_DF6B_4C81_52ABFE0E6BD3" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Memasukkan Email dan Password" xmi.id="EAID_87F0C912_7A40_83F7_2839_89400DDBEDF1" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Memverifikasi Kredensial" xmi.id="EAID_5C990C0B_A554_4D1D_2000_08938BCB66C4" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Membuat Session" xmi.id="EAID_144E7465_F19C_5EFE_EF0B_7BE5EBFC6EC3" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Mengarahkan ke Dashboard" xmi.id="EAID_42168522_ACCE_C36F_BDB7_C616AF576885" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_268D0AFD_A2CA_9795_6424_35B3CBB1B67E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel><UML:ActivityModel name="AD_UC08_Melakukan Logout" xmi.id="EAID_CCC8DE5A_C9EB_7C34_379B_904932A76F5D" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_B10C5251_DA84_C8BC_609D_A0A59CA37604" source="EAID_F1CA724C_4B12_A349_F9D0_DF527C03734E" target="EAID_2F9FA961_5080_B672_160B_F3B68A1DD600" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_BCDA1B5D_D60E_8F2C_35E1_66BFD74EF9B7" source="EAID_2F9FA961_5080_B672_160B_F3B68A1DD600" target="EAID_44BD7CF5_D319_BAA1_ACCD_0A6C29CABB13" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_4C64CB6F_1D70_B98D_BEC1_83FB24D84A88" source="EAID_44BD7CF5_D319_BAA1_ACCD_0A6C29CABB13" target="EAID_AEA35FA8_C8CD_2CA1_7E3A_5FABE8600FC3" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_DB0C7631_B99F_1A7F_93EC_8C0869845FB8" source="EAID_AEA35FA8_C8CD_2CA1_7E3A_5FABE8600FC3" target="EAID_6BFB4D6C_9360_B8A2_F91B_E641E9A2EB52" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_DFF1B5B3_C9EB_B538_54CD_15028669141C">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_F1CA724C_4B12_A349_F9D0_DF527C03734E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Menekan Tombol Logout" xmi.id="EAID_2F9FA961_5080_B672_160B_F3B68A1DD600" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Menghapus Session" xmi.id="EAID_44BD7CF5_D319_BAA1_ACCD_0A6C29CABB13" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Mengarahkan ke Halaman Login" xmi.id="EAID_AEA35FA8_C8CD_2CA1_7E3A_5FABE8600FC3" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_6BFB4D6C_9360_B8A2_F91B_E641E9A2EB52" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel><UML:ActivityModel name="AD_UC13_Melihat Daftar Pendaftar" xmi.id="EAID_B77B3ED5_6745_9D77_A23C_AE7C927C21CB" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_84BFEA50_5643_1EBB_A7F3_B69E493D3304" source="EAID_27AA319B_D2E3_2BE7_41C6_CE4A24D4764E" target="EAID_B91149B2_DE8D_715A_898C_CAF4E4D7D819" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_43490057_A6A3_F572_70C2_C158EB145464" source="EAID_B91149B2_DE8D_715A_898C_CAF4E4D7D819" target="EAID_3358FEB4_9CA8_7942_4900_01A3F1584191" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_14A47709_9919_1A23_4C8F_32DD735FEFE6" source="EAID_3358FEB4_9CA8_7942_4900_01A3F1584191" target="EAID_61777F25_26FF_09A7_F19D_75FD53C9FEB0" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_E366FE4E_2B6A_293D_A774_D8259CF0A2DC" source="EAID_61777F25_26FF_09A7_F19D_75FD53C9FEB0" target="EAID_F8BC2B84_307F_79AE_EB32_77A0E1E4FF8E" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_591DF9A9_45D6_441D_4A80_97548CBC1961">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_27AA319B_D2E3_2BE7_41C6_CE4A24D4764E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Masuk ke Menu Pendaftar" xmi.id="EAID_B91149B2_DE8D_715A_898C_CAF4E4D7D819" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Menarik Data dari DB" xmi.id="EAID_3358FEB4_9CA8_7942_4900_01A3F1584191" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Menampilkan Tabel Pendaftar" xmi.id="EAID_61777F25_26FF_09A7_F19D_75FD53C9FEB0" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_F8BC2B84_307F_79AE_EB32_77A0E1E4FF8E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel><UML:ActivityModel name="AD_UC14_Melihat Detail Pendaftar" xmi.id="EAID_C829665B_153E_F2D6_5235_55E47DDF81E3" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_99528DB1_1198_2D30_EFE9_71160A46FE29" source="EAID_25F10B91_3961_D654_A2EE_CA8C2BB1A93C" target="EAID_872EA060_EF47_1DB1_0CEE_0E4A93E48984" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_9B8C8C0F_6842_F074_E44F_FE6EC9D6AD90" source="EAID_872EA060_EF47_1DB1_0CEE_0E4A93E48984" target="EAID_7DC3D30A_5237_A84C_3E46_25CA9E44EE16" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_F567733A_3CCF_3B22_66DF_04D9E1F75347" source="EAID_7DC3D30A_5237_A84C_3E46_25CA9E44EE16" target="EAID_04A9D4BB_EF22_1454_4F51_4FF0C5AB94AE" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_5111D302_457F_8F58_0254_B68CE58A9B9E" source="EAID_04A9D4BB_EF22_1454_4F51_4FF0C5AB94AE" target="EAID_3B992D40_D534_85D3_8609_E9D1D686961E" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_FBD2B5EB_CCB6_2F7E_2DED_358B05AF99D9">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_25F10B91_3961_D654_A2EE_CA8C2BB1A93C" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Menekan Tombol Detail" xmi.id="EAID_872EA060_EF47_1DB1_0CEE_0E4A93E48984" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Memuat Data Lengkap dan Foto" xmi.id="EAID_7DC3D30A_5237_A84C_3E46_25CA9E44EE16" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Menampilkan Modal Detail" xmi.id="EAID_04A9D4BB_EF22_1454_4F51_4FF0C5AB94AE" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_3B992D40_D534_85D3_8609_E9D1D686961E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel><UML:ActivityModel name="AD_UC15_Mengubah Status Pendaftaran" xmi.id="EAID_9F458A92_6484_E938_0A00_A9D3CA8F6E0B" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_63DC6A3E_B1EB_8ED6_AA09_2BB8EDDDD45D" source="EAID_F0444152_9978_9A3F_7A3C_6A6FDB5E7B45" target="EAID_DA41A20B_F285_0944_A254_0F3D06E3CB6F" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_36F90ECD_B770_F357_0213_BE564E59757A" source="EAID_DA41A20B_F285_0944_A254_0F3D06E3CB6F" target="EAID_37699545_8196_B53C_7986_CA4AA511281E" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_8A09ED44_7214_73A6_3A98_4FC55FB46350" source="EAID_37699545_8196_B53C_7986_CA4AA511281E" target="EAID_325F9121_5602_21B4_B268_57A83C6AD26B" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_AA85663E_E763_EC51_33A2_FBD863F0F207" source="EAID_325F9121_5602_21B4_B268_57A83C6AD26B" target="EAID_02D5585F_EFA5_E511_93E2_8AC9F289301B" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_8726C0F7_B83E_0EE9_09B2_782195EE9DB8">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_F0444152_9978_9A3F_7A3C_6A6FDB5E7B45" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Memilih Status Baru" xmi.id="EAID_DA41A20B_F285_0944_A254_0F3D06E3CB6F" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Memperbarui Status DB" xmi.id="EAID_37699545_8196_B53C_7986_CA4AA511281E" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Tabel Termuat Ulang Otomatis" xmi.id="EAID_325F9121_5602_21B4_B268_57A83C6AD26B" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_02D5585F_EFA5_E511_93E2_8AC9F289301B" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel><UML:ActivityModel name="AD_UC16_Menghapus Data Pendaftar" xmi.id="EAID_54DA6869_EC3D_E00D_9D50_8C0FCA1471C3" context="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" visibility="public">
+                    <UML:ModelElement.taggedValue>
+                        <UML:TaggedValue tag="ea_stype" value="Activity"/>
+                        <UML:TaggedValue tag="ea_ntype" value="0"/>
+                    </UML:ModelElement.taggedValue>
+                    <UML:StateMachine.transitions><UML:Transition xmi.id="EAID_4C9BA967_8378_13F7_52E1_C0CEBAEED26D" source="EAID_1F557F0C_C3F7_B623_3F44_1235C6ACC42B" target="EAID_B4A2E731_A621_029D_EF74_7B5D150CA24B" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_584FDCCE_D57E_153C_F10E_1931B3703BBC" source="EAID_B4A2E731_A621_029D_EF74_7B5D150CA24B" target="EAID_8E1D6D3E_20D6_DEA1_FB22_0F83C72DDCEF" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_7ED52BF9_E070_8665_E370_EB66459F7F4B" source="EAID_8E1D6D3E_20D6_DEA1_FB22_0F83C72DDCEF" target="EAID_699FBF00_067E_A791_9AF9_9160ED066C35" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition><UML:Transition xmi.id="EAID_2CFE1021_4838_49CC_312C_51A604B59783" source="EAID_699FBF00_067E_A791_9AF9_9160ED066C35" target="EAID_672EF2B3_2DA6_8FC8_6080_073F2A61778B" visibility="public">
+                        <UML:ModelElement.stereotype><UML:Stereotype name="ControlFlow"/></UML:ModelElement.stereotype>
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_type" value="ControlFlow"/>
+                            <UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Transition></UML:StateMachine.transitions>
+                 <UML:StateMachine.top>
+                    <UML:CompositeState xmi.id="EAID_79607673_D417_C734_AACF_ACE4C3CDFBC1">
+                        <UML:CompositeState.subvertex><UML:Pseudostate name="Start" xmi.id="EAID_1F557F0C_C3F7_B623_3F44_1235C6ACC42B" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="100"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate><UML:ActionState name="Menekan Tombol Hapus" xmi.id="EAID_B4A2E731_A621_029D_EF74_7B5D150CA24B" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Menyetujui Konfirmasi" xmi.id="EAID_8E1D6D3E_20D6_DEA1_FB22_0F83C72DDCEF" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:ActionState name="Sistem Menghapus Data dan File S3" xmi.id="EAID_699FBF00_067E_A791_9AF9_9160ED066C35" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="Action"/>
+                            <UML:TaggedValue tag="ea_ntype" value="0"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:ActionState><UML:Pseudostate name="End" xmi.id="EAID_672EF2B3_2DA6_8FC8_6080_073F2A61778B" visibility="public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag="ea_stype" value="StateNode"/>
+                            <UML:TaggedValue tag="ea_ntype" value="101"/>
+                        </UML:ModelElement.taggedValue>
+                     </UML:Pseudostate></UML:CompositeState.subvertex></UML:CompositeState></UML:StateMachine.top></UML:ActivityModel>
+					</UML:Namespace.ownedElement>
+				</UML:Package>
+			</UML:Namespace.ownedElement>
+		</UML:Model>
+	</XMI.content>
+    <XMI.extensions xmi.extender="Enterprise Architect 2.5">
+        <diagrams>
+            
+            <diagram xmi.id="EAID_D6DFEDF8_23C3_D15B_AEB4_B4AA3A481E4E">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Melakukan Login" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_B9BB3C5C_B826_DF6B_4C81_52ABFE0E6BD3" seqno="0" style="DUID=EAID_4DDA02EC_F459_C6D2_6B5B_974E01BAA319;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_87F0C912_7A40_83F7_2839_89400DDBEDF1" seqno="1" style="DUID=EAID_15E1C363_3C27_AE99_49B2_8DF348F0BEFB;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_5C990C0B_A554_4D1D_2000_08938BCB66C4" seqno="2" style="DUID=EAID_586E87C8_00F5_8A35_E69C_C23FD09A5A2F;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_144E7465_F19C_5EFE_EF0B_7BE5EBFC6EC3" seqno="3" style="DUID=EAID_65358117_4B59_10D1_A9D9_ACD700655589;"/>
+<element geometry="Left=200;Top=370;Right=400;Bottom=410;" subject="EAID_42168522_ACCE_C36F_BDB7_C616AF576885" seqno="4" style="DUID=EAID_7A740316_32C2_CE5F_65FB_DE8D90FFBA61;"/>
+<element geometry="Left=290;Top=450;Right=310;Bottom=470;" subject="EAID_268D0AFD_A2CA_9795_6424_35B3CBB1B67E" seqno="5" style="DUID=EAID_80A986C1_4495_F93A_CD65_814BA388CF37;"/>
+</elements>
+            </diagram>
+            <diagram xmi.id="EAID_CF9DDA73_539C_D435_EE4C_17ECBE83A626">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Melakukan Logout" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_F1CA724C_4B12_A349_F9D0_DF527C03734E" seqno="0" style="DUID=EAID_E57A0154_7E60_9E1E_A3D1_3552B01BEE47;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_2F9FA961_5080_B672_160B_F3B68A1DD600" seqno="1" style="DUID=EAID_7682247B_2112_BB62_3B83_5D2352E2E436;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_44BD7CF5_D319_BAA1_ACCD_0A6C29CABB13" seqno="2" style="DUID=EAID_8A10FEF6_1EE3_8E7B_1B38_827BB3DCDBEF;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_AEA35FA8_C8CD_2CA1_7E3A_5FABE8600FC3" seqno="3" style="DUID=EAID_4E9C9587_9D4C_FC9F_A99F_E6471C2CEC93;"/>
+<element geometry="Left=290;Top=370;Right=310;Bottom=390;" subject="EAID_6BFB4D6C_9360_B8A2_F91B_E641E9A2EB52" seqno="4" style="DUID=EAID_DF0ECB28_FD47_1F1B_5E87_177898138EAF;"/>
+</elements>
+            </diagram>
+            <diagram xmi.id="EAID_E1B1E9C2_F97F_49B5_FB01_26BA9090473C">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Melihat Daftar Pendaftar" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_27AA319B_D2E3_2BE7_41C6_CE4A24D4764E" seqno="0" style="DUID=EAID_6355F998_D2DE_4431_3A7E_9C4B52045603;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_B91149B2_DE8D_715A_898C_CAF4E4D7D819" seqno="1" style="DUID=EAID_5E8F7F59_90C5_67DF_819C_8D6376E36C13;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_3358FEB4_9CA8_7942_4900_01A3F1584191" seqno="2" style="DUID=EAID_77C37D36_CA86_1B58_1EBE_734F2343FE9F;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_61777F25_26FF_09A7_F19D_75FD53C9FEB0" seqno="3" style="DUID=EAID_28CF3924_B962_4926_3411_CC8BC962119C;"/>
+<element geometry="Left=290;Top=370;Right=310;Bottom=390;" subject="EAID_F8BC2B84_307F_79AE_EB32_77A0E1E4FF8E" seqno="4" style="DUID=EAID_2E91B33A_4167_44E7_F56D_CCEB87AF80B2;"/>
+</elements>
+            </diagram>
+            <diagram xmi.id="EAID_EB20ABE5_80AE_30ED_F8D7_54D5417D0A6D">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Melihat Detail Pendaftar" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_25F10B91_3961_D654_A2EE_CA8C2BB1A93C" seqno="0" style="DUID=EAID_D1093412_81A8_4B1B_B65E_8AFC80FFA41B;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_872EA060_EF47_1DB1_0CEE_0E4A93E48984" seqno="1" style="DUID=EAID_82918713_E706_2B71_88AD_239262AF8498;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_7DC3D30A_5237_A84C_3E46_25CA9E44EE16" seqno="2" style="DUID=EAID_3E1199A0_0EFD_22D6_27D1_B9C773972F50;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_04A9D4BB_EF22_1454_4F51_4FF0C5AB94AE" seqno="3" style="DUID=EAID_D45B6483_1B8F_7526_5EBD_EC54B4C4E010;"/>
+<element geometry="Left=290;Top=370;Right=310;Bottom=390;" subject="EAID_3B992D40_D534_85D3_8609_E9D1D686961E" seqno="4" style="DUID=EAID_3FFF93BE_C84C_A288_A81F_2804CEB60FD0;"/>
+</elements>
+            </diagram>
+            <diagram xmi.id="EAID_E656B4CD_CE42_718B_F1C7_7F8EAE3AC781">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Mengubah Status Pendaftaran" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_F0444152_9978_9A3F_7A3C_6A6FDB5E7B45" seqno="0" style="DUID=EAID_D1EF088C_CA5C_39C6_8D05_1845B7B58468;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_DA41A20B_F285_0944_A254_0F3D06E3CB6F" seqno="1" style="DUID=EAID_E1614F25_AB99_A60C_3304_F75DE046B641;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_37699545_8196_B53C_7986_CA4AA511281E" seqno="2" style="DUID=EAID_9EF45874_8998_806D_A5F5_E7CBFBCC98B4;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_325F9121_5602_21B4_B268_57A83C6AD26B" seqno="3" style="DUID=EAID_BF366350_16E0_6512_F9A0_03120B2C358A;"/>
+<element geometry="Left=290;Top=370;Right=310;Bottom=390;" subject="EAID_02D5585F_EFA5_E511_93E2_8AC9F289301B" seqno="4" style="DUID=EAID_876BF742_50B2_18F0_7365_16CDEC99E25B;"/>
+</elements>
+            </diagram>
+            <diagram xmi.id="EAID_FE238211_FC62_88D1_4384_69D69D491764">
+                <model package="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246" localID="1" owner="EAID_9C810604_7FBD_3CAC_AB5A_75C0E1CBC246"/>
+                <properties name="AD: Menghapus Data Pendaftar" type="Activity"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements><element geometry="Left=290;Top=50;Right=310;Bottom=70;" subject="EAID_1F557F0C_C3F7_B623_3F44_1235C6ACC42B" seqno="0" style="DUID=EAID_97EB921D_090C_68BC_3EB9_ECD998B3045D;"/>
+<element geometry="Left=200;Top=130;Right=400;Bottom=170;" subject="EAID_B4A2E731_A621_029D_EF74_7B5D150CA24B" seqno="1" style="DUID=EAID_589E6667_DC89_5DAB_BB60_39342CF6B07E;"/>
+<element geometry="Left=200;Top=210;Right=400;Bottom=250;" subject="EAID_8E1D6D3E_20D6_DEA1_FB22_0F83C72DDCEF" seqno="2" style="DUID=EAID_1455BFC6_3E05_6CA7_3B28_B1D5A4985C09;"/>
+<element geometry="Left=200;Top=290;Right=400;Bottom=330;" subject="EAID_699FBF00_067E_A791_9AF9_9160ED066C35" seqno="3" style="DUID=EAID_B7C068EA_2B6F_2806_2B61_56FBA4295C08;"/>
+<element geometry="Left=290;Top=370;Right=310;Bottom=390;" subject="EAID_672EF2B3_2DA6_8FC8_6080_073F2A61778B" seqno="4" style="DUID=EAID_AA779606_9251_8173_DA78_AB159C36F914;"/>
+</elements>
+            </diagram>
+        </diagrams>
+    </XMI.extensions>
+</XMI>
