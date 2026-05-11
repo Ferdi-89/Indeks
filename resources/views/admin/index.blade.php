@@ -259,6 +259,8 @@
         // 2. Intercept Form Submissions (SPA no-reload)
         document.addEventListener('submit', async function(e) {
             if (e.target.closest('.admin-tab-panel') && !e.target.hasAttribute('data-no-ajax')) {
+                if (e.target.getAttribute('method') && e.target.getAttribute('method').toLowerCase() === 'dialog') return;
+                
                 e.preventDefault();
                 const form = e.target;
                 const panel = form.closest('.admin-tab-panel');
