@@ -59,62 +59,16 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     } while (App\Models\pendaftaran::where('id_pendaftaran', $idPendaftaran)->exists());
 
     try {
-        // 3. Handle Upload File ke Supabase Storage dengan Kompresi Gambar
+        // 3. Handle Upload File ke Supabase Storage (Kompresi sudah dilakukan di client-side)
         $filePath = null;
         if ($request->hasFile('path_gambar')) {
             $file = $request->file('path_gambar');
             $originalName = $file->getClientOriginalName();
             $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-]/', '', pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
             
-            // Coba kompresi hanya jika format gambar didukung (jpg, jpeg, png)
-            if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
-                $fileName = time() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
-                $image = @imagecreatefromstring(file_get_contents($file->getRealPath()));
-                
-                if ($image !== false) {
-                    $width = imagesx($image);
-                    $height = imagesy($image);
-                    
-                    // Batasi dimensi maksimum 1920px (Full HD) agar size < 1MB tapi tidak buram
-                    $maxDim = 1920;
-                    if ($width > $maxDim || $height > $maxDim) {
-                        if ($width > $height) {
-                            $newWidth = $maxDim;
-                            $newHeight = intval($height * ($maxDim / $width));
-                        } else {
-                            $newHeight = $maxDim;
-                            $newWidth = intval($width * ($maxDim / $height));
-                        }
-                        $newImage = imagecreatetruecolor($newWidth, $newHeight);
-                        
-                        // Isi background putih untuk mencegah black background pada PNG transparan
-                        $white = imagecolorallocate($newImage, 255, 255, 255);
-                        imagefill($newImage, 0, 0, $white);
-                        
-                        imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                        imagedestroy($image);
-                        $image = $newImage;
-                    }
-                    
-                    // Simpan output JPEG ke dalam buffer memori dengan kualitas 82%
-                    ob_start();
-                    imagejpeg($image, null, 82); 
-                    $imageContent = ob_get_clean();
-                    imagedestroy($image);
-                    
-                    // Upload file hasil kompresi ke Supabase S3
-                    Illuminate\Support\Facades\Storage::disk('s3')->put('pendaftaran/' . $fileName, $imageContent);
-                    $filePath = 'pendaftaran/' . $fileName;
-                } else {
-                    // Fallback jika GD gagal membaca file gambar
-                    $fileName = time() . '_' . $originalName;
-                    $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
-                }
-            } else {
-                // Fallback untuk file tipe lain
-                $fileName = time() . '_' . $originalName;
-                $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
-            }
+            // Simpan langsung tanpa proses GD karena kompresi sudah dilakukan di form HTML
+            $filePath = $file->storeAs('pendaftaran', $fileName, 's3');
         }
 
         // 4. Simpan ke Database

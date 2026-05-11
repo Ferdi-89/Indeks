@@ -619,27 +619,88 @@
             typingTimer = timer;
         });
 
-        // ── Image Preview ──────────────────────────────────────────────────
+        // ── Image Preview & Auto Compress ───────────────────────────────────
         var fileInput = document.getElementById('file-input');
         var previewContainer = document.getElementById('preview-container');
         var previewImage = document.getElementById('image-preview');
         var uploadLabel = document.getElementById('upload-label');
 
-        fileInput.addEventListener('change', function () {
+        fileInput.addEventListener('change', function (e) {
             var file = fileInput.files[0];
             if (!file) return;
 
-            // 1 MB guard
-            if (file.size > 1048576) {
-                alert('Ukuran file maksimal 1 MB.');
+            if (!file.type.match(/image.*/)) {
+                alert('Mohon pilih file gambar (JPG/PNG).');
                 fileInput.value = '';
                 return;
             }
 
-            previewImage.src = URL.createObjectURL(file);
-            previewContainer.classList.remove('hidden');
-            previewContainer.classList.add('flex');
-            uploadLabel.textContent = 'Klik untuk mengganti gambar';
+            uploadLabel.textContent = 'Memproses dan mengkompres gambar...';
+            
+            var reader = new FileReader();
+            reader.onload = function (readerEvent) {
+                var image = new Image();
+                image.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    var max_size = 1920;
+                    var width = image.width;
+                    var height = image.height;
+
+                    if (width > height) {
+                        if (width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        }
+                    } else {
+                        if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext('2d');
+                    
+                    // Latar putih mencegah background hitam pada PNG transparan
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.drawImage(image, 0, 0, width, height);
+
+                    // Kompresi rekursif untuk memastikan ukuran < 1MB
+                    var quality = 0.9;
+                    var compressImage = function() {
+                        canvas.toBlob(function (blob) {
+                            if (blob.size > 1048576 && quality > 0.1) {
+                                // Kurangi kualitas jika masih > 1MB
+                                quality -= 0.1;
+                                compressImage();
+                            } else {
+                                // Selesai
+                                var compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+
+                                // Masukkan file terkompresi kembali ke input
+                                var dataTransfer = new DataTransfer();
+                                dataTransfer.items.add(compressedFile);
+                                fileInput.files = dataTransfer.files;
+
+                                previewImage.src = URL.createObjectURL(compressedFile);
+                                previewContainer.classList.remove('hidden');
+                                previewContainer.classList.add('flex');
+                                uploadLabel.textContent = 'Klik untuk mengganti gambar';
+                            }
+                        }, 'image/jpeg', quality);
+                    };
+                    
+                    compressImage();
+                };
+                image.src = readerEvent.target.result;
+            };
+            reader.readAsDataURL(file);
         });
 
         // ── Submit loading state ───────────────────────────────────────────
