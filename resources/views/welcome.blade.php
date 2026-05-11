@@ -59,16 +59,37 @@
 
         <style>
             @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
             }
+
             @keyframes scaleIn {
-                from { opacity: 0; transform: scale(0.85) translateY(20px); }
-                to { opacity: 1; transform: scale(1) translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: scale(0.85) translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
             }
+
             @keyframes popIn {
-                from { opacity: 0; transform: scale(0); }
-                to { opacity: 1; transform: scale(1); }
+                from {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
             }
         </style>
     @endif
@@ -291,230 +312,84 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto lg:items-start">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto lg:items-stretch">
+                    @foreach($pakets as $index => $paket)
+                        @php
+                            $isPopular = ($index == 1);
+                        @endphp
+                        <div id="card-paket-{{ $paket->id_paket }}"
+                            class="card transition-colors duration-200 {{ $isPopular ? 'bg-primary text-primary-content border border-primary/10 relative lg:-mt-4 lg:mb-4' : 'bg-base-100 border border-base-200 hover:border-primary/100' }}">
 
-                    {{-- Paket Dasar (Ekonomi) --}}
-                    <div id="card-paket-ekonomi"
-                        class="card bg-base-100 border border-base-200 hover:border-primary/100 transition-colors duration-200">
-                        <div class="card-body text-center gap-4 p-6">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-500" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">{{ $ekonomi['title_paket']  }}</h3>
-                                <p class="text-base-content/50 text-sm mt-1">Sempurna untuk rumah kecil</p>
-                            </div>
-                            <div class="flex items-end justify-center gap-1">
-                                <span
-                                    class="text-4xl font-extrabold text-primary">{{ $ekonomi['harga_paket'] / 1000}}K</span>
-                                <span class="text-base-content/50 mb-1 text-sm">/bulan</span>
-                            </div>
-                            <div class="divider my-0"></div>
-                            <ul class="text-left space-y-2.5 text-sm">
-                                <li class="flex items-center gap-2.5">
+                            @if($isPopular)
+                                <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
                                     <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
+                                        class="badge bg-warning text-warning-content font-bold px-4 py-3 rounded-full border border-warning/30 text-xs tracking-wide">
+                                        TERPOPULER
                                     </div>
-                                    <span>Internet Cepat & Stabil</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>No FUP (Fair Usage Policy)</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>Unlimited Quota</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-primary/30 bg-primary/10 flex items-center justify-center shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-primary" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <span class="font-semibold text-primary">Untuk 3 Perangkat</span>
-                                </li>
-                            </ul>
-                            <div class="card-actions justify-center mt-auto">
-                                <a href="/daftar?paket=ekonomi" id="btn-pilih-ekonomi"
-                                    class="btn btn-outline btn-primary rounded-xl w-full font-bold">Pilih Paket</a>
+                                </div>
+                            @endif
+
+                            <div class="card-body text-center gap-4 p-6 {{ $isPopular ? 'pt-10' : '' }}">
+                                <div
+                                    class="w-12 h-12 rounded-xl {{ $isPopular ? 'bg-white/15 border border-white/20' : 'bg-blue-50 border border-blue-100' }} flex items-center justify-center mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-6 h-6 {{ $isPopular ? 'text-white' : 'text-blue-500' }}" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold">{{ $paket->title_paket }}</h3>
+                                </div>
+                                <div class="flex items-end justify-center gap-1">
+                                    <span
+                                        class="text-4xl font-extrabold {{ $isPopular ? '' : 'text-primary' }}">{{ number_format($paket->harga_paket / 1000, 0) }}K</span>
+                                    <span
+                                        class="mb-1 text-sm {{ $isPopular ? 'text-white/70' : 'text-base-content/50' }}">/bulan</span>
+                                </div>
+                                <div class="{{ $isPopular ? 'border-t border-white/20' : 'divider' }} my-0"></div>
+                                <ul class="text-left space-y-2.5 text-sm">
+                                    <li class="flex items-center gap-2.5">
+                                        <div
+                                            class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 {{ $isPopular ? 'bg-white/15 border border-white/25' : 'border border-success/40 bg-success/10' }}">
+                                            <svg class="w-3 h-3 {{ $isPopular ? 'text-white' : 'text-success' }}"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span>Internet Cepat & Stabil</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <div
+                                            class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 {{ $isPopular ? 'bg-white/15 border border-white/25' : 'border border-success/40 bg-success/10' }}">
+                                            <svg class="w-3 h-3 {{ $isPopular ? 'text-white' : 'text-success' }}"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span>No FUP (Fair Usage Policy)</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <div
+                                            class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 {{ $isPopular ? 'bg-white/15 border border-white/25' : 'border border-success/40 bg-success/10' }}">
+                                            <svg class="w-3 h-3 {{ $isPopular ? 'text-white' : 'text-success' }}"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span>Unlimited Quota</span>
+                                    </li>
+                                </ul>
+                                <div class="card-actions justify-center mt-auto pt-4">
+                                    <a href="/daftar?paket={{ $paket->id_paket }}"
+                                        class="btn rounded-xl w-full font-bold {{ $isPopular ? 'bg-white text-primary hover:bg-base-100 border border-white/60' : 'btn-outline btn-primary' }}">Pilih
+                                        Paket</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    {{-- Paket Keluarga (POPULAR) --}}
-                    <div id="card-paket-keluarga"
-                        class="card bg-primary text-primary-content border border-primary/10    0 relative lg:-mt-4 lg:mb-4">
-                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                            <div
-                                class="badge bg-warning text-warning-content font-bold px-4 py-3 rounded-full border border-warning/30 text-xs tracking-wide">
-                                TERPOPULER
-                            </div>
-                        </div>
-                        <div class="card-body text-center gap-4 p-6 pt-10">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">{{ $famili['title_paket'] }}</h3>
-                                <p class="text-white/70 text-sm mt-1">Ideal untuk keluarga</p>
-                            </div>
-                            <div class="flex items-end justify-center gap-1">
-                                <span class="text-4xl font-extrabold">{{ $famili['harga_paket'] / 1000 }}K</span>
-                                <span class="text-white/70 mb-1 text-sm">/bulan</span>
-                            </div>
-                            <div class="border-t border-white/20 my-0"></div>
-                            <ul class="text-left space-y-2.5 text-sm">
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>Internet Cepat & Stabil</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>No FUP (Fair Usage Policy)</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>Unlimited Quota</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full bg-white/25 border border-white/30 flex items-center justify-center shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-white" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <span class="font-bold">Untuk 6 Perangkat</span>
-                                </li>
-                            </ul>
-                            <div class="card-actions justify-center mt-auto">
-                                <a href="/daftar?paket=keluarga" id="btn-pilih-keluarga"
-                                    class="btn bg-white text-primary hover:bg-base-100 rounded-xl w-full font-bold border border-white/60">Pilih
-                                    Paket</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Paket Premium --}}
-                    <div id="card-paket-premium"
-                        class="card bg-base-100 border border-base-300 hover:border-primary/40 transition-colors duration-200">
-                        <div class="card-body text-center gap-4 p-6">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3l14 9-14 9V3z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">{{ $premium['title_paket'] }}</h3>
-                                <p class="text-base-content/50 text-sm mt-1">Untuk seluruh anggota keluarga</p>
-                            </div>
-                            <div class="flex items-end justify-center gap-1">
-                                <span
-                                    class="text-4xl font-extrabold text-primary">{{ $premium['harga_paket'] / 1000 }}K</span>
-                                <span class="text-base-content/50 mb-1 text-sm">/bulan</span>
-                            </div>
-                            <div class="divider my-0"></div>
-                            <ul class="text-left space-y-2.5 text-sm">
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>Internet Cepat & Stabil</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>No FUP (Fair Usage Policy)</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-success/40 bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span>Unlimited Quota</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <div
-                                        class="w-5 h-5 rounded-full border border-primary/30 bg-primary/10 flex items-center justify-center shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-primary" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <span class="font-semibold text-primary">Untuk 8 Perangkat</span>
-                                </li>
-
-                            </ul>
-                            <div class="card-actions justify-center mt-auto">
-                                <a href="/daftar?paket=premium" id="btn-pilih-premium"
-                                    class="btn btn-outline btn-primary rounded-xl w-full font-bold">Pilih Paket</a>
-                            </div>
-                        </div>
-                    </div>
-
+                    @endforeach
                 </div>
 
 

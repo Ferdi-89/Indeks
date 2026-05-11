@@ -14,6 +14,7 @@ class paket extends Model
         'id_paket',
         'title_paket',
         'harga_paket',
+        'is_hidden',
         'created_at',
         'updated_at'
     ];

@@ -23,23 +23,18 @@ use Illuminate\Support\Str;
 
 // ─── Landing Page ───────────────────────────────────────────────────────
 Route::get('/', function () {
-
     $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
-    $pakets = paket::all();
-
-    $ekonomi = $pakets->where('id_paket', 'p001')->first();
-    $famili  = $pakets->where('id_paket', 'p002')->first();
-    $premium = $pakets->where('id_paket', 'p003')->first();
+    $pakets = paket::where('is_hidden', false)->get();
 
     if (empty($pengumuman)) {
         $pengumuman = ['Selamat datang dan Pilihlah paket anda :> '];
     }
-    return view('welcome', compact('pengumuman', 'famili', 'ekonomi', 'premium'));
+    return view('welcome', compact('pengumuman', 'pakets'));
 });
 
 // ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
 Route::get('/daftar', function () {
-    $pakets = paket::all();
+    $pakets = paket::where('is_hidden', false)->get();
     return view('pendaftaran', compact('pakets'));
 })->name('pendaftaran');
 
@@ -202,6 +197,18 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         return redirect()->back()->with('success', 'Pendaftaran dihapus.');
     })->name('pendaftaran.destroy');
 
+    Route::put('/pendaftaran/{id}', function(Illuminate\Http\Request $request, $id) {
+        $data = $request->validate([
+            'nama' => 'required|string|max:50',
+            'alamat' => 'required|string|max:100',
+            'email' => 'required|email|max:100',
+            'nomor_tlpn' => 'required|string|max:20',
+            'id_paket' => 'required|string|max:5'
+        ]);
+        App\Models\pendaftaran::findOrFail($id)->update($data);
+        return redirect()->back()->with('success', 'Data pendaftaran diperbarui.');
+    })->name('pendaftaran.update');
+
     // --- Paket ---
     Route::post('/paket', function(Illuminate\Http\Request $request) {
         $data = $request->validate([
@@ -223,9 +230,22 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     })->name('paket.update');
 
     Route::delete('/paket/{id}', function($id) {
-        App\Models\paket::where('id_paket', $id)->delete();
-        return redirect()->back()->with('success', 'Paket dihapus.');
+        try {
+            App\Models\paket::where('id_paket', $id)->delete();
+            return redirect()->back()->with('success', 'Paket dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '23503') {
+                return redirect()->back()->with('error', 'Gagal menghapus paket. Paket ini masih digunakan oleh data pendaftaran.');
+            }
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     })->name('paket.destroy');
+
+    Route::patch('/paket/{id}/toggle-hide', function($id) {
+        $paket = App\Models\paket::findOrFail($id);
+        $paket->update(['is_hidden' => !$paket->is_hidden]);
+        return redirect()->back()->with('success', 'Status visibilitas paket diperbarui.');
+    })->name('paket.toggle_hide');
 
     // --- Pengumuman ---
     Route::post('/pengumuman', function(Illuminate\Http\Request $request) {

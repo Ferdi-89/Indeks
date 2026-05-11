@@ -63,6 +63,10 @@
                             )" class="btn btn-sm btn-square btn-ghost text-info" title="Detail">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
+                            <!-- Edit Button -->
+                            <button onclick="document.getElementById('modal_edit_{{ $item->id_pendaftaran }}').showModal()" class="btn btn-sm btn-square btn-ghost text-warning" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
                             <!-- Delete Button -->
                             <button onclick="document.getElementById('modal_hapus_{{ $item->id_pendaftaran }}').showModal()" class="btn btn-sm btn-square btn-ghost text-error" title="Hapus">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -162,6 +166,58 @@
         <button type="submit" class="btn btn-error">Hapus</button>
       </form>
     </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<!-- Modal Edit -->
+<dialog id="modal_edit_{{ $item->id_pendaftaran }}" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Edit Pendaftaran: {{ $item->id_pendaftaran }}</h3>
+    
+    <form action="{{ route('admin.pendaftaran.update', $item->id_pendaftaran) }}" method="POST" class="space-y-4">
+        @csrf
+        @method('PUT')
+        
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text">Nama Lengkap</span></label>
+            <input type="text" name="nama" value="{{ $item->nama }}" class="input input-bordered w-full" required />
+        </div>
+        
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text">Email</span></label>
+            <input type="email" name="email" value="{{ $item->email }}" class="input input-bordered w-full" required />
+        </div>
+        
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text">Telepon</span></label>
+            <input type="text" name="nomor_tlpn" value="{{ $item->nomor_tlpn }}" class="input input-bordered w-full" required />
+        </div>
+        
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text">Paket</span></label>
+            <select name="id_paket" class="select select-bordered w-full" required>
+                @foreach($paket as $p)
+                    <option value="{{ $p->id_paket }}" {{ $item->id_paket == $p->id_paket ? 'selected' : '' }}>{{ $p->id_paket }} - {{ $p->title_paket }}</option>
+                @endforeach
+            </select>
+        </div>
+        
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text">Alamat</span></label>
+            <textarea name="alamat" class="textarea textarea-bordered h-24" required>{{ $item->alamat }}</textarea>
+        </div>
+        
+        <div class="modal-action">
+            <button type="button" onclick="document.getElementById('modal_edit_{{ $item->id_pendaftaran }}').close()" class="btn">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+    </form>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
