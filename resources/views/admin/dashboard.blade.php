@@ -98,7 +98,7 @@
 
 <!-- Quick Actions -->
 <h3 class="font-bold text-lg mb-4 text-base-content">Aksi Cepat</h3>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <a href="{{ route('admin.paket') }}" class="card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition group cursor-pointer">
         <div class="card-body">
             <div class="flex items-center justify-between mb-2">
@@ -127,6 +127,16 @@
             </div>
             <h3 class="text-xl font-bold mb-1">Promosi</h3>
             <span class="text-primary text-sm font-medium flex items-center gap-1 group-hover:underline">Buka halaman <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </div>
+    </a>
+    <a href="#server" data-tab="server" class="admin-nav-link card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition group cursor-pointer">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm text-base-content/60 font-medium">Sistem</h4>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-base-content/40 group-hover:text-error transition"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-1">Kontrol Server</h3>
+            <span class="text-error text-sm font-medium flex items-center gap-1 group-hover:underline">Buka halaman <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
         </div>
     </a>
 </div>

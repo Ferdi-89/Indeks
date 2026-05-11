@@ -272,6 +272,29 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         ? response()->json(['success' => false, 'errors' => $errors], 422)
         : redirect()->back()->withErrors($errors);
 
+    // --- Kontrol Server ---
+    Route::post('/server/maintenance', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        Illuminate\Support\Facades\Artisan::call('down', [
+            '--secret' => 'rnet-admin',
+            '--render' => 'errors.503'
+        ]);
+        return $jsonOrRedirect($request, 'Mode maintenance diaktifkan. Anda dapat bypass menggunakan URL /rnet-admin');
+    })->name('server.maintenance');
+
+    Route::post('/server/up', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        Illuminate\Support\Facades\Artisan::call('up');
+        return $jsonOrRedirect($request, 'Server kembali online untuk publik.');
+    })->name('server.up');
+
+    Route::post('/server/shutdown', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        // Matikan serve secara asinkron tergantung OS
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            pclose(popen('start /B taskkill /F /IM php.exe', 'r'));
+        } else {
+            exec('pkill -f "php artisan serve" > /dev/null 2>&1 &');
+        }
+        return $jsonOrRedirect($request, 'Perintah shutdown telah dikirim. Server akan mati dalam beberapa detik.');
+    })->name('server.shutdown');
     // --- Profil Admin: Update Info ---
     Route::put('/profil', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
         $data = $request->validate([

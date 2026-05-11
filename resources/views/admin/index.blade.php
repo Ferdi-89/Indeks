@@ -49,6 +49,11 @@
         <div id="monitoring-content"></div>
     </div>
 
+    <!-- Tab Server -->
+    <div class="admin-tab-panel" id="panel-server" style="display:none;">
+        @include('admin.partials.server')
+    </div>
+
 </div>
 @endsection
 
@@ -92,7 +97,7 @@
     // ═══════════════════════════════════════════
     // Admin SPA Tab Controller (Vanilla JS)
     // ═══════════════════════════════════════════
-    const VALID_TABS = ['dashboard', 'pendaftaran', 'paket', 'pengumuman', 'promosi', 'profil', 'pengaturan', 'monitoring'];
+    const VALID_TABS = ['dashboard', 'pendaftaran', 'paket', 'pengumuman', 'promosi', 'profil', 'pengaturan', 'monitoring', 'server'];
     const TAB_TITLES = {
         dashboard: 'Dasbor',
         pendaftaran: 'Pendaftaran',
@@ -101,7 +106,8 @@
         promosi: 'Promosi',
         profil: 'Profil Admin',
         pengaturan: 'Pengaturan Perusahaan',
-        monitoring: 'Monitoring Sistem'
+        monitoring: 'Monitoring Sistem',
+        server: 'Kontrol Server'
     };
 
     function switchTab(tabName) {
