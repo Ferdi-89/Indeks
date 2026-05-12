@@ -339,7 +339,7 @@
       document.getElementById('inputAlamat').value = item.alamat;
       document.getElementById('inputLat').value = item.lat;
       document.getElementById('inputLong').value = item.long;
-      document.getElementById('inputDate').value = '2026-04-29'; // Format adjustment if needed
+      document.getElementById('inputDate').value = '2026-04-29';
       document.getElementById('inputStatus').value = item.status;
       document.getElementById('inputPhoto').value = item.photo;
       openModal('formModal');
