@@ -35,11 +35,11 @@
                         <div class="text-xs text-base-content/70">{{ $item->email }}</div>
                     </td>
                     <td class="max-w-[200px] truncate" title="{{ $item->alamat }}">{{ $item->alamat }}</td>
-                    <td><span class="badge badge-info badge-sm">{{ $item->id_paket }}</span></td>
+                    <td><span class="px-2 py-1 bg-info/10 text-info font-bold rounded-md border border-info/20 text-xs">{{ $item->id_paket }}</span></td>
                     <td>
                         <select
                             data-id="{{ $item->id_pendaftaran }}"
-                            class="select select-bordered select-sm w-full max-w-xs status-select"
+                            class="select select-bordered select-sm w-full max-w-xs status-select rounded-md font-semibold bg-base-50/50"
                             onchange="updateStatus(this)"
                         >
                             <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -89,17 +89,49 @@
     </div>
 </div>
 
-<!-- Modal Tambah (Placeholder for future functionality) -->
+<!-- Modal Tambah -->
 <dialog id="modal_tambah_pendaftaran" class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">Tambah Pendaftaran</h3>
-    <p class="py-4">Fitur penambahan admin belum diimplementasikan backend-nya.</p>
-    <div class="modal-action">
-      <form method="dialog">
-        <button class="btn">Tutup</button>
-      </form>
-    </div>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Tambah Pendaftaran Baru</h3>
+    <form action="{{ route('admin.pendaftaran.store') }}" method="POST" class="space-y-4">
+        @csrf
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Nama Lengkap</span></label>
+            <input type="text" name="nama" class="input input-bordered w-full" placeholder="Masukkan nama lengkap" required />
+        </div>
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Email</span></label>
+            <input type="email" name="email" class="input input-bordered w-full" placeholder="Masukkan email aktif" required />
+        </div>
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">No. Telepon / WhatsApp</span></label>
+            <input type="text" name="nomor_tlpn" class="input input-bordered w-full" placeholder="Contoh: 08123456789" required />
+        </div>
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Pilih Paket Layanan</span></label>
+            <select name="id_paket" class="select select-bordered w-full" required>
+                <option value="" disabled selected>-- Pilih Paket --</option>
+                @foreach($paket as $p)
+                    <option value="{{ $p->id_paket }}">{{ $p->id_paket }} - {{ $p->title_paket }} (Rp {{ number_format($p->harga_paket, 0, ',', '.') }})</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Alamat Pemasangan</span></label>
+            <textarea name="alamat" class="textarea textarea-bordered h-24" placeholder="Masukkan alamat lengkap..." required></textarea>
+        </div>
+        <div class="modal-action">
+            <button type="button" onclick="document.getElementById('modal_tambah_pendaftaran').close()" class="btn btn-ghost">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Pendaftaran</button>
+        </div>
+    </form>
   </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
 </dialog>
 
 @foreach($pendaftaran as $item)
@@ -125,8 +157,8 @@
         <div><span class="text-base-content/70 text-sm block">Nama</span><span class="font-medium">{{ $item->nama }}</span></div>
         <div><span class="text-base-content/70 text-sm block">Email</span><span class="font-medium">{{ $item->email }}</span></div>
         <div><span class="text-base-content/70 text-sm block">Telepon</span><span class="font-medium">{{ $item->nomor_tlpn }}</span></div>
-        <div><span class="text-base-content/70 text-sm block">ID Paket</span><span class="badge badge-info">{{ $item->id_paket }}</span></div>
-        <div><span class="text-base-content/70 text-sm block">Status</span><span id="detail_status_{{ $item->id_pendaftaran }}" class="badge {{ $item->status == 'pending' ? 'badge-warning' : ($item->status == 'validated' ? 'badge-info' : ($item->status == 'rejected' ? 'badge-error' : ($item->status == 'setup' ? 'badge-accent' : ($item->status == 'active' || $item->status == 'aktif' ? 'badge-success' : 'badge-ghost')))) }}">{{ ucfirst($item->status) }}</span></div>
+        <div><span class="text-base-content/70 text-sm block mb-1">ID Paket</span><span class="px-2 py-1 bg-info/10 text-info font-bold rounded-md border border-info/20 text-xs">{{ $item->id_paket }}</span></div>
+        <div><span class="text-base-content/70 text-sm block mb-1">Status</span><span id="detail_status_{{ $item->id_pendaftaran }}" class="px-2 py-1 font-bold rounded-md border text-xs {{ $item->status == 'pending' ? 'bg-warning/10 text-warning border-warning/20' : ($item->status == 'validated' ? 'bg-info/10 text-info border-info/20' : ($item->status == 'rejected' ? 'bg-error/10 text-error border-error/20' : ($item->status == 'setup' ? 'bg-accent/10 text-accent border-accent/20' : ($item->status == 'active' || $item->status == 'aktif' ? 'bg-success/10 text-success border-success/20' : 'bg-base-200 text-base-content/70 border-base-300')))) }}">{{ ucfirst($item->status) }}</span></div>
         <div><span class="text-base-content/70 text-sm block">Tanggal Daftar</span><span class="font-medium">{{ $item->created_at->format('d M Y H:i') }}</span></div>
         
         <div class="md:col-span-2"><span class="text-base-content/70 text-sm block">Alamat</span><span class="font-medium">{{ $item->alamat }}</span></div>
@@ -279,15 +311,15 @@
 
             // Sync badge in detail modal
             const BADGE_MAP = {
-                pending: 'badge-warning',
-                validated: 'badge-info',
-                rejected: 'badge-error',
-                setup: 'badge-accent',
-                active: 'badge-success'
+                pending: 'bg-warning/10 text-warning border-warning/20',
+                validated: 'bg-info/10 text-info border-info/20',
+                rejected: 'bg-error/10 text-error border-error/20',
+                setup: 'bg-accent/10 text-accent border-accent/20',
+                active: 'bg-success/10 text-success border-success/20'
             };
             const badge = document.getElementById('detail_status_' + id);
             if (badge) {
-                badge.className = 'badge ' + (BADGE_MAP[newStatus] || 'badge-ghost');
+                badge.className = 'px-2 py-1 font-bold rounded-md border text-xs ' + (BADGE_MAP[newStatus] || 'bg-base-200 text-base-content/70 border-base-300');
                 badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
             }
 

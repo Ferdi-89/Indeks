@@ -12,38 +12,38 @@
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">ID Promosi</span></label>
-                    <input type="text" name="id_promosi" class="input input-bordered" placeholder="Contoh: PROM-01" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">ID Promosi</span></label>
+                    <input type="text" name="id_promosi" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Contoh: PROM-01" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tema</span></label>
-                    <input type="text" name="tema" class="input input-bordered" placeholder="Contoh: Ramadhan" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tema</span></label>
+                    <input type="text" name="tema" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Contoh: Ramadhan" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Diskon (%)</span></label>
-                    <input type="number" name="value_promosi" class="input input-bordered" placeholder="30" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Diskon (%)</span></label>
+                    <input type="number" name="value_promosi" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="30" required />
                 </div>
             </div>
 
-            <div class="form-control">
-                <label class="label"><span class="label-text">Deskripsi Promosi</span></label>
-                <textarea name="text_promosi" class="textarea textarea-bordered h-24" placeholder="Masukkan isi promosi..." required></textarea>
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text font-medium">Deskripsi Promosi</span></label>
+                <textarea name="text_promosi" class="textarea textarea-bordered h-24 w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Masukkan isi promosi..." required></textarea>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Mulai</span></label>
-                    <input type="date" name="valid_start" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Mulai</span></label>
+                    <input type="date" name="valid_start" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Berakhir</span></label>
-                    <input type="date" name="valid_end" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Berakhir</span></label>
+                    <input type="date" name="valid_end" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" required />
                 </div>
             </div>
             
-            <div class="mt-4 flex gap-2">
-                <button type="submit" class="btn btn-primary">Publikasikan</button>
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="btn btn-primary px-8">Publikasikan</button>
             </div>
         </form>
     </div>
@@ -106,29 +106,29 @@
             @method('PUT')
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control text-base-content">
-                    <label class="label"><span class="label-text">Tema</span></label>
-                    <input type="text" name="tema" value="{{ $item->tema }}" class="input input-bordered" required />
+                <div class="form-control w-full text-base-content">
+                    <label class="label"><span class="label-text font-medium">Tema</span></label>
+                    <input type="text" name="tema" value="{{ $item->tema }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
                 </div>
-                <div class="form-control text-base-content">
-                    <label class="label"><span class="label-text">Diskon (%)</span></label>
-                    <input type="number" name="value_promosi" value="{{ $item->value_promosi }}" class="input input-bordered" required />
+                <div class="form-control w-full text-base-content">
+                    <label class="label"><span class="label-text font-medium">Diskon (%)</span></label>
+                    <input type="number" name="value_promosi" value="{{ $item->value_promosi }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
                 </div>
             </div>
 
-            <div class="form-control text-base-content">
-                <label class="label"><span class="label-text">Deskripsi Promosi</span></label>
-                <textarea name="text_promosi" class="textarea textarea-bordered h-24" required>{{ $item->text_promosi }}</textarea>
+            <div class="form-control w-full text-base-content">
+                <label class="label"><span class="label-text font-medium">Deskripsi Promosi</span></label>
+                <textarea name="text_promosi" class="textarea textarea-bordered h-24 w-full bg-base-50/50 focus:bg-base-100" required>{{ $item->text_promosi }}</textarea>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base-content">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Mulai</span></label>
-                    <input type="date" name="valid_start" value="{{ $item->valid_start }}" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Mulai</span></label>
+                    <input type="date" name="valid_start" value="{{ $item->valid_start }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Berakhir</span></label>
-                    <input type="date" name="valid_end" value="{{ $item->valid_end }}" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Berakhir</span></label>
+                    <input type="date" name="valid_end" value="{{ $item->valid_end }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
                 </div>
             </div>
             
@@ -167,12 +167,14 @@
       </form>
     </dialog>
     @empty
-    <div class="col-span-full py-12 text-center text-base-content/50 bg-base-100 rounded-xl border border-dashed border-base-300">
-        <div class="flex justify-center mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-20"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+    <div class="col-span-full py-16 text-center text-base-content/50 bg-base-100 rounded-2xl border border-dashed border-base-300">
+        <div class="flex justify-center mb-4">
+            <div class="p-4 bg-base-200 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7"/></svg>
+            </div>
         </div>
-        <p class="text-lg font-medium">Belum ada promosi aktif.</p>
-        <p class="text-sm">Gunakan form di atas untuk membuat promosi baru.</p>
+        <p class="text-lg font-semibold text-base-content/70">Belum Ada Promosi Aktif</p>
+        <p class="text-sm mt-1">Buat penawaran spesial pertama Anda melalui formulir di atas.</p>
     </div>
     @endforelse
 </div>

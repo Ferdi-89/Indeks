@@ -12,34 +12,34 @@
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">ID Pengumuman</span></label>
-                    <input type="text" name="id_pengumuman" class="input input-bordered" placeholder="Contoh: PENG-01" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">ID Pengumuman</span></label>
+                    <input type="text" name="id_pengumuman" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Contoh: PENG-01" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tema</span></label>
-                    <input type="text" name="tema" class="input input-bordered" placeholder="Contoh: Maintenance / Promo" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tema</span></label>
+                    <input type="text" name="tema" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Contoh: Maintenance / Promo" required />
                 </div>
             </div>
 
-            <div class="form-control">
-                <label class="label"><span class="label-text">Isi Pengumuman</span></label>
-                <textarea name="text_pengumuman" class="textarea textarea-bordered h-24" placeholder="Masukkan isi pengumuman..." required></textarea>
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text font-medium">Isi Pengumuman</span></label>
+                <textarea name="text_pengumuman" class="textarea textarea-bordered h-24 w-full bg-base-50/50 focus:bg-base-100 transition-colors" placeholder="Masukkan isi pengumuman..." required></textarea>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Mulai</span></label>
-                    <input type="date" name="valid_start" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Mulai</span></label>
+                    <input type="date" name="valid_start" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" required />
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tanggal Berakhir</span></label>
-                    <input type="date" name="valid_end" class="input input-bordered" required />
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Tanggal Berakhir</span></label>
+                    <input type="date" name="valid_end" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100 transition-colors" required />
                 </div>
             </div>
             
-            <div class="mt-4 flex gap-2">
-                <button type="submit" class="btn btn-primary">Publikasikan</button>
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="btn btn-primary px-8">Publikasikan</button>
             </div>
         </form>
     </div>
@@ -75,8 +75,14 @@
         </div>
     </div>
     @empty
-    <div class="py-8 text-center text-base-content/50 bg-base-100 rounded-xl border border-base-200">
-        Belum ada pengumuman.
+    <div class="py-16 text-center text-base-content/50 bg-base-100 rounded-2xl border border-dashed border-base-300">
+        <div class="flex justify-center mb-4">
+            <div class="p-4 bg-base-200 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+        </div>
+        <p class="text-lg font-semibold text-base-content/70">Belum Ada Pengumuman</p>
+        <p class="text-sm mt-1">Gunakan formulir di atas untuk membuat pengumuman pertama Anda.</p>
     </div>
     @endforelse
 </div>
@@ -90,24 +96,24 @@
         @csrf
         @method('PUT')
         
-        <div class="form-control">
-            <label class="label"><span class="label-text">Tema</span></label>
-            <input type="text" name="tema" value="{{ $item->tema }}" class="input input-bordered" required />
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Tema</span></label>
+            <input type="text" name="tema" value="{{ $item->tema }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
         </div>
 
-        <div class="form-control">
-            <label class="label"><span class="label-text">Isi Pengumuman</span></label>
-            <textarea name="text_pengumuman" class="textarea textarea-bordered h-24" required>{{ $item->text_pengumuman }}</textarea>
+        <div class="form-control w-full">
+            <label class="label"><span class="label-text font-medium">Isi Pengumuman</span></label>
+            <textarea name="text_pengumuman" class="textarea textarea-bordered h-24 w-full bg-base-50/50 focus:bg-base-100" required>{{ $item->text_pengumuman }}</textarea>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="form-control">
-                <label class="label"><span class="label-text">Tanggal Mulai</span></label>
-                <input type="date" name="valid_start" value="{{ $item->valid_start }}" class="input input-bordered" required />
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text font-medium">Tanggal Mulai</span></label>
+                <input type="date" name="valid_start" value="{{ $item->valid_start }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
             </div>
-            <div class="form-control">
-                <label class="label"><span class="label-text">Tanggal Berakhir</span></label>
-                <input type="date" name="valid_end" value="{{ $item->valid_end }}" class="input input-bordered" required />
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text font-medium">Tanggal Berakhir</span></label>
+                <input type="date" name="valid_end" value="{{ $item->valid_end }}" class="input input-bordered w-full bg-base-50/50 focus:bg-base-100" required />
             </div>
         </div>
         

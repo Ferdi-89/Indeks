@@ -128,6 +128,35 @@ Route::post('/logout', function (Illuminate\Http\Request $request) {
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // --- Pendaftaran ---
+    Route::post('/pendaftaran', function(Illuminate\Http\Request $request) {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:50',
+            'alamat' => 'required|string|max:100',
+            'email' => 'required|email|max:100',
+            'nomor_tlpn' => 'required|string|max:20',
+            'id_paket' => 'required|string|max:5'
+        ]);
+
+        do {
+            $idPendaftaran = strtoupper(Illuminate\Support\Str::random(5));
+        } while (App\Models\pendaftaran::where('id_pendaftaran', $idPendaftaran)->exists());
+
+        App\Models\pendaftaran::create([
+            'id_pendaftaran' => $idPendaftaran,
+            'nama' => $validated['nama'],
+            'alamat' => $validated['alamat'],
+            'email' => $validated['email'],
+            'nomor_tlpn' => $validated['nomor_tlpn'],
+            'id_paket' => $validated['id_paket'],
+            'status' => 'pending',
+            'latitude' => 0,
+            'longtitude' => 0,
+            'path_gambar' => null
+        ]);
+
+        return redirect()->back()->with('success', 'Pendaftaran baru berhasil ditambahkan.');
+    })->name('pendaftaran.store');
+
     Route::patch('/pendaftaran/{id}/status', function (Illuminate\Http\Request $request, $id) {
         $validated = $request->validate([
             'status' => 'required|in:pending,validated,rejected,setup,active,aktif'

@@ -121,11 +121,11 @@
         document.querySelectorAll('.admin-nav-link').forEach(link => {
             const linkTab = link.getAttribute('data-tab');
             if (linkTab === tabName) {
-                link.classList.add('active', 'bg-white/20');
-                link.classList.remove('hover:bg-blue-800');
+                link.classList.add('active', 'bg-primary/10', 'text-primary', 'font-semibold');
+                link.classList.remove('hover:bg-base-200');
             } else {
-                link.classList.remove('active', 'bg-white/20');
-                link.classList.add('hover:bg-blue-800');
+                link.classList.remove('active', 'bg-primary/10', 'text-primary', 'font-semibold');
+                link.classList.add('hover:bg-base-200');
             }
         });
 

@@ -127,12 +127,12 @@
     <div class="drawer-side z-40">
         <label for="admin-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
 
-        <ul class="menu p-4 w-72 min-h-full bg-[#1e3a8a] text-white">
+        <ul class="menu p-4 w-72 min-h-full bg-base-100 border-r border-base-200 text-base-content">
             <!-- Brand -->
             <li class="mb-4 pointer-events-none">
-                <h1 class="text-xl md:text-2xl font-bold flex items-center gap-3 text-white px-2 py-4 border-b border-blue-800">
+                <h1 class="text-xl md:text-2xl font-black flex items-center gap-3 text-primary px-2 py-4 border-b border-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 20h.01" />
                         <path d="M2 8.82a15 15 0 0 1 20 0" />
                         <path d="M5 12.859a10 10 0 0 1 14 0" />
@@ -144,7 +144,7 @@
 
             <!-- Navigation -->
             <li class="mb-1">
-                <a href="#dashboard" data-tab="dashboard" class="admin-nav-link active bg-white/20">
+                <a href="#dashboard" data-tab="dashboard" class="admin-nav-link active bg-primary/10 text-primary font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -154,7 +154,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#pendaftaran" data-tab="pendaftaran" class="admin-nav-link hover:bg-blue-800">
+                <a href="#pendaftaran" data-tab="pendaftaran" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -166,7 +166,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#paket" data-tab="paket" class="admin-nav-link hover:bg-blue-800">
+                <a href="#paket" data-tab="paket" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
@@ -177,7 +177,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#pengumuman" data-tab="pengumuman" class="admin-nav-link hover:bg-blue-800">
+                <a href="#pengumuman" data-tab="pengumuman" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
@@ -188,7 +188,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#promosi" data-tab="promosi" class="admin-nav-link hover:bg-blue-800">
+                <a href="#promosi" data-tab="promosi" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
@@ -200,10 +200,10 @@
             </li>
 
             <li class="mt-4 mb-2 pointer-events-none">
-                <span class="text-xs uppercase tracking-wider text-blue-300/60 px-2">Akun</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-base-content/40 px-2">Akun</span>
             </li>
             <li class="mb-1">
-                <a href="#profil" data-tab="profil" class="admin-nav-link hover:bg-blue-800">
+                <a href="#profil" data-tab="profil" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -213,7 +213,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#pengaturan" data-tab="pengaturan" class="admin-nav-link hover:bg-blue-800">
+                <a href="#pengaturan" data-tab="pengaturan" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
@@ -224,10 +224,10 @@
             </li>
 
             <li class="mt-4 mb-2 pointer-events-none">
-                <span class="text-xs uppercase tracking-wider text-blue-300/60 px-2">Sistem</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-base-content/40 px-2">Sistem</span>
             </li>
             <li class="mb-1">
-                <a href="#monitoring" data-tab="monitoring" class="admin-nav-link hover:bg-blue-800">
+                <a href="#monitoring" data-tab="monitoring" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -236,7 +236,7 @@
                 </a>
             </li>
             <li class="mb-1">
-                <a href="#server" data-tab="server" class="admin-nav-link hover:bg-blue-800">
+                <a href="#server" data-tab="server" class="admin-nav-link hover:bg-base-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
