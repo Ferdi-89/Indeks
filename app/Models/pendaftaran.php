@@ -16,7 +16,7 @@ class pendaftaran extends Model
         'alamat',
         'latitude',
         'longtitude',
-        'email',
+        'wilayah',
         'nomor_tlpn',
         'path_gambar',
         'id_paket',

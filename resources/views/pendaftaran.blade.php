@@ -169,12 +169,15 @@
 
                                 <div class="space-y-1.5">
                                     <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                        Email Utama<span class="text-red-500 ml-1">*</span>
+                                        Wilayah<span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <input type="email" name="email" placeholder="email@anda.com"
-                                        value="{{ old('email') }}" maxlength="100" required
-                                        class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
-                                    @error('email') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                                    <select name="wilayah" required class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
+                                        <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah Anda</option>
+                                        @foreach($areaLayanan as $area)
+                                            <option value="{{ $area->nama_area }}" {{ old('wilayah') == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('wilayah') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                         </div>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('id_paket', 3);
             $table->decimal('latitude', 10, 8);
             $table->decimal('longtitude', 11, 8);
-            $table->string('email', 100);
+            $table->string('wilayah', 100);
             $table->string('nomor_tlpn', 20);
             $table->string('path_gambar', 100);
         });

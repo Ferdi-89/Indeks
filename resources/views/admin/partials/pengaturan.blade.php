@@ -215,35 +215,7 @@
                 </div>
             </div>
 
-            <!-- Area Layanan -->
-            <div class="card bg-base-100 shadow-sm border border-base-200">
-                <div class="card-body">
-                    <h3 class="card-title text-lg mb-2">Area Layanan</h3>
-                    <div class="space-y-2 max-h-48 overflow-y-auto">
-                        @forelse($areaLayanan as $area)
-                        <div class="flex items-center justify-between group">
-                            <div class="flex items-center gap-2">
-                                <span class="badge badge-primary badge-sm">●</span>
-                                <span class="text-sm">{{ $area->nama_area }}</span>
-                            </div>
-                            <form action="{{ route('admin.area.destroy', $area->id) }}" method="POST" class="opacity-0 group-hover:opacity-100 transition-opacity">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-ghost btn-xs text-error" onclick="return confirm('Hapus area {{ $area->nama_area }}?')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                </button>
-                            </form>
-                        </div>
-                        @empty
-                        <p class="text-sm text-base-content/50 italic">Belum ada area layanan.</p>
-                        @endforelse
-                    </div>
-                    <button class="btn btn-outline btn-sm mt-4 gap-1 w-full" onclick="document.getElementById('modal_tambah_area').showModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Tambah Area
-                    </button>
-                </div>
-            </div>
+
 
             <!-- Info Sistem -->
             <div class="card bg-neutral text-neutral-content shadow-lg">
@@ -274,24 +246,7 @@
     </div>
 </div>
 
-<!-- Modal Tambah Area Layanan -->
-<dialog id="modal_tambah_area" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">Tambah Area Layanan</h3>
-        <form action="{{ route('admin.area.store') }}" method="POST">
-            @csrf
-            <div class="form-control">
-                <label class="label"><span class="label-text font-medium">Nama Area / Kelurahan / Kecamatan</span></label>
-                <input type="text" name="nama_area" class="input input-bordered w-full" placeholder="cth: Kel. Cikaret, Kec. Bogor Selatan" required autofocus>
-            </div>
-            <div class="modal-action">
-                <form method="dialog"><button class="btn btn-ghost">Batal</button></form>
-                <button type="submit" class="btn btn-primary">Tambah Area</button>
-            </div>
-        </form>
-    </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
-</dialog>
+
 
 {{-- Toast dari sesi (fallback non-AJAX) ditangani oleh spaToast global --}}
 

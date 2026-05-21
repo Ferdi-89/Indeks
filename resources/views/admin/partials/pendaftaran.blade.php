@@ -32,7 +32,7 @@
                     <td class="font-medium">{{ $item->nama }}</td>
                     <td>
                         <div class="text-sm">{{ $item->nomor_tlpn }}</div>
-                        <div class="text-xs text-base-content/70">{{ $item->email }}</div>
+                        <div class="text-xs text-base-content/70">{{ $item->wilayah }}</div>
                     </td>
                     <td class="max-w-[200px] truncate" title="{{ $item->alamat }}">{{ $item->alamat }}</td>
                     <td><span class="px-2 py-1 bg-info/10 text-info font-bold rounded-md border border-info/20 text-xs">{{ $item->id_paket }}</span></td>
@@ -103,8 +103,13 @@
             <input type="text" name="nama" class="input input-bordered w-full" placeholder="Masukkan nama lengkap" required />
         </div>
         <div class="form-control w-full">
-            <label class="label"><span class="label-text font-medium">Email</span></label>
-            <input type="email" name="email" class="input input-bordered w-full" placeholder="Masukkan email aktif" required />
+            <label class="label"><span class="label-text font-medium">Wilayah</span></label>
+            <select name="wilayah" class="select select-bordered w-full" required>
+                <option value="" disabled selected>-- Pilih Wilayah --</option>
+                @foreach($areaLayanan as $area)
+                    <option value="{{ $area->nama_area }}">{{ $area->nama_area }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="form-control w-full">
             <label class="label"><span class="label-text font-medium">No. Telepon / WhatsApp</span></label>
@@ -155,7 +160,7 @@
         @endif
         
         <div><span class="text-base-content/70 text-sm block">Nama</span><span class="font-medium">{{ $item->nama }}</span></div>
-        <div><span class="text-base-content/70 text-sm block">Email</span><span class="font-medium">{{ $item->email }}</span></div>
+        <div><span class="text-base-content/70 text-sm block">Wilayah</span><span class="font-medium">{{ $item->wilayah }}</span></div>
         <div><span class="text-base-content/70 text-sm block">Telepon</span><span class="font-medium">{{ $item->nomor_tlpn }}</span></div>
         <div><span class="text-base-content/70 text-sm block mb-1">ID Paket</span><span class="px-2 py-1 bg-info/10 text-info font-bold rounded-md border border-info/20 text-xs">{{ $item->id_paket }}</span></div>
         <div><span class="text-base-content/70 text-sm block mb-1">Status</span><span id="detail_status_{{ $item->id_pendaftaran }}" class="px-2 py-1 font-bold rounded-md border text-xs {{ $item->status == 'pending' ? 'bg-warning/10 text-warning border-warning/20' : ($item->status == 'validated' ? 'bg-info/10 text-info border-info/20' : ($item->status == 'rejected' ? 'bg-error/10 text-error border-error/20' : ($item->status == 'setup' ? 'bg-accent/10 text-accent border-accent/20' : ($item->status == 'active' || $item->status == 'aktif' ? 'bg-success/10 text-success border-success/20' : 'bg-base-200 text-base-content/70 border-base-300')))) }}">{{ ucfirst($item->status) }}</span></div>
@@ -222,8 +227,13 @@
         </div>
         
         <div class="form-control w-full">
-            <label class="label"><span class="label-text">Email</span></label>
-            <input type="email" name="email" value="{{ $item->email }}" class="input input-bordered w-full" required />
+            <label class="label"><span class="label-text">Wilayah</span></label>
+            <select name="wilayah" class="select select-bordered w-full" required>
+                <option value="" disabled>-- Pilih Wilayah --</option>
+                @foreach($areaLayanan as $area)
+                    <option value="{{ $area->nama_area }}" {{ $item->wilayah == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
+                @endforeach
+            </select>
         </div>
         
         <div class="form-control w-full">

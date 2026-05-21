@@ -30,6 +30,11 @@
         @include('admin.partials.promosi')
     </div>
 
+    <!-- Tab Wilayah -->
+    <div class="admin-tab-panel" id="panel-wilayah" style="display:none;">
+        @include('admin.partials.wilayah')
+    </div>
+
     <!-- Tab Profil -->
     <div class="admin-tab-panel" id="panel-profil" style="display:none;">
         @include('admin.partials.profil')
@@ -97,13 +102,14 @@
     // ═══════════════════════════════════════════
     // Admin SPA Tab Controller (Vanilla JS)
     // ═══════════════════════════════════════════
-    const VALID_TABS = ['dashboard', 'pendaftaran', 'paket', 'pengumuman', 'promosi', 'profil', 'pengaturan', 'monitoring', 'server'];
+    const VALID_TABS = ['dashboard', 'pendaftaran', 'paket', 'pengumuman', 'promosi', 'wilayah', 'profil', 'pengaturan', 'monitoring', 'server'];
     const TAB_TITLES = {
         dashboard: 'Dasbor',
         pendaftaran: 'Pendaftaran',
         paket: 'Paket Internet',
         pengumuman: 'Pengumuman',
         promosi: 'Promosi',
+        wilayah: 'Wilayah Layanan',
         profil: 'Profil Admin',
         pengaturan: 'Pengaturan Perusahaan',
         monitoring: 'Monitoring Sistem',

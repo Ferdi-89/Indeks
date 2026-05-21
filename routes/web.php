@@ -35,7 +35,8 @@ Route::get('/', function () {
 // ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
 Route::get('/daftar', function () {
     $pakets = paket::where('is_hidden', false)->get();
-    return view('pendaftaran', compact('pakets'));
+    $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
+    return view('pendaftaran', compact('pakets', 'areaLayanan'));
 })->name('pendaftaran');
 
 // ─── Proses Pendaftaran (POST) ──────────────────────────────────────────
@@ -47,7 +48,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'alamat' => 'required|string|max:100',
         'latitude' => 'nullable|numeric',
         'longtitude' => 'nullable|numeric',
-        'email' => 'required|email|max:100',
+        'wilayah' => 'required|string|max:100',
         'nomor_tlpn' => 'required|string|max:20',
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'id_paket' => 'required|string|max:5'
@@ -78,7 +79,7 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
             'alamat' => $validated['alamat'],
             'latitude' => $validated['latitude'] ?? 0,
             'longtitude' => $validated['longtitude'] ?? 0,
-            'email' => $validated['email'],
+            'wilayah' => $validated['wilayah'],
             'nomor_tlpn' => $validated['nomor_tlpn'],
             'path_gambar' => $filePath,
             'id_paket' => $validated['id_paket'],
@@ -132,7 +133,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $validated = $request->validate([
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:100',
-            'email' => 'required|email|max:100',
+            'wilayah' => 'required|string|max:100',
             'nomor_tlpn' => 'required|string|max:20',
             'id_paket' => 'required|string|max:5'
         ]);
@@ -145,7 +146,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'id_pendaftaran' => $idPendaftaran,
             'nama' => $validated['nama'],
             'alamat' => $validated['alamat'],
-            'email' => $validated['email'],
+            'wilayah' => $validated['wilayah'],
             'nomor_tlpn' => $validated['nomor_tlpn'],
             'id_paket' => $validated['id_paket'],
             'status' => 'pending',
@@ -184,7 +185,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $data = $request->validate([
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:100',
-            'email' => 'required|email|max:100',
+            'wilayah' => 'required|string|max:100',
             'nomor_tlpn' => 'required|string|max:20',
             'id_paket' => 'required|string|max:5'
         ]);
@@ -470,6 +471,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         App\Models\AreaLayanan::findOrFail($id)->update($data);
         return $jsonOrRedirect($request, 'Area layanan diperbarui.');
     })->name('area.update');
+
+    Route::patch('/area/{id}/toggle-hide', function($id) {
+        $area = App\Models\AreaLayanan::findOrFail($id);
+        $area->update(['is_active' => !$area->is_active]);
+        return redirect()->back()->with('success', 'Status visibilitas area diperbarui.');
+    })->name('area.toggle_hide');
 
     Route::delete('/area/{id}', function(Illuminate\Http\Request $request, $id) use ($jsonOrRedirect) {
         App\Models\AreaLayanan::findOrFail($id)->delete();
