@@ -24,4 +24,12 @@ class pendaftaran extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * Relasi ke model Paket
+     */
+    public function paket()
+    {
+        return $this->belongsTo(paket::class, 'id_paket', 'id_paket');
+    }
 }

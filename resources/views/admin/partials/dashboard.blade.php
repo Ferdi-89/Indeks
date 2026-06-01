@@ -52,12 +52,12 @@
                 </a>
             </div>
             <div class="overflow-x-auto">
-                <table class="table table-zebra w-full">
+                 <table class="table table-zebra w-full">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Paket</th>
+                            <th>Paket Layanan</th>
                             <th>Status</th>
                             <th>Tanggal</th>
                         </tr>
@@ -65,15 +65,30 @@
                     <tbody>
                         @forelse($pendaftaran->take(5) as $item)
                         <tr>
-                            <td class="font-mono text-sm">{{ $item->id_pendaftaran }}</td>
+                            <td class="font-mono text-sm font-semibold text-primary">{{ $item->id_pendaftaran }}</td>
                             <td class="font-medium">{{ $item->nama }}</td>
-                            <td><span class="badge badge-info badge-sm">{{ $item->id_paket }}</span></td>
-                            <td class="text-sm">
-                                <span class="badge badge-sm {{ $item->status == 'pending' ? 'badge-warning' : ($item->status == 'aktif' ? 'badge-success' : 'badge-ghost') }}">
-                                    {{ ucfirst($item->status) }}
+                            <td>
+                                <span class="px-2 py-1 bg-primary/10 text-primary font-semibold rounded-md border border-primary/20 text-xs whitespace-nowrap">
+                                    {{ $item->paket ? $item->paket->title_paket : $item->id_paket }}
                                 </span>
                             </td>
-                            <td class="text-sm">{{ $item->created_at->format('d M Y') }}</td>
+                            <td>
+                                @php
+                                    $statusClasses = [
+                                        'pending' => 'bg-warning/10 text-warning border-warning/20',
+                                        'validated' => 'bg-info/10 text-info border-info/20',
+                                        'rejected' => 'bg-error/10 text-error border-error/20',
+                                        'setup' => 'bg-accent/10 text-accent border-accent/20',
+                                        'active' => 'bg-success/10 text-success border-success/20',
+                                        'aktif' => 'bg-success/10 text-success border-success/20',
+                                    ];
+                                    $statusClass = $statusClasses[$item->status] ?? 'bg-base-200 text-base-content/70 border-base-300';
+                                @endphp
+                                <span class="px-2 py-1 font-semibold rounded-md border text-xs whitespace-nowrap {{ $statusClass }}">
+                                    {{ ucfirst($item->status === 'aktif' ? 'active' : $item->status) }}
+                                </span>
+                            </td>
+                            <td class="text-sm font-medium text-base-content/70">{{ $item->created_at->format('d M Y') }}</td>
                         </tr>
                         @empty
                         <tr>

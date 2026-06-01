@@ -485,7 +485,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('/', function (Illuminate\Http\Request $request) {
         // Pendaftaran: paginasi 10 data, totalPendaftaran diambil dari paginator (bukan query count terpisah)
-        $pendaftaran = App\Models\pendaftaran::latest('created_at')->paginate(10)->fragment('pendaftaran');
+        $pendaftaran = App\Models\pendaftaran::with('paket')->latest('created_at')->paginate(10)->fragment('pendaftaran');
         $totalPendaftaran = $pendaftaran->total(); // Gunakan hasil dari paginator, bukan ::count() terpisah
         
         // Paket: limit 100, count dari collection (bukan query terpisah)

@@ -79,16 +79,37 @@
 
         <style>
             @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
             }
+
             @keyframes scaleIn {
-                from { opacity: 0; transform: scale(0.85) translateY(20px); }
-                to { opacity: 1; transform: scale(1) translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: scale(0.85) translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
             }
+
             @keyframes popIn {
-                from { opacity: 0; transform: scale(0); }
-                to { opacity: 1; transform: scale(1); }
+                from {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
             }
         </style>
     @endif
@@ -144,41 +165,26 @@
                                 </label>
                                 <input type="text" name="nama" placeholder="Masukkan nama lengkap Anda"
                                     value="{{ old('nama') }}" required
-                                    class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
+                                    class="w-full px-4 py-3 rounded-lg transition text-sm outline-none {{ $errors->has('nama') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900 placeholder-red-400' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}">
                                 @error('nama') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
-                            <div class="grid md:grid-cols-2 gap-5">
-                                <div class="space-y-1.5">
-                                    <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                        Nomor Telepon<span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <div
-                                        class="flex w-full bg-[#f8fafc] border border-slate-200 rounded-lg overflow-hidden focus-within:ring-1 focus-within:bg-white focus-within:ring-blue-500 focus-within:border-blue-500 transition">
-                                        <span
-                                            class="flex items-center justify-center px-3 bg-slate-50 border-r border-slate-200 text-sm text-slate-500 font-semibold shadow-inner">
-                                            +62
-                                        </span>
-                                        <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
-                                            value="{{ old('nomor_tlpn') }}" required minlength="8"
-                                            class="w-full px-3 py-3 outline-none text-sm bg-transparent">
-                                    </div>
-                                    @error('nomor_tlpn') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                            <div class="space-y-1.5">
+                                <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                    Nomor Telepon<span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <div
+                                    class="flex w-full rounded-lg overflow-hidden transition {{ $errors->has('nomor_tlpn') ? 'border-2 border-red-500 bg-red-50 focus-within:ring-2 focus-within:ring-red-200' : 'border border-slate-200 bg-[#f8fafc] focus-within:ring-1 focus-within:bg-white focus-within:ring-blue-500 focus-within:border-blue-500' }}">
+                                    <span
+                                        class="flex items-center justify-center px-3 border-r text-sm font-semibold shadow-inner {{ $errors->has('nomor_tlpn') ? 'bg-red-100 border-red-200 text-red-700' : 'bg-slate-50 border-slate-200 text-slate-500' }}">
+                                        +62
+                                    </span>
+                                    <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
+                                        value="{{ old('nomor_tlpn') }}" required minlength="8"
+                                        class="w-full px-3 py-3 outline-none text-sm bg-transparent {{ $errors->has('nomor_tlpn') ? 'text-red-900 placeholder-red-400' : 'text-slate-800' }}">
                                 </div>
-
-                                <div class="space-y-1.5">
-                                    <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                        Wilayah<span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <select name="wilayah" required class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-sm outline-none">
-                                        <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah Anda</option>
-                                        @foreach($areaLayanan as $area)
-                                            <option value="{{ $area->nama_area }}" {{ old('wilayah') == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('wilayah') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                                </div>
+                                @error('nomor_tlpn') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -203,13 +209,13 @@
                                 @foreach ($pakets as $paket)
                                                             <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
                                                                 onclick="selectPaket(this)" class="paket-card group relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
-                                                                                                                                                                                                                    {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                                                                                                                                                                                                                                {{ old('id_paket', request('paket')) == $paket['id_paket']
                                     ? 'border-[#1e40af] bg-[#eef2ff] ring-1 ring-[#1e40af]/30'
                                     : 'border-slate-200 bg-[#f8fafc] hover:border-slate-300 hover:bg-white' }}">
 
                                                                 {{-- Check indicator --}}
                                                                 <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200
-                                                                                                                                                                                                                    {{ old('id_paket', request('paket')) == $paket['id_paket']
+                                                                                                                                                                                                                                                {{ old('id_paket', request('paket')) == $paket['id_paket']
                                     ? 'bg-[#1e40af] text-white scale-100'
                                     : 'border-2 border-slate-300 scale-90' }}">
                                                                     <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
@@ -243,7 +249,7 @@
                         <div class="space-y-5 md:pl-2">
                             <div class="space-y-1.5 flex flex-col">
                                 <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Koordinat Lokasi<span class="text-red-500 ml-1">*</span>
+                                    Tandai Titik Lokasi Pemasangan (Peta)<span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <div class="w-full">
                                     <div
@@ -276,15 +282,15 @@
                                                 <i data-lucide="navigation" class="w-5 h-5"></i>
                                             </button>
                                         </div>
-                                        <!-- Footer Konfirmasi -->
+                                        <!-- Footer Konfirmasi (Selalu Vertikal) -->
                                         <div
-                                            class="bg-white p-4 md:px-5 md:py-4 z-10 shrink-0 flex flex-col md:flex-row gap-4 md:items-center relative border-t border-slate-200">
-                                            <div class="flex items-start gap-3 flex-1 min-w-0">
+                                            class="bg-white p-4 md:p-5 z-10 shrink-0 flex flex-col gap-4 relative border-t border-slate-200">
+                                            <div class="flex items-start gap-3 w-full min-w-0">
                                                 <i data-lucide="map-pin"
                                                     class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i>
                                                 <div class="flex-1 min-w-0">
                                                     <p
-                                                        class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5 md:mb-1">
+                                                        class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
                                                         Alamat Terpilih</p>
                                                     <p id="temp-address-display"
                                                         class="text-sm font-medium text-slate-800 line-clamp-2 leading-snug">
@@ -292,8 +298,12 @@
                                                     </p>
                                                 </div>
                                             </div>
+                                            <!-- Validasi Status diletakkan di luar flexbox icon agar sejajar rapi dengan batas kiri kontainer -->
+                                            <div id="wilayah-validation-status"
+                                                class="mt-1 text-xs font-semibold hidden flex items-center gap-1.5 w-full">
+                                            </div>
                                             <button id="btn-confirm-address" type="button" disabled
-                                                class="w-full md:w-auto bg-[#1e40af] text-white py-2.5 px-6 rounded-lg font-semibold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm md:shrink-0 text-center">
+                                                class="w-full bg-[#1e40af] text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm text-center">
                                                 Konfirmasi Alamat
                                             </button>
                                         </div>
@@ -305,12 +315,29 @@
                                 </div>
                             </div>
 
+                            <div class="space-y-1.5">
+                                <label class="text-sm font-semibold text-slate-700 flex items-center">
+                                    Wilayah Layanan Internet<span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <select id="select-wilayah" name="wilayah" required
+                                    class="w-full px-4 py-3 rounded-lg transition text-sm outline-none {{ $errors->has('wilayah') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}">
+                                    <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah Anda
+                                    </option>
+                                    @foreach($areaLayanan as $area)
+                                        <option value="{{ $area->nama_area }}" {{ old('wilayah') == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
+                                    @endforeach
+                                    <option value="konsultasi" class="text-blue-600 font-semibold">💬 Wilayah Anda tidak
+                                        ada? Konsultasi dengan Admin</option>
+                                </select>
+                                @error('wilayah') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+
                             <div id="alamat" class="space-y-1.5">
                                 <label class="text-sm font-semibold text-slate-700 flex items-center">
                                     Alamat Lengkap<span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <textarea id="alamat-input" name="alamat" rows="3" required
-                                    class="w-full px-4 py-3 bg-[#f8fafc] border border-slate-200 rounded-lg transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 resize-none text-sm outline-none"
+                                    class="w-full px-4 py-3 rounded-lg transition resize-none text-sm outline-none {{ $errors->has('alamat') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900 placeholder-red-400' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}"
                                     placeholder="Contoh: Jl. Panglima Sudirman No. 12, RT 01/RW 02, Kelurahan Melati, Kode Pos 15810">{{ old('alamat') }}</textarea>
                                 @error('alamat') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 <p class="text-[11px] text-slate-500 leading-relaxed mt-2 italic">
@@ -338,7 +365,7 @@
                             </label>
 
                             <div
-                                class="relative border border-slate-200 rounded-xl transition hover:border-blue-400 bg-[#f8fafc] overflow-hidden">
+                                class="relative border rounded-xl transition overflow-hidden {{ $errors->has('path_gambar') ? 'border-2 border-red-500 bg-red-50 hover:border-red-500' : 'border-slate-200 bg-[#f8fafc] hover:border-blue-400' }}">
                                 <!-- Preview area (hidden until file is chosen) -->
                                 <div id="preview-container"
                                     class="hidden items-center p-4 border-b border-slate-200 bg-white">
@@ -482,11 +509,171 @@
         var btnConfirm = document.getElementById('btn-confirm-address');
         var alamatInput = document.getElementById('alamat-input');
 
+        // Global auto-switch wilayah function
+        window.autoSwitchWilayah = function (newRegion) {
+            var selectWilayah = document.getElementById('select-wilayah');
+            if (selectWilayah) {
+                selectWilayah.value = newRegion;
+                validateWilayahLocation();
+            }
+        };
+
+        function validateWilayahLocation() {
+            var selectWilayah = document.getElementById('select-wilayah');
+            var selectedVal = selectWilayah ? selectWilayah.value : "";
+            var validationEl = document.getElementById('wilayah-validation-status');
+
+            if (!selectWilayah || !validationEl) return;
+
+            if (!tempAddr || tempAddr.includes("Geser peta") || tempAddr.includes("Mencari")) {
+                validationEl.classList.add('hidden');
+                return;
+            }
+
+            // Dapatkan seluruh wilayah terdaftar dari opsi dropdown
+            var registeredRegions = Array.from(selectWilayah.options)
+                .map(o => o.value)
+                .filter(val => val && val !== 'konsultasi');
+
+            // Normalisasi alamat untuk pencocokan
+            var normalizedAddr = tempAddr.toLowerCase();
+
+            // Deteksi apakah alamat masuk ke salah satu wilayah terdaftar
+            var detectedRegion = null;
+            for (var i = 0; i < registeredRegions.length; i++) {
+                var r = registeredRegions[i];
+                var rKeyword = r.toLowerCase()
+                    .replace('kota', '')
+                    .replace('kabupaten', '')
+                    .replace('kab.', '')
+                    .replace('kecamatan', '')
+                    .replace('kec.', '')
+                    .trim();
+
+                if (normalizedAddr.includes(rKeyword)) {
+                    detectedRegion = r;
+                    break;
+                }
+            }
+
+            validationEl.classList.remove('hidden');
+
+            // Hapus kelas warna tombol konfirmasi agar bisa diset dinamis
+            btnConfirm.classList.remove('bg-slate-400', 'bg-amber-600', 'hover:bg-amber-700', 'bg-[#1e40af]', 'hover:bg-[#1e3a8a]', 'opacity-60', 'cursor-not-allowed');
+
+            // Kasus 1: Wilayah Tidak Terdaftar
+            if (!detectedRegion) {
+                // Kunci tombol konfirmasi alamat
+                btnConfirm.disabled = true;
+                btnConfirm.classList.add('bg-slate-400', 'opacity-60', 'cursor-not-allowed');
+                btnConfirm.textContent = "Wilayah Tidak Terjangkau";
+                delete btnConfirm.dataset.pendingRegion;
+
+                // Kunci select wilayah layanan dan reset nilainya
+                selectWilayah.disabled = true;
+                selectWilayah.value = "";
+
+                validationEl.className = "mt-2 text-xs font-semibold text-rose-600 flex flex-col gap-2.5 bg-rose-50 p-3.5 rounded-lg border border-rose-100";
+                validationEl.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <i data-lucide="x-circle" class="w-4.5 h-4.5 shrink-0 mt-0.5 text-rose-500"></i>
+                        <div>
+                            <span class="block text-rose-800 font-bold mb-0.5">Lokasi Berada di Luar Wilayah Layanan R-NET</span>
+                            <span class="block text-slate-600 font-medium leading-normal mb-1">Maaf, titik koordinat yang Anda tandai di peta berada di luar jangkauan wilayah layanan internet resmi kami saat ini.</span>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/6281373242873?text=Halo%20Admin%20R-NET,%20titik%20peta%20koordinat%20pemasangan%20saya%20terdeteksi%20di%20luar%20wilayah%20layanan.%20Apakah%20bisa%20dibantu%20cek%20lokasi%20saya%20berikut%3A%20${encodeURIComponent(tempAddr)}" target="_blank" class="flex items-center justify-center gap-1.5 w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-lg text-xs transition duration-150 shadow-sm text-center">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        Konsultasi Mengenai Lokasi (Hubungi Admin)
+                    </a>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Jika wilayah terdaftar, buka kunci tombol konfirmasi alamat & select wilayah
+            btnConfirm.disabled = false;
+            selectWilayah.disabled = false;
+
+            // Kasus 2: Pengguna belum memilih wilayah
+            if (!selectedVal) {
+                btnConfirm.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                btnConfirm.textContent = "Konfirmasi Alamat & Pilih Wilayah";
+                btnConfirm.dataset.pendingRegion = detectedRegion;
+
+                validationEl.className = "mt-2 text-xs font-semibold text-amber-600 flex flex-col gap-2 bg-amber-50 p-3 rounded-lg border border-amber-100 animate-pulse";
+                validationEl.innerHTML = `
+                    <div class="flex items-center gap-1.5">
+                        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                        <span>Terdeteksi di "${detectedRegion}". Klik tombol konfirmasi di samping untuk menyetujui alamat dan memilih wilayah ini secara otomatis.</span>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Kasus 3: Lokasi terdeteksi cocok dengan pilihan wilayah
+            if (selectedVal === detectedRegion) {
+                btnConfirm.classList.add('bg-[#1e40af]', 'hover:bg-[#1e3a8a]');
+                btnConfirm.textContent = "Konfirmasi Alamat";
+                delete btnConfirm.dataset.pendingRegion;
+
+                validationEl.className = "mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 bg-emerald-50 p-2.5 rounded-lg border border-emerald-100";
+                validationEl.innerHTML = `
+                    <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+                    <span>Lokasi sesuai dengan wilayah jangkauan "${selectedVal}"</span>
+                `;
+            } else {
+                // Kasus 4: Alamat terdaftar tetapi salah memilih wilayah
+                btnConfirm.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                btnConfirm.textContent = "Konfirmasi Alamat & Sesuaikan Wilayah";
+                btnConfirm.dataset.pendingRegion = detectedRegion;
+
+                validationEl.className = "mt-2 text-xs font-semibold text-amber-600 flex flex-col gap-2 bg-amber-50 p-3 rounded-lg border border-amber-100";
+                validationEl.innerHTML = `
+                    <div class="flex items-start gap-1.5">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                        <div>
+                            <span>Lokasi terdeteksi di "${detectedRegion}", tetapi Anda memilih "${selectedVal}". Klik konfirmasi di samping untuk menyesuaikan secara otomatis.</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Re-render icons
+            lucide.createIcons();
+        }
+
+        // Mapping koordinat pusat untuk masing-masing wilayah layanan
+        var REGION_CENTERS = {
+            'Kota Sungai Penuh': [-2.0594, 101.3789],
+            'Kabupaten Kerinci': [-2.1158, 101.4485],
+            'Kabupaten Merangin': [-2.1661, 102.2612]
+        };
+
+        // Listener untuk select wilayah
+        document.getElementById('select-wilayah').addEventListener('change', function () {
+            if (this.value === 'konsultasi') {
+                window.open('https://wa.me/6281373242873?text=Halo%20Admin%20R-NET,%20saya%20ingin%20berkonsultasi%20mengenai%20wilayah%20layanan%20internet%20di%20lokasi%20saya.', '_blank');
+                this.value = ""; // Reset kembali pilihan
+            } else {
+                var center = REGION_CENTERS[this.value];
+                if (center) {
+                    map.flyTo(center, 14); // Geser peta ke pusat wilayah yang dipilih secara dinamis!
+                }
+            }
+            validateWilayahLocation();
+        });
+
         function setMapLoading(loading) {
             loadingObj.classList.toggle('hidden', !loading);
             btnConfirm.disabled = loading || !tempAddr;
-            if (loading) displayAddr.textContent = "Mencari lokasi di peta...";
-            else displayAddr.textContent = tempAddr || "Geser peta untuk menentukan area";
+            if (loading) {
+                displayAddr.textContent = "Mencari lokasi di peta...";
+            } else {
+                displayAddr.textContent = tempAddr || "Geser peta untuk menentukan area";
+                validateWilayahLocation();
+            }
         }
 
         async function fetchAddress(lat, lon) {
@@ -585,12 +772,28 @@
         });
 
         btnConfirm.addEventListener('click', function () {
+            var pendingRegion = btnConfirm.dataset.pendingRegion;
+            if (pendingRegion) {
+                autoSwitchWilayah(pendingRegion);
+            }
+
             document.getElementById('lat').value = tempCenter.lat;
             document.getElementById('long').value = tempCenter.lng;
             alamatInput.value = tempAddr;
 
             isMapSelected = true;
             setTimeout(function () { isMapSelected = false; }, 5000);
+
+            // Tampilkan feedback mengambang hijau nan mewah
+            var successBanner = document.createElement('div');
+            successBanner.className = "fixed bottom-5 right-5 z-[9999] bg-emerald-600 text-white font-bold px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-2 animate-bounce";
+            successBanner.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> <span>Alamat & Wilayah berhasil dikonfirmasi!</span>`;
+            document.body.appendChild(successBanner);
+            lucide.createIcons();
+            setTimeout(() => {
+                successBanner.classList.add('transition-opacity', 'duration-500', 'opacity-0');
+                setTimeout(() => successBanner.remove(), 500);
+            }, 3000);
         });
 
         // Auto tracking: Move map automatically if user typed something in Alamat Lengkap
@@ -639,7 +842,7 @@
             }
 
             uploadLabel.textContent = 'Memproses dan mengkompres gambar...';
-            
+
             var reader = new FileReader();
             reader.onload = function (readerEvent) {
                 var image = new Image();
@@ -664,16 +867,16 @@
                     canvas.width = width;
                     canvas.height = height;
                     var ctx = canvas.getContext('2d');
-                    
+
                     // Latar putih mencegah background hitam pada PNG transparan
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
+
                     ctx.drawImage(image, 0, 0, width, height);
 
                     // Kompresi rekursif untuk memastikan ukuran < 1MB
                     var quality = 0.9;
-                    var compressImage = function() {
+                    var compressImage = function () {
                         canvas.toBlob(function (blob) {
                             if (blob.size > 1048576 && quality > 0.1) {
                                 // Kurangi kualitas jika masih > 1MB
@@ -698,7 +901,7 @@
                             }
                         }, 'image/jpeg', quality);
                     };
-                    
+
                     compressImage();
                 };
                 image.src = readerEvent.target.result;
@@ -706,8 +909,31 @@
             reader.readAsDataURL(file);
         });
 
-        // ── Submit loading state ───────────────────────────────────────────
-        document.querySelector('form').addEventListener('submit', function () {
+        // ── Submit loading state with Wilayah check ─────────────────────────
+        document.querySelector('form').addEventListener('submit', function (e) {
+            var selectWilayah = document.querySelector('select[name="wilayah"]');
+            var selectedVal = selectWilayah ? selectWilayah.value : "";
+
+            if (selectedVal && tempAddr && !tempAddr.includes("Geser peta") && !tempAddr.includes("Mencari")) {
+                var normalizedAddr = tempAddr.toLowerCase();
+                var keyword = selectedVal.toLowerCase()
+                    .replace('kota', '')
+                    .replace('kabupaten', '')
+                    .replace('kab.', '')
+                    .replace('kecamatan', '')
+                    .replace('kec.', '')
+                    .trim();
+
+                var isMatched = normalizedAddr.includes(keyword);
+                if (!isMatched) {
+                    var confirmSubmit = confirm(`Perhatian: Lokasi yang Anda tandai di peta sepertinya berada di luar wilayah layanan "${selectedVal}" yang Anda pilih.\n\nApakah Anda yakin lokasi pemasangan sudah benar dan ingin melanjutkan pendaftaran?`);
+                    if (!confirmSubmit) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            }
+
             var btn = document.getElementById('submit-btn');
             btn.disabled = true;
             btn.textContent = 'Memproses Data...';

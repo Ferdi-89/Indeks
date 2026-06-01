@@ -14,10 +14,20 @@ class AdminDataSeeder extends Seeder
      */
     public function run(): void
     {
+        // ─── User Account for Authentication ────────────────
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@rnet.com'],
+            [
+                'name' => 'Admin R-NET',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            ]
+        );
+
         // ─── Admin Profile ──────────────────────────────────
         AdminProfile::firstOrCreate(
             ['username' => 'admin_rnet'],
             [
+                'user_id' => $user->id,
                 'nama_lengkap' => 'Admin R-NET',
                 'email' => 'admin@rnet.id',
                 'phone' => '0812-3456-7890',
