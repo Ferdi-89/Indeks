@@ -1,58 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌐 R-NET — Sistem Pendaftaran Internet Provider
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Framework](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel)](https://laravel.com)
+[![Database](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql)](https://postgresql.org)
+[![Storage](https://img.shields.io/badge/Supabase-S3_Storage-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
+[![UI](https://img.shields.io/badge/DaisyUI-4.10.2-563D7C?style=flat-square&logo=tailwind-css)](https://daisyui.com)
 
-## About Laravel
+**R-NET** adalah sistem manajemen terpadu untuk penyedia layanan internet (Internet Service Provider) yang dirancang khusus untuk memfasilitasi calon pelanggan dalam melakukan pendaftaran secara mandiri dan mempermudah administrator dalam melakukan verifikasi, monitoring sistem, serta manajemen konten.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini dikembangkan sebagai bagian dari **Proyek Base Learning (PBL) Semester 4** dengan fokus pada **kecepatan akses (performa)**, **pengalaman pengguna yang mulus (SPA-like)**, dan **keandalan data**.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Kilas Arsitektur (System Architecture)
 
-## Learning Laravel
+Sistem R-NET menggunakan arsitektur hybrid modern:
+*   **Front-End Portal**: Antarmuka responsif yang menyajikan daftar paket internet, promosi, pengumuman aktif, serta formulir pendaftaran interaktif dengan kompresi gambar sisi klien sebelum diunggah ke cloud storage.
+*   **Admin Panel (Single-View SPA)**: Dasbor admin telah direfaktor sepenuhnya menjadi **Single Page Application (SPA) berbasis Vanilla JavaScript**. Semua data dimuat dalam satu request awal untuk mengatasi kendala latensi database jarak jauh (Supabase PostgreSQL), dengan navigasi antar modul instan (0ms) tanpa reload halaman.
+*   **Storage Aset**: Menggunakan **Supabase S3 Storage** terintegrasi secara asinkron untuk menyimpan file berkas fisik (misalnya, foto rumah calon pelanggan) sehingga menghemat kapasitas dan memori lokal server.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack & Library
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Lapisan (Layer) | Teknologi / Library | Deskripsi |
+| :--- | :--- | :--- |
+| **Core Framework** | Laravel 11.x | Backend API, Routing, dan template rendering. |
+| **Database** | PostgreSQL (Supabase) | Penyimpanan data relasional aman. |
+| **Cloud Storage** | Supabase S3 bucket | Driver S3 via `league/flysystem-aws-s3-v3`. |
+| **UI Framework** | Tailwind CSS & DaisyUI 4.10.2 | Desain antarmuka premium, responsif, dan konsisten. |
+| **Navigasi Admin** | Vanilla JavaScript SPA | Sistem tab switching interaktif tanpa library tambahan. |
+| **Grafik Statistik** | Chart.js | Visualisasi data pendaftaran mingguan. |
+| **Peta Interaktif** | Leaflet.js | Lokasi geografis pendaftar / rumah pelanggan. |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 👥 Pembagian Kerja Modul Mahasiswa
+
+Proyek PBL R-NET dibagi menjadi 4 modul utama yang saling terintegrasi:
+
+### 🖥️ Orang 1: Modul Front-End & Portal Pelanggan
+*   **Tanggung Jawab**: Merancang landing page utama, memuat informasi paket, dan menyediakan form pendaftaran pelanggan.
+*   **Fitur Utama**:
+    *   Landing page responsif (Tailwind & DaisyUI).
+    *   Tabel harga dan kartu paket dinamis dari database.
+    *   Formulir pendaftaran pelanggan interaktif.
+    *   Upload foto berkas fisik ke cloud storage S3 dengan kompresi data.
+    *   Popup feedback status keberhasilan pendaftaran.
+
+### 🔐 Orang 2: Modul Manajemen Pendaftaran & Auth
+*   **Tanggung Jawab**: Mengelola data pendaftar dan sistem gerbang keamanan masuk admin.
+*   **Fitur Utama**:
+    *   Sistem autentikasi masuk/keluar admin (Login & Logout).
+    *   Tabel manajemen data pendaftaran pelanggan.
+    *   Detail pendaftar dengan penampil gambar berkas.
+    *   Ubah status pendaftaran (Pending, Validated, Active, Rejected) berbasis AJAX.
+    *   Penghapusan data pendaftaran terintegrasi dengan penghapusan aset gambar di S3.
+
+### 📦 Orang 3: Modul Konten Produk & Promosi
+*   **Tanggung Jawab**: Manajemen paket internet yang dijual dan program promosi/diskon perusahaan.
+*   **Fitur Utama**:
+    *   CRUD Manajemen Paket Internet (Nama, Kecepatan, Harga).
+    *   CRUD Manajemen Promosi & Diskon (Nilai Diskon, Deskripsi, Periode Aktif).
+    *   Sinkronisasi dinamis konten paket dan promosi ke Landing Page pelanggan.
+
+### 📊 Orang 4: Modul Monitoring & Pengumuman
+*   **Tanggung Jawab**: Menyediakan visualisasi data di dasbor admin, monitoring kesehatan sistem, serta manajemen papan pengumuman.
+*   **Fitur Utama**:
+    *   Dasbor agregasi data (Total Pendaftar, Paket, Pengumuman).
+    *   Grafik pendaftaran 7 hari terakhir menggunakan Chart.js.
+    *   Monitoring resource server (Memori, Versi PHP, Load Time).
+    *   Monitoring database PostgreSQL & konektivitas Supabase S3.
+    *   CRUD Manajemen Pengumuman dengan filter periode aktif untuk banner Landing Page.
+
+---
+
+## 📁 Dokumentasi Lengkap Proyek
+
+Untuk memahami sistem R-NET secara lebih mendalam, silakan baca dokumentasi khusus berikut:
+
+1.  📖 **[Panduan Instalasi & Setup Lokal (docs/INSTALLATION.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/INSTALLATION.md)**: Langkah-langkah detail untuk memasang, mengonfigurasi `.env`, dan menjalankan proyek ini di komputer Anda.
+2.  🎯 **[Spesifikasi Fitur & Use Case (docs/FEATURES.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/FEATURES.md)**: Penjelasan lengkap 25 Use Cases (UC01-UC25) sistem dan alur kerja integrasi antar-modul.
+3.  📦 **[Dokumentasi Dependency & Package (docs/DEPENDENCIES.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/DEPENDENCIES.md)**: Analisis mendalam 5W+1H untuk paket-paket pihak ketiga yang digunakan dalam sistem R-NET.
+4.  🔄 **[Catatan Refactoring SPA Admin (docs/ADMIN_PANEL_REFACTORING.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/ADMIN_PANEL_REFACTORING.md)**: Dokumentasi proses pemindahan halaman admin dari multi-route konvensional ke Single-View SPA Vanilla JS beserta metrik performanya.
+5.  🚀 **[Integrasi CI/CD & GitHub Actions (docs/GITHUB_ACTIONS.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/GITHUB_ACTIONS.md)**: Panduan otomatisasi build, linting, dan pengujian ("Saat Final").
+6.  📝 **[CHANGELOG.md](file:///e:/SEMESTER4/PBL/Indeks/CHANGELOG.md)**: Catatan riwayat versi rilis, bug fixes, dan rencana implementasi mingguan.
+
+---
+
+## ⚙️ Menjalankan Proyek Secara Cepat
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repository & masuk ke direktori
+git clone https://github.com/Ferdi-89/Indeks.git
+cd Indeks
 
-php artisan boost:install
+# 2. Instalasi Dependensi PHP & JS
+composer install
+npm install
+
+# 3. Salin file lingkungan & atur kredensial DB/S3
+cp .env.example .env
+php artisan key:generate
+
+# 4. Jalankan Server
+php artisan serve
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Buka **[http://localhost:8000](http://localhost:8000)** di browser Anda untuk mengakses portal pelanggan R-NET, dan **[http://localhost:8000/admin](http://localhost:8000/admin)** untuk mengakses panel admin.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+*Tim Proyek PBL R-NET — 2026*
