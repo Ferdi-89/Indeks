@@ -39,40 +39,42 @@
     {{-- Modal Konfirmasi Pendaftaran Berhasil --}}
     @if (session('sukses') || session('success'))
         <div id="success-overlay"
-            class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+            class="fixed inset-0 z-[9999] overflow-y-auto bg-black/50 backdrop-blur-sm"
             style="animation: fadeIn 0.3s ease-out;">
 
-            <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 max-w-md w-[90%] text-center relative"
-                style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 max-w-md w-full text-center relative"
+                    style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
 
-                {{-- Checkmark Circle --}}
-                <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6"
-                    style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;">
-                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
+                    {{-- Checkmark Circle --}}
+                    <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6"
+                        style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;">
+                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
 
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">Pendaftaran Berhasil!</h2>
-                <p class="text-slate-500 text-sm leading-relaxed mb-2">
-                    Terima kasih telah mendaftar layanan <span class="font-semibold text-slate-700">R-NET</span>.
-                </p>
-                <p class="text-slate-500 text-sm leading-relaxed mb-8">
-                    Tim teknisi kami akan segera menghubungi Anda untuk proses instalasi.
-                    Mohon pastikan nomor telepon Anda aktif.
-                </p>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Pendaftaran Berhasil!</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-2">
+                        Terima kasih telah mendaftar layanan <span class="font-semibold text-slate-700">R-NET</span>.
+                    </p>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8">
+                        Tim teknisi kami akan segera menghubungi Anda untuk proses instalasi.
+                        Mohon pastikan nomor telepon Anda aktif.
+                    </p>
 
-                <div class="flex flex-col gap-3">
-                    <a href="/"
-                        class="w-full bg-[#1e40af] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm text-center">
-                        Kembali ke Beranda
-                    </a>
-                    <button onclick="document.getElementById('success-overlay').remove()"
-                        class="w-full text-slate-500 font-semibold py-2.5 px-6 rounded-lg hover:bg-slate-100 transition text-sm">
-                        Daftar Lagi
-                    </button>
+                    <div class="flex flex-col gap-3">
+                        <a href="/"
+                            class="w-full bg-[#1e40af] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm text-center">
+                            Kembali ke Beranda
+                        </a>
+                        <button onclick="document.getElementById('success-overlay').remove()"
+                            class="w-full text-slate-500 font-semibold py-2.5 px-6 rounded-lg hover:bg-slate-100 transition text-sm">
+                            Daftar Lagi
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -784,16 +786,36 @@
             isMapSelected = true;
             setTimeout(function () { isMapSelected = false; }, 5000);
 
-            // Tampilkan feedback mengambang hijau nan mewah
+            // Tampilkan feedback mengambang premium di tengah bawah
             var successBanner = document.createElement('div');
-            successBanner.className = "fixed bottom-5 right-5 z-[9999] bg-emerald-600 text-white font-bold px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-2 animate-bounce";
-            successBanner.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> <span>Alamat & Wilayah berhasil dikonfirmasi!</span>`;
+            successBanner.className = "fixed bottom-8 left-1/2 z-[9999] bg-slate-900/95 text-white backdrop-blur-md px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-800/80 flex items-center gap-3.5 w-[92%] max-w-md";
+            successBanner.style.transform = "translate(-50%, 30px)";
+            successBanner.style.opacity = "0";
+            successBanner.style.transition = "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+
+            successBanner.innerHTML = `
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                </span>
+                <div class="flex flex-col text-left">
+                    <span class="font-bold text-sm tracking-wide text-white">Konfirmasi Berhasil</span>
+                    <span class="text-xs text-slate-400">Alamat & wilayah lokasi Anda telah disimpan.</span>
+                </div>
+            `;
             document.body.appendChild(successBanner);
             lucide.createIcons();
+
+            // Trigger enter animation
+            requestAnimationFrame(() => {
+                successBanner.style.transform = "translate(-50%, 0)";
+                successBanner.style.opacity = "1";
+            });
+
             setTimeout(() => {
-                successBanner.classList.add('transition-opacity', 'duration-500', 'opacity-0');
+                successBanner.style.transform = "translate(-50%, -20px)";
+                successBanner.style.opacity = "0";
                 setTimeout(() => successBanner.remove(), 500);
-            }, 3000);
+            }, 3500);
         });
 
         // Auto tracking: Move map automatically if user typed something in Alamat Lengkap

@@ -23,36 +23,38 @@
     {{-- Modal Konfirmasi Pendaftaran Berhasil --}}
     @if (session('sukses') || session('success'))
         <div id="success-overlay"
-            class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+            class="fixed inset-0 z-[9999] overflow-y-auto bg-black/50 backdrop-blur-sm"
             style="animation: fadeIn 0.3s ease-out;">
 
-            <div class="bg-base-100 rounded-2xl shadow-2xl p-8 md:p-10 max-w-md w-[90%] text-center relative border border-base-300"
-                style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="bg-base-100 rounded-2xl shadow-2xl p-8 md:p-10 max-w-md w-full text-center relative border border-base-300"
+                    style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
 
-                {{-- Checkmark Circle --}}
-                <div class="mx-auto w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mb-6"
-                    style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;">
-                    <svg class="w-10 h-10 text-success" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
+                    {{-- Checkmark Circle --}}
+                    <div class="mx-auto w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mb-6"
+                        style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;">
+                        <svg class="w-10 h-10 text-success" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
 
-                <h2 class="text-2xl font-bold text-base-content mb-2">Pendaftaran Berhasil!</h2>
-                <p class="text-base-content/70 text-sm leading-relaxed mb-2">
-                    Terima kasih telah mendaftar layanan <span class="font-semibold text-primary">R-NET</span>.
-                </p>
-                <p class="text-base-content/70 text-sm leading-relaxed mb-8">
-                    Tim teknisi kami akan segera menghubungi Anda untuk proses instalasi.
-                    Mohon pastikan nomor telepon Anda aktif.
-                </p>
+                    <h2 class="text-2xl font-bold text-base-content mb-2">Pendaftaran Berhasil!</h2>
+                    <p class="text-base-content/70 text-sm leading-relaxed mb-2">
+                        Terima kasih telah mendaftar layanan <span class="font-semibold text-primary">R-NET</span>.
+                    </p>
+                    <p class="text-base-content/70 text-sm leading-relaxed mb-8">
+                        Tim teknisi kami akan segera menghubungi Anda untuk proses instalasi.
+                        Mohon pastikan nomor telepon Anda aktif.
+                    </p>
 
-                <div class="flex flex-col gap-3">
-                    <button onclick="document.getElementById('success-overlay').remove()"
-                        class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl transition shadow text-sm">
-                        Siap, Terima Kasih!
-                    </button>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="document.getElementById('success-overlay').remove()"
+                            class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl transition shadow text-sm">
+                            Siap, Terima Kasih!
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
