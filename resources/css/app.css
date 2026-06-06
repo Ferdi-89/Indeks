@@ -37,13 +37,11 @@
 
 /*
  * Marquee — berjalan di GPU compositor thread
- * Hanya menggunakan transform (tidak menyentuh layout/paint)
  */
 @keyframes marquee {
     from {
         transform: translateX(0);
     }
-
     to {
         transform: translateX(-50%);
     }
@@ -73,7 +71,6 @@
 
 /*
  * Hero section — background image per theme
- * Selector menggunakan #hero-section (id) sesuai welcome.blade.php
  */
 #hero-section {
     background-size: cover;
@@ -97,4 +94,105 @@
 [data-theme="dark"] .element-adaptive {
     border: 1px solid #dddddd;
     color: #fcfcfc;
+}
+
+/*
+ * ========================================================
+ * PREMIUM DESIGN SYSTEM ADDITIONS
+ * ========================================================
+ */
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        border-color: rgba(25, 119, 191, 0.15);
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+    50% {
+        border-color: rgba(25, 119, 191, 0.45);
+        box-shadow: 0 10px 25px -2px rgba(25, 119, 191, 0.25);
+    }
+}
+
+/* Animation utilities */
+.animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Glassmorphism */
+.glass-card {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .glass-card {
+    background-color: rgba(252, 252, 252, 0.72);
+    border: 1px solid rgba(30, 30, 30, 0.07);
+}
+
+[data-theme="dark"] .glass-card {
+    background-color: rgba(30, 30, 30, 0.65);
+    border: 1px solid rgba(252, 252, 252, 0.07);
+}
+
+/* Premium active glowing card border */
+.premium-glow-active {
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Custom premium elements */
+.speed-bar-fill {
+    transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Custom Accordion FAQ styling */
+.faq-accordion-item {
+    transition: all 0.3s ease;
+}
+
+/* Custom step layout classes */
+.step-container {
+    display: none;
+}
+.step-container.active {
+    display: block;
+}
+
+/* Form inputs focus state */
+.premium-input {
+    transition: all 0.25s ease;
+}
+.premium-input:focus {
+    box-shadow: 0 0 0 3px rgba(25, 119, 191, 0.15);
+    border-color: #1977BF !important;
 }

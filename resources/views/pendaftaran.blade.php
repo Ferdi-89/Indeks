@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,9 @@
         content="Daftarkan layanan internet R-NET di lokasi Anda. Fiber optik berkecepatan tinggi untuk rumah Anda.">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -17,21 +19,28 @@
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
 
-<body class="min-h-screen bg-[#f1f5f9] font-sans pb-20 antialiased">
+<body class="min-h-screen bg-gradient-to-tr from-base-200 to-base-100 font-sans pb-20 antialiased relative">
 
+    {{-- Error Banner --}}
     @if ($errors->any())
         <div class="max-w-7xl mx-auto px-4 md:px-8 pt-4">
-            <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl">
-                <ul class="list-disc pl-5 text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <div class="alert alert-error bg-error/10 border border-error/30 text-error-content rounded-2xl shadow-sm">
+                <div class="flex items-start gap-2">
+                    <i data-lucide="alert-circle" class="w-5 h-5 shrink-0 text-error"></i>
+                    <div>
+                        <span class="font-bold text-sm block mb-1">Periksa kembali data Anda:</span>
+                        <ul class="list-disc pl-5 text-xs space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     @endif
@@ -39,39 +48,38 @@
     {{-- Modal Konfirmasi Pendaftaran Berhasil --}}
     @if (session('sukses') || session('success'))
         <div id="success-overlay"
-            class="fixed inset-0 z-[9999] overflow-y-auto bg-black/50 backdrop-blur-sm"
-            style="animation: fadeIn 0.3s ease-out;">
+            class="fixed inset-0 z-[9999] overflow-y-auto bg-black/50 backdrop-blur-sm animate-fade-in">
 
             <div class="flex min-h-full items-center justify-center p-4">
-                <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 max-w-md w-full text-center relative"
-                    style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+                <div class="bg-base-100 rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full text-center relative border border-base-300/40"
+                    style="animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;">
 
                     {{-- Checkmark Circle --}}
-                    <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6"
+                    <div class="mx-auto w-20 h-20 bg-success/15 rounded-full flex items-center justify-center mb-6"
                         style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;">
-                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2.5"
+                        <svg class="w-10 h-10 text-success" fill="none" stroke="currentColor" stroke-width="2.5"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
 
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Pendaftaran Berhasil!</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-2">
-                        Terima kasih telah mendaftar layanan <span class="font-semibold text-slate-700">R-NET</span>.
+                    <h2 class="text-2xl font-bold text-base-content mb-2">Pendaftaran Berhasil!</h2>
+                    <p class="text-base-content/70 text-sm leading-relaxed mb-2">
+                        Terima kasih telah mendaftar layanan <span class="font-semibold text-primary">R-NET</span>.
                     </p>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-8">
+                    <p class="text-base-content/70 text-sm leading-relaxed mb-8">
                         Tim teknisi kami akan segera menghubungi Anda untuk proses instalasi.
                         Mohon pastikan nomor telepon Anda aktif.
                     </p>
 
                     <div class="flex flex-col gap-3">
                         <a href="/"
-                            class="w-full bg-[#1e40af] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm text-center">
+                            class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl shadow transition text-sm text-center">
                             Kembali ke Beranda
                         </a>
                         <button onclick="document.getElementById('success-overlay').remove()"
-                            class="w-full text-slate-500 font-semibold py-2.5 px-6 rounded-lg hover:bg-slate-100 transition text-sm">
+                            class="w-full btn btn-ghost text-base-content/60 font-semibold py-2.5 px-6 rounded-xl hover:bg-base-300/30 transition text-sm">
                             Daftar Lagi
                         </button>
                     </div>
@@ -80,16 +88,6 @@
         </div>
 
         <style>
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-
-                to {
-                    opacity: 1;
-                }
-            }
-
             @keyframes scaleIn {
                 from {
                     opacity: 0;
@@ -116,333 +114,357 @@
         </style>
     @endif
 
+    {{-- Header Area --}}
+    <header class="max-w-7xl mx-auto px-4 md:px-8 pt-8 flex justify-between items-center">
+        <a href="/" class="btn btn-ghost btn-sm rounded-xl gap-2 font-bold text-base-content/75">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Beranda
+        </a>
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-base-content/40 uppercase tracking-widest">Portal Pendaftaran</span>
+            <span class="badge badge-primary font-bold py-2">R-NET</span>
+        </div>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-6 md:pt-10 grid lg:grid-cols-12 gap-6 md:gap-10">
+    {{-- Progress Steps bar --}}
+    <div class="max-w-xl mx-auto mt-8 mb-4 px-6">
+        <ul class="steps steps-horizontal w-full text-xs font-bold">
+            <li id="step-indicator-1" class="step step-primary">Data &amp; Paket</li>
+            <li id="step-indicator-2" class="step">Lokasi Rumah</li>
+            <li id="step-indicator-3" class="step">Foto Verifikasi</li>
+        </ul>
+    </div>
 
-        <!-- Left Column (Info Panel) -->
-        <div class="lg:col-span-4 space-y-4 md:space-y-6">
+    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-4 grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-            <div class="space-y-2">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
-                    Daftar Layanan
-                </h1>
-            </div>
+        <!-- Left Column: Guide & Instruction (Dynamic Panel) -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="glass-card p-6 md:p-8 rounded-3xl shadow-lg border border-base-300/40 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-base-content tracking-tight leading-tight">
+                        Langkah Pendaftaran
+                    </h2>
+                    <p class="text-xs font-medium text-primary mt-1 uppercase tracking-widest" id="guide-step-title">Langkah 1 dari 3</p>
+                </div>
 
-            <div class="space-y-3 text-[15px] md:text-base text-slate-600 leading-relaxed max-w-[22rem]">
-                <p>Isi formulir pendaftaran di samping untuk mulai menggunakan layanan internet berkecepatan tinggi dari
-                    R-NET (Internet Rakyat).</p>
-                <p>Dapatkan pengalaman berselancar tanpa batas dengan dukungan fiber optik mutakhir kami yang menjangkau
-                    rumah Anda.</p>
-            </div>
+                <!-- Dynamic text prompt for the active step -->
+                <div id="guide-box" class="bg-base-200/50 border border-base-300/50 p-5 rounded-2xl">
+                    <p id="guide-text" class="text-sm text-base-content/75 leading-relaxed">
+                        Silakan masukkan nama lengkap Anda dan nomor telepon WhatsApp aktif yang dapat dihubungi. Setelah itu, pilih salah satu paket layanan internet yang Anda inginkan.
+                    </p>
+                </div>
 
-            <div href="#alamat"
-                class="bg-white p-4 text-slate-700 text-sm shadow-sm border border-slate-200 rounded-xl mt-6">
-                <p class="font-semibold mb-1 text-slate-900">Petunjuk Lokasi Peta:</p>
-                <p class="opacity-90 leading-relaxed text-xs md:text-sm">Geser peta untuk mencari lokasi Anda yang
-                    paling tepat, lalu tekan tombol "Konfirmasi Alamat".</p>
+                <!-- Map picking helper (shows only on Step 2) -->
+                <div id="map-helper-box" class="hidden border border-base-300/60 p-5 rounded-2xl bg-base-100 shadow-inner">
+                    <p class="font-bold text-xs mb-2 text-base-content flex items-center gap-1.5">
+                        <i data-lucide="info" class="w-4 h-4 text-primary"></i> Panduan Pemetaan:
+                    </p>
+                    <ul class="list-disc pl-5 text-xs text-base-content/75 space-y-2 leading-relaxed">
+                        <li>Gunakan tombol GPS <span class="badge badge-sm bg-base-200"><i data-lucide="navigation" class="w-3 h-3 text-slate-700"></i></span> untuk mendeteksi lokasi Anda saat ini.</li>
+                        <li>Geser peta hingga ikon pin merah tepat berada di atap rumah Anda.</li>
+                        <li>Klik <b>Konfirmasi Alamat</b> untuk mengunci koordinat lokasi.</li>
+                    </ul>
+                </div>
+
+                <!-- Support Footer Info -->
+                <div class="pt-4 border-t border-base-300/40 flex items-center gap-3 text-xs text-base-content/65 leading-relaxed">
+                    <i data-lucide="lock" class="w-5 h-5 text-success shrink-0"></i>
+                    <span>Data pendaftaran Anda aman dan hanya digunakan untuk kepentingan instalasi internet.</span>
+                </div>
             </div>
         </div>
 
-        <!-- Right Column (The Form) -->
-        <div class="lg:col-span-8 space-y-6 mb-10">
-
-            <div class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-slate-200">
-                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
-                    class="space-y-8">
+        <!-- Right Column: Overhauled Multi-Step Form -->
+        <div class="lg:col-span-8 space-y-6 mb-12">
+            <div class="glass-card p-6 md:p-10 rounded-3xl shadow-xl border border-base-300/50">
+                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                     @csrf
 
-                    <!-- Informasi Pribadi Section -->
-                    <div class="space-y-5">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                    <!-- hidden coordinates values -->
+                    <input type="hidden" name="latitude" id="lat" value="{{ old('latitude', -2.0337714) }}">
+                    <input type="hidden" name="longtitude" id="long" value="{{ old('longtitude', 101.3963373) }}">
+
+                    <!-- ==================== STEP 1: INFORMASI DATA DIRI & PAKET ==================== -->
+                    <div id="step-content-1" class="step-container active space-y-6 animate-fade-in">
+                        <!-- Header -->
+                        <div class="flex items-center gap-3 pb-3 border-b border-base-300/40">
+                            <div class="bg-primary/10 text-primary p-2.5 rounded-xl">
                                 <i data-lucide="user" class="w-5 h-5"></i>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Informasi Pribadi</h3>
+                            <div>
+                                <h3 class="font-bold text-lg text-base-content">Informasi Personal</h3>
+                                <p class="text-xs text-base-content/50">Masukkan nama lengkap dan nomor kontak Anda</p>
+                            </div>
                         </div>
 
-                        <div class="space-y-5 md:pl-2">
+                        <!-- Inputs -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Nama Lengkap<span class="text-red-500 ml-1">*</span>
+                                <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                    Nama Lengkap <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <input type="text" name="nama" placeholder="Masukkan nama lengkap Anda"
                                     value="{{ old('nama') }}" required
-                                    class="w-full px-4 py-3 rounded-lg transition text-sm outline-none {{ $errors->has('nama') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900 placeholder-red-400' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}">
-                                @error('nama') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                                    class="w-full input input-bordered px-4 py-3 bg-base-200/50 focus:bg-base-100 border-base-300/80 premium-input rounded-xl text-sm">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Nomor Telepon<span class="text-red-500 ml-1">*</span>
+                                <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                    Nomor Telepon (WhatsApp) <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <div
-                                    class="flex w-full rounded-lg overflow-hidden transition {{ $errors->has('nomor_tlpn') ? 'border-2 border-red-500 bg-red-50 focus-within:ring-2 focus-within:ring-red-200' : 'border border-slate-200 bg-[#f8fafc] focus-within:ring-1 focus-within:bg-white focus-within:ring-blue-500 focus-within:border-blue-500' }}">
-                                    <span
-                                        class="flex items-center justify-center px-3 border-r text-sm font-semibold shadow-inner {{ $errors->has('nomor_tlpn') ? 'bg-red-100 border-red-200 text-red-700' : 'bg-slate-50 border-slate-200 text-slate-500' }}">
+                                <div class="flex w-full rounded-xl overflow-hidden border border-base-300/80 focus-within:ring-2 focus-within:ring-primary/25 bg-base-200/50">
+                                    <span class="flex items-center justify-center px-4 border-r border-base-300/80 text-sm font-bold text-base-content/60 bg-base-300/30">
                                         +62
                                     </span>
-                                    <input type="tel" name="nomor_tlpn" placeholder="812-3456-7890"
+                                    <input type="tel" name="nomor_tlpn" placeholder="8123456789"
                                         value="{{ old('nomor_tlpn') }}" required minlength="8"
-                                        class="w-full px-3 py-3 outline-none text-sm bg-transparent {{ $errors->has('nomor_tlpn') ? 'text-red-900 placeholder-red-400' : 'text-slate-800' }}">
+                                        class="w-full px-4 py-3 outline-none text-sm bg-transparent text-base-content focus:bg-base-100">
                                 </div>
-                                @error('nomor_tlpn') <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                                @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Pilihan Paket Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="package" class="w-5 h-5"></i>
+                        <!-- Section: Package selection -->
+                        <div class="pt-6 space-y-4">
+                            <div class="flex items-center gap-3 pb-3 border-b border-base-300/40">
+                                <div class="bg-primary/10 text-primary p-2.5 rounded-xl">
+                                    <i data-lucide="package" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-base-content">Pilih Paket Internet</h3>
+                                    <p class="text-xs text-base-content/50">Pilih paket langganan bulanan Anda</p>
+                                </div>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Pilihan Paket</h3>
-                        </div>
 
-                        <div class="space-y-2 md:pl-2">
-                            <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                Paket Internet<span class="text-red-500 ml-1">*</span>
-                            </label>
                             <input type="hidden" name="id_paket" id="selected-paket"
                                 value="{{ old('id_paket', request('paket')) }}" required>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 @foreach ($pakets as $paket)
-                                                            <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
-                                                                onclick="selectPaket(this)" class="paket-card group relative flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
-                                                                                                                                                                                                                                                {{ old('id_paket', request('paket')) == $paket['id_paket']
-                                    ? 'border-[#1e40af] bg-[#eef2ff] ring-1 ring-[#1e40af]/30'
-                                    : 'border-slate-200 bg-[#f8fafc] hover:border-slate-300 hover:bg-white' }}">
+                                    <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
+                                        onclick="selectPaket(this)" class="paket-card group relative flex flex-col items-center text-center p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer w-full bg-base-200/40 border-base-300/60 hover:border-primary/50 hover:bg-base-100 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? 'border-primary bg-primary/5 ring-1 ring-primary/25 font-bold' : '' }}">
 
-                                                                {{-- Check indicator --}}
-                                                                <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200
-                                                                                                                                                                                                                                                {{ old('id_paket', request('paket')) == $paket['id_paket']
-                                    ? 'bg-[#1e40af] text-white scale-100'
-                                    : 'border-2 border-slate-300 scale-90' }}">
-                                                                    <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
-                                                                        fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7">
-                                                                        </path>
-                                                                    </svg>
-                                                                </div>
+                                        {{-- Check indicator inside badge --}}
+                                        <div class="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? 'bg-primary border-primary text-white scale-100' : 'border-base-300/80 scale-90' }}">
+                                            <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
+                                                fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
 
-                                                                <p class="text-sm font-bold text-slate-800 mt-1">{{ $paket['title_paket'] }}</p>
-                                                                <p class="text-[#1e40af] font-extrabold text-lg leading-tight mt-1.5">
-                                                                    Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
-                                                                </p>
-                                                                <p class="text-[11px] text-slate-500 font-medium">/bulan</p>
-                                                            </button>
+                                        <p class="text-sm font-bold text-base-content mt-1">{{ $paket['title_paket'] }}</p>
+                                        <p class="text-primary font-black text-xl leading-tight mt-2">
+                                            Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
+                                        </p>
+                                        <p class="text-[10px] text-base-content/50 font-semibold uppercase tracking-wider">/bulan</p>
+                                    </button>
                                 @endforeach
                             </div>
-                            @error('id_paket') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <!-- Footer Navigation -->
+                        <div class="pt-6 border-t border-base-300/40 flex justify-end">
+                            <button type="button" onclick="goToStep(2)"
+                                class="btn btn-primary font-bold px-8 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-primary/20">
+                                Lanjut Ke Lokasi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Informasi Alamat Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
+                    <!-- ==================== STEP 2: TITIK LOKASI & ALAMAT ==================== -->
+                    <div id="step-content-2" class="step-container space-y-6 animate-fade-in">
+                        <!-- Header -->
+                        <div class="flex items-center gap-3 pb-3 border-b border-base-300/40">
+                            <div class="bg-primary/10 text-primary p-2.5 rounded-xl">
                                 <i data-lucide="map-pin" class="w-5 h-5"></i>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Informasi Alamat</h3>
+                            <div>
+                                <h3 class="font-bold text-lg text-base-content">Detail Lokasi &amp; Alamat</h3>
+                                <p class="text-xs text-base-content/50">Tentukan lokasi rumah Anda di peta</p>
+                            </div>
                         </div>
 
-                        <div class="space-y-5 md:pl-2">
-                            <div class="space-y-1.5 flex flex-col">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Tandai Titik Lokasi Pemasangan (Peta)<span class="text-red-500 ml-1">*</span>
-                                </label>
-                                <div class="w-full">
-                                    <div
-                                        class="rounded-xl overflow-hidden border border-slate-200 shadow-sm z-0 w-full mb-2">
-                                        <div class="relative h-[20rem] md:h-[24rem] w-full z-0 block">
-                                            <div id="map" class="h-full w-full"></div>
-                                            <!-- Fixed Center Pin overlay -->
-                                            <div
-                                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full z-[400] drop-shadow-md pointer-events-none flex flex-col items-center">
-                                                <div id="map-loading-indicator"
-                                                    class="hidden absolute -top-8 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-md font-medium whitespace-nowrap mb-1 shadow">
-                                                    Mencari alamat...
-                                                </div>
-                                                <div id="map-pin-icon"
-                                                    class="transition-transform duration-200 ease-in-out translate-y-0">
-                                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="#ef4444"
-                                                        stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                                        <circle cx="12" cy="10" r="3" fill="white"></circle>
-                                                    </svg>
-                                                </div>
-                                                <div id="map-pin-shadow"
-                                                    class="w-2.5 h-1 bg-black/30 rounded-full mt-1 blur-[1px] transition-opacity duration-200 opacity-100">
-                                                </div>
-                                            </div>
-                                            <!-- Use GPS Button -->
-                                            <button id="btn-gps" title="Gunakan Lokasi Saat Ini (GPS)" type="button"
-                                                class="absolute bottom-4 right-4 z-[400] bg-white p-3 rounded-full shadow-lg border border-slate-100 text-slate-700 hover:text-blue-600 hover:bg-slate-50 transition">
-                                                <i data-lucide="navigation" class="w-5 h-5"></i>
-                                            </button>
+                        <!-- Peta / Map Picker Container -->
+                        <div class="space-y-3">
+                            <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                Tandai Titik Pemasangan di Peta <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            
+                            <div class="rounded-2xl overflow-hidden border border-base-300/80 shadow-md bg-base-100">
+                                <div class="relative h-[22rem] w-full z-0 block">
+                                    <div id="map" class="h-full w-full"></div>
+                                    
+                                    <!-- Fixed Center Pin overlay (Premium UI) -->
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full z-[400] drop-shadow-lg pointer-events-none flex flex-col items-center">
+                                        <div id="map-loading-indicator"
+                                            class="hidden absolute -top-8 bg-black/80 text-white text-[10px] px-3 py-1 rounded-md font-bold whitespace-nowrap mb-1 shadow animate-pulse">
+                                            Mencari alamat...
                                         </div>
-                                        <!-- Footer Konfirmasi (Selalu Vertikal) -->
-                                        <div
-                                            class="bg-white p-4 md:p-5 z-10 shrink-0 flex flex-col gap-4 relative border-t border-slate-200">
-                                            <div class="flex items-start gap-3 w-full min-w-0">
-                                                <i data-lucide="map-pin"
-                                                    class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i>
-                                                <div class="flex-1 min-w-0">
-                                                    <p
-                                                        class="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
-                                                        Alamat Terpilih</p>
-                                                    <p id="temp-address-display"
-                                                        class="text-sm font-medium text-slate-800 line-clamp-2 leading-snug">
-                                                        Geser peta untuk menentukan area
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <!-- Validasi Status diletakkan di luar flexbox icon agar sejajar rapi dengan batas kiri kontainer -->
-                                            <div id="wilayah-validation-status"
-                                                class="mt-1 text-xs font-semibold hidden flex items-center gap-1.5 w-full">
-                                            </div>
-                                            <button id="btn-confirm-address" type="button" disabled
-                                                class="w-full bg-[#1e40af] text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-[#1e3a8a] transition disabled:opacity-60 disabled:cursor-not-allowed shadow-sm text-center">
-                                                Konfirmasi Alamat
-                                            </button>
+                                        <div id="map-pin-icon" class="transition-transform duration-200 ease-in-out translate-y-0">
+                                            <svg width="44" height="44" viewBox="0 0 24 24" fill="#ef4444"
+                                                stroke="white" stroke-width="1.8" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                <circle cx="12" cy="10" r="3" fill="white"></circle>
+                                            </svg>
+                                        </div>
+                                        <div id="map-pin-shadow"
+                                            class="w-3 h-1 bg-black/40 rounded-full mt-1 blur-[1px] transition-opacity duration-200 opacity-100">
                                         </div>
                                     </div>
-                                    <input type="hidden" name="latitude" id="lat"
-                                        value="{{ old('latitude', -2.0337714) }}">
-                                    <input type="hidden" name="longtitude" id="long"
-                                        value="{{ old('longtitude', 101.3963373) }}">
+
+                                    <!-- GPS button -->
+                                    <button id="btn-gps" title="Gunakan Lokasi Saat Ini (GPS)" type="button"
+                                        class="absolute bottom-4 right-4 z-[400] btn btn-circle bg-base-100 border border-base-300 shadow-xl text-base-content hover:bg-base-200 transition active:scale-90">
+                                        <i data-lucide="navigation" class="w-5 h-5 text-primary"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Map Address display card overlay -->
+                                <div class="bg-base-200/50 p-4 border-t border-base-300/80 space-y-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="bg-red-500/15 p-2 rounded-xl text-red-500 shrink-0">
+                                            <i data-lucide="map-pin" class="w-4.5 h-4.5"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-0.5">Alamat Peta</p>
+                                            <p id="temp-address-display" class="text-xs font-semibold text-base-content/85 line-clamp-2 leading-relaxed">
+                                                Geser peta untuk menentukan area pemasangan...
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Wilayah check status -->
+                                    <div id="wilayah-validation-status" class="text-xs font-bold hidden rounded-xl p-3 border"></div>
+
+                                    <button id="btn-confirm-address" type="button" disabled
+                                        class="w-full btn btn-primary font-bold rounded-xl shadow">
+                                        Konfirmasi Alamat
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Wilayah Layanan Internet<span class="text-red-500 ml-1">*</span>
+                        <!-- Dropdown Wilayah & Alamat Textarea -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+                            <div class="md:col-span-1 space-y-1.5">
+                                <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                    Wilayah Layanan <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <select id="select-wilayah" name="wilayah" required
-                                    class="w-full px-4 py-3 rounded-lg transition text-sm outline-none {{ $errors->has('wilayah') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}">
-                                    <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah Anda
-                                    </option>
+                                    class="w-full select select-bordered px-4 py-3 bg-base-200/50 focus:bg-base-100 border-base-300/80 premium-input rounded-xl text-sm">
+                                    <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah</option>
                                     @foreach($areaLayanan as $area)
                                         <option value="{{ $area->nama_area }}" {{ old('wilayah') == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
                                     @endforeach
-                                    <option value="konsultasi" class="text-blue-600 font-semibold">💬 Wilayah Anda tidak
-                                        ada? Konsultasi dengan Admin</option>
+                                    <option value="konsultasi" class="text-primary font-bold">💬 Hubungi Admin R-NET</option>
                                 </select>
-                                @error('wilayah') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
-                            <div id="alamat" class="space-y-1.5">
-                                <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                    Alamat Lengkap<span class="text-red-500 ml-1">*</span>
+                            <div class="md:col-span-2 space-y-1.5">
+                                <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                    Alamat Lengkap Rumah <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <textarea id="alamat-input" name="alamat" rows="3" required
-                                    class="w-full px-4 py-3 rounded-lg transition resize-none text-sm outline-none {{ $errors->has('alamat') ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-red-50 text-red-900 placeholder-red-400' : 'bg-[#f8fafc] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 text-slate-800' }}"
-                                    placeholder="Contoh: Jl. Panglima Sudirman No. 12, RT 01/RW 02, Kelurahan Melati, Kode Pos 15810">{{ old('alamat') }}</textarea>
-                                @error('alamat') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                                <p class="text-[11px] text-slate-500 leading-relaxed mt-2 italic">
-                                    Jika Anda mengubah teks ini dengan alamat/kota yang spesifik, peta di atas otomatis
-                                    akan bergeser ke lokasi tersebut.
-                                </p>
+                                <textarea id="alamat-input" name="alamat" rows="2" required
+                                    class="w-full textarea textarea-bordered px-4 py-3 bg-base-200/50 focus:bg-base-100 border-base-300/80 premium-input rounded-xl text-sm resize-none"
+                                    placeholder="Contoh: Jl. Diponegoro No. 45, RT 02/RW 03, Kelurahan Jati, Kode Pos 37111">{{ old('alamat') }}</textarea>
                             </div>
+                        </div>
+
+                        <!-- Footer Navigation -->
+                        <div class="pt-6 border-t border-base-300/40 flex justify-between gap-4">
+                            <button type="button" onclick="goToStep(1)"
+                                class="btn btn-outline btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
+                            </button>
+                            <button type="button" onclick="goToStep(3)"
+                                class="btn btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-primary/20">
+                                Lanjut Ke Upload <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
 
-
-
-                    <!-- Foto Properti Section -->
-                    <div class="space-y-5 pt-4 border-t border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#eef2ff] text-[#1e40af] p-2 rounded-lg">
-                                <i data-lucide="home" class="w-5 h-5"></i>
+                    <!-- ==================== STEP 3: FOTO VERIFIKASI ==================== -->
+                    <div id="step-content-3" class="step-container space-y-6 animate-fade-in">
+                        <!-- Header -->
+                        <div class="flex items-center gap-3 pb-3 border-b border-base-300/40">
+                            <div class="bg-primary/10 text-primary p-2.5 rounded-xl">
+                                <i data-lucide="camera" class="w-5 h-5"></i>
                             </div>
-                            <h3 class="font-bold text-lg text-slate-800">Foto Properti</h3>
+                            <div>
+                                <h3 class="font-bold text-lg text-base-content">Foto Rumah &amp; Verifikasi</h3>
+                                <p class="text-xs text-base-content/50">Upload foto rumah tampak depan</p>
+                            </div>
                         </div>
 
-                        <div class="space-y-1.5 md:pl-2">
-                            <label class="text-sm font-semibold text-slate-700 flex items-center">
-                                Upload Foto Rumah<span class="text-red-500 ml-1">*</span>
+                        <!-- File upload box styled as drag/drop card -->
+                        <div class="space-y-4">
+                            <label class="text-xs font-bold text-base-content/75 flex items-center tracking-wide uppercase">
+                                Upload Foto Depan Rumah <span class="text-red-500 ml-1">*</span>
                             </label>
 
-                            <div
-                                class="relative border rounded-xl transition overflow-hidden {{ $errors->has('path_gambar') ? 'border-2 border-red-500 bg-red-50 hover:border-red-500' : 'border-slate-200 bg-[#f8fafc] hover:border-blue-400' }}">
-                                <!-- Preview area (hidden until file is chosen) -->
-                                <div id="preview-container"
-                                    class="hidden items-center p-4 border-b border-slate-200 bg-white">
+                            <div class="relative border-2 border-dashed border-base-300/80 hover:border-primary/60 rounded-2xl transition-all duration-300 overflow-hidden bg-base-200/20">
+                                <!-- Image Preview panel -->
+                                <div id="preview-container" class="hidden items-center p-4 border-b border-base-300/60 bg-base-100">
                                     <img id="image-preview" src="#" alt="Preview"
-                                        class="w-20 h-20 object-cover rounded shadow border border-slate-200">
+                                        class="w-24 h-24 object-cover rounded-xl shadow border border-base-300/50">
                                     <div class="flex-1 ml-4">
-                                        <p class="text-sm font-semibold text-slate-800">Gambar berhasil dipilih</p>
-                                        <p class="text-xs text-slate-500 mt-1">Gunakan tombol di bawah untuk mengganti.
-                                        </p>
+                                        <p class="text-sm font-bold text-base-content">Foto berhasil dipilih</p>
+                                        <p class="text-xs text-base-content/50 mt-1">Kami secara otomatis mengompres foto Anda agar lebih hemat kuota.</p>
                                     </div>
                                 </div>
 
-                                <label for="file-input"
-                                    class="flex flex-col items-center justify-center p-6 md:p-8 cursor-pointer hover:bg-slate-50 transition">
-                                    <div
-                                        class="bg-[#eef2ff] p-3 rounded-xl mb-4 text-[#1e40af] shadow-sm font-semibold">
-                                        <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                                <label for="file-input" class="flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-base-200/30 transition w-full">
+                                    <div class="bg-primary/10 p-3.5 rounded-2xl mb-4 text-primary shadow-sm">
+                                        <i data-lucide="upload-cloud" class="w-6 h-6 animate-pulse"></i>
                                     </div>
-                                    <p class="text-sm font-bold text-slate-700 mb-1" id="upload-label">
-                                        Klik untuk upload foto rumah
+                                    <p class="text-sm font-bold text-base-content mb-1" id="upload-label">
+                                        Pilih foto rumah dari galeri
                                     </p>
-                                    <p class="text-xs text-slate-500 font-medium">PNG, JPG maksimal 1 MB</p>
+                                    <p class="text-xs text-base-content/40 font-semibold uppercase tracking-wider">PNG, JPG (Maksimal 1 MB)</p>
                                 </label>
 
-                                <input type="file" id="file-input" name="path_gambar" accept=".png,.jpg,.jpeg"
-                                    class="hidden" required>
+                                <input type="file" id="file-input" name="path_gambar" accept=".png,.jpg,.jpeg" class="hidden" required>
                             </div>
-                            @error('path_gambar') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                            <p class="text-xs text-slate-500 leading-relaxed mt-2">
-                                Upload foto tampak depan rumah yang jelas untuk membantu teknisi menemukan lokasi
-                                properti Anda.
-                            </p>
                         </div>
-                    </div>
 
-                    <!-- Submit Section -->
-                    <div class="pt-8">
-                        <button type="submit" id="submit-btn"
-                            class="w-full bg-[#1e40af] text-white font-bold px-8 py-3.5 rounded-lg hover:bg-[#1e3a8a] transition shadow text-sm flex items-center justify-center">
-                            Kirim Pendaftaran
-                        </button>
-                        <p class="text-[11px] text-center text-slate-500 font-medium mt-4">
-                            Dengan mengirim formulir ini, Anda setuju dengan <br class="hidden sm:block">
-                            <span class="text-blue-600 hover:underline cursor-pointer">Syarat Layanan</span> dan
-                            <span class="text-blue-600 hover:underline cursor-pointer">Kebijakan Privasi</span> kami.
-                        </p>
+                        <!-- Agreements T&C disclaimer -->
+                        <div class="bg-base-200/50 border border-base-300/60 p-5 rounded-2xl text-xs text-base-content/70 leading-relaxed">
+                            <p>Dengan menekan tombol <b>Kirim Pendaftaran</b>, Anda menyatakan bahwa data pendaftaran, nomor telepon, dan letak koordinat rumah yang Anda berikan adalah benar dan valid.</p>
+                        </div>
+
+                        <!-- Footer Navigation -->
+                        <div class="pt-6 border-t border-base-300/40 flex justify-between gap-4">
+                            <button type="button" onclick="goToStep(2)"
+                                class="btn btn-outline btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
+                            </button>
+                            <button type="submit" id="submit-btn"
+                                class="btn btn-success text-white font-bold px-8 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-success/20">
+                                Kirim Pendaftaran <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
                     </div>
 
                 </form>
             </div>
-
-            <!-- Contact Support Container directly below the form card -->
-            <div
-                class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col sm:flex-row gap-5 items-start sm:items-center mt-6">
-                <div class="bg-[#eef2ff] p-3 md:p-4 rounded-xl text-[#1e40af] shrink-0">
-                    <i data-lucide="headphones" class="w-6 h-6 md:w-8 md:h-8"></i>
+            
+            <!-- Contact Customer Service support box below -->
+            <div class="glass-card p-6 rounded-3xl shadow-lg border border-base-300/50 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+                <div class="bg-primary/10 p-3.5 rounded-2xl text-primary shrink-0">
+                    <i data-lucide="headphones" class="w-6 h-6 sm:w-8 sm:h-8"></i>
                 </div>
                 <div>
-                    <h4 class="font-bold text-slate-800 text-base">Butuh Bantuan?</h4>
-                    <p class="text-sm text-slate-500 mt-1 mb-3">Tim layanan pelanggan kami tersedia 24/7 untuk membantu
-                        proses instalasi Anda.</p>
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 text-sm font-semibold">
-                        <a href="tel:+6281373242873"
-                            class="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
-                            0813-7324-2873
+                    <h4 class="font-bold text-base-content text-base">Butuh Bantuan Pendaftaran?</h4>
+                    <p class="text-sm text-base-content/50 mt-1 mb-3">Customer service kami siap memandu proses pemasangan Anda.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 text-xs font-bold uppercase tracking-wider">
+                        <a href="tel:+6281373242873" class="flex items-center gap-2 text-base-content/75 hover:text-primary transition">
+                            <i data-lucide="phone" class="w-4 h-4 text-primary"></i> 0813-7324-2873
                         </a>
-                        <a href="#" class="flex items-center gap-2 text-green-600 hover:text-green-700 transition">
-                            <i data-lucide="message-square" class="w-4 h-4"></i>
-                            Dukungan WhatsApp
+                        <a href="https://wa.me/6281373242873" target="_blank" class="flex items-center gap-2 text-success hover:text-success-focus transition">
+                            <i data-lucide="message-square" class="w-4 h-4"></i> Chat WhatsApp
                         </a>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
@@ -451,6 +473,110 @@
     <script>
         // ── Init Lucide Icons ──────────────────────────────────────────────
         lucide.createIcons();
+
+        // ── Step Navigation & Guidances ──────────────────────────────────────────
+        let currentStep = 1;
+        const stepIndicators = [
+            document.getElementById('step-indicator-1'),
+            document.getElementById('step-indicator-2'),
+            document.getElementById('step-indicator-3')
+        ];
+        const stepContents = [
+            document.getElementById('step-content-1'),
+            document.getElementById('step-content-2'),
+            document.getElementById('step-content-3')
+        ];
+        const guideStepTitle = document.getElementById('guide-step-title');
+        const guideText = document.getElementById('guide-text');
+        const mapHelperBox = document.getElementById('map-helper-box');
+
+        const guides = {
+            1: "Silakan masukkan nama lengkap Anda dan nomor telepon WhatsApp aktif yang dapat dihubungi. Setelah itu, pilih salah satu paket layanan internet yang Anda inginkan.",
+            2: "Tandai titik lokasi rumah Anda di peta dengan menggeser peta hingga pin merah berada di posisi yang tepat. Gunakan tombol GPS jika Anda sedang berada di lokasi rumah.",
+            3: "Upload foto bagian depan rumah Anda dengan jelas. Foto ini digunakan untuk memudahkan teknisi kami memetakan kabel fiber optik ke rumah Anda."
+        };
+
+        function goToStep(step) {
+            // Validation before moving forward
+            if (step > currentStep) {
+                if (currentStep === 1) {
+                    const name = document.querySelector('input[name="nama"]').value.trim();
+                    const tel = document.querySelector('input[name="nomor_tlpn"]').value.trim();
+                    const paket = document.getElementById('selected-paket').value;
+
+                    if (!name) {
+                        alert("Nama Lengkap harus diisi terlebih dahulu.");
+                        return;
+                    }
+                    if (!tel) {
+                        alert("Nomor telepon harus diisi terlebih dahulu.");
+                        return;
+                    }
+                    if (!paket) {
+                        alert("Silakan pilih salah satu Paket Internet.");
+                        return;
+                    }
+                } else if (currentStep === 2) {
+                    const selectWilayah = document.getElementById('select-wilayah');
+                    const selectedVal = selectWilayah ? selectWilayah.value : "";
+                    const latInput = document.getElementById('lat');
+                    const isConfirmed = !document.getElementById('btn-confirm-address').disabled;
+                    const addressVal = document.getElementById('alamat-input').value.trim();
+
+                    if (!selectedVal) {
+                        alert("Wilayah layanan harus dipilih terlebih dahulu.");
+                        return;
+                    }
+                    if (document.getElementById('btn-confirm-address').textContent === "Wilayah Tidak Terjangkau") {
+                        alert("Titik lokasi peta Anda berada di luar jangkauan wilayah R-NET. Silakan hubungi admin.");
+                        return;
+                    }
+                    if (isConfirmed && btnConfirm.textContent.includes("Konfirmasi")) {
+                        alert("Silakan tekan tombol 'Konfirmasi Alamat' terlebih dahulu untuk mengunci lokasi peta.");
+                        return;
+                    }
+                    if (!addressVal || addressVal.length < 5) {
+                        alert("Alamat rumah lengkap harus diisi.");
+                        return;
+                    }
+                }
+            }
+
+            // Update content display
+            stepContents.forEach((content, index) => {
+                if (index + 1 === step) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+
+            // Update step indicators
+            stepIndicators.forEach((indicator, index) => {
+                if (index + 1 <= step) {
+                    indicator.classList.add('step-primary');
+                } else {
+                    indicator.classList.remove('step-primary');
+                }
+            });
+
+            // Update Guidance text
+            currentStep = step;
+            guideStepTitle.textContent = `Langkah ${step} dari 3`;
+            guideText.textContent = guides[step];
+
+            if (step === 2) {
+                mapHelperBox.classList.remove('hidden');
+                // Force Leaflet recalculation when switching to tab
+                if (map) {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 200);
+                }
+            } else {
+                mapHelperBox.classList.add('hidden');
+            }
+        }
 
         // ── Paket Card Selector ───────────────────────────────────────────
         function selectPaket(el) {
@@ -462,33 +588,17 @@
                 var checkSvg = card.querySelector('svg');
 
                 if (card.getAttribute('data-paket-id') === id) {
-                    card.className = card.className
-                        .replace('border-slate-200', 'border-[#1e40af]')
-                        .replace('bg-[#f8fafc]', 'bg-[#eef2ff]')
-                        .replace('hover:border-slate-300', '')
-                        .replace('hover:bg-white', '');
-                    card.classList.add('ring-1', 'ring-[#1e40af]/30');
-                    indicator.className = indicator.className
-                        .replace('border-2', '').replace('border-slate-300', '')
-                        .replace('scale-90', 'scale-100');
-                    indicator.classList.add('bg-[#1e40af]', 'text-white');
+                    card.className = "paket-card group relative flex flex-col items-center text-center p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer w-full border-primary bg-primary/5 ring-1 ring-primary/25 font-bold";
+                    indicator.className = "absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 bg-primary border-primary text-white scale-100";
                     checkSvg.classList.remove('hidden');
                 } else {
-                    card.className = card.className
-                        .replace('border-[#1e40af]', 'border-slate-200')
-                        .replace('bg-[#eef2ff]', 'bg-[#f8fafc]');
-                    card.classList.remove('ring-1', 'ring-[#1e40af]/30');
-                    card.classList.add('hover:border-slate-300', 'hover:bg-white');
-                    indicator.classList.remove('bg-[#1e40af]', 'text-white');
-                    indicator.className = indicator.className
-                        .replace('scale-100', 'scale-90');
-                    indicator.classList.add('border-2', 'border-slate-300');
+                    card.className = "paket-card group relative flex flex-col items-center text-center p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer w-full bg-base-200/40 border-base-300/60 hover:border-primary/50 hover:bg-base-100";
+                    indicator.className = "absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 border-base-300/80 scale-90";
                     checkSvg.classList.add('hidden');
                 }
             });
         }
 
-        // ── Leaflet Map ────────────────────────────────────────────────────
         // ── Leaflet Map (MapPicker React behavior port) ────────────
         var defaultLat = parseFloat(document.getElementById('lat').value) || -2.0337714;
         var defaultLong = parseFloat(document.getElementById('long').value) || 101.3963373;
@@ -561,13 +671,13 @@
             validationEl.classList.remove('hidden');
 
             // Hapus kelas warna tombol konfirmasi agar bisa diset dinamis
-            btnConfirm.classList.remove('bg-slate-400', 'bg-amber-600', 'hover:bg-amber-700', 'bg-[#1e40af]', 'hover:bg-[#1e3a8a]', 'opacity-60', 'cursor-not-allowed');
+            btnConfirm.className = "w-full btn font-bold rounded-xl shadow";
 
             // Kasus 1: Wilayah Tidak Terdaftar
             if (!detectedRegion) {
                 // Kunci tombol konfirmasi alamat
                 btnConfirm.disabled = true;
-                btnConfirm.classList.add('bg-slate-400', 'opacity-60', 'cursor-not-allowed');
+                btnConfirm.classList.add('btn-disabled');
                 btnConfirm.textContent = "Wilayah Tidak Terjangkau";
                 delete btnConfirm.dataset.pendingRegion;
 
@@ -575,18 +685,17 @@
                 selectWilayah.disabled = true;
                 selectWilayah.value = "";
 
-                validationEl.className = "mt-2 text-xs font-semibold text-rose-600 flex flex-col gap-2.5 bg-rose-50 p-3.5 rounded-lg border border-rose-100";
+                validationEl.className = "text-xs font-bold text-error bg-error/10 p-3 rounded-xl border border-error/20 flex flex-col gap-2";
                 validationEl.innerHTML = `
                     <div class="flex items-start gap-2">
-                        <i data-lucide="x-circle" class="w-4.5 h-4.5 shrink-0 mt-0.5 text-rose-500"></i>
+                        <i data-lucide="x-circle" class="w-4 h-4 shrink-0 mt-0.5 text-error"></i>
                         <div>
-                            <span class="block text-rose-800 font-bold mb-0.5">Lokasi Berada di Luar Wilayah Layanan R-NET</span>
-                            <span class="block text-slate-600 font-medium leading-normal mb-1">Maaf, titik koordinat yang Anda tandai di peta berada di luar jangkauan wilayah layanan internet resmi kami saat ini.</span>
+                            <span class="block font-bold text-error">Lokasi Di Luar Wilayah Layanan R-NET</span>
+                            <span class="block font-medium text-base-content/70 mt-0.5 leading-normal">Maaf, titik koordinat yang Anda tandai berada di luar jangkauan wilayah operasional resmi kami.</span>
                         </div>
                     </div>
-                    <a href="https://wa.me/6281373242873?text=Halo%20Admin%20R-NET,%20titik%20peta%20koordinat%20pemasangan%20saya%20terdeteksi%20di%20luar%20wilayah%20layanan.%20Apakah%20bisa%20dibantu%20cek%20lokasi%20saya%20berikut%3A%20${encodeURIComponent(tempAddr)}" target="_blank" class="flex items-center justify-center gap-1.5 w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-lg text-xs transition duration-150 shadow-sm text-center">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        Konsultasi Mengenai Lokasi (Hubungi Admin)
+                    <a href="https://wa.me/6281373242873?text=Halo%20Admin%20R-NET,%20lokasi%20saya%20terdeteksi%20di%20luar%20wilayah%20layanan%20berikut%3A%20${encodeURIComponent(tempAddr)}" target="_blank" class="btn btn-error btn-xs w-full text-white font-bold py-1.5 rounded-lg">
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5 mr-1"></i> Hubungi Admin
                     </a>
                 `;
                 lucide.createIcons();
@@ -599,16 +708,14 @@
 
             // Kasus 2: Pengguna belum memilih wilayah
             if (!selectedVal) {
-                btnConfirm.classList.add('bg-amber-600', 'hover:bg-amber-700');
-                btnConfirm.textContent = "Konfirmasi Alamat & Pilih Wilayah";
+                btnConfirm.classList.add('btn-warning');
+                btnConfirm.textContent = "Konfirmasi & Pilih Wilayah";
                 btnConfirm.dataset.pendingRegion = detectedRegion;
 
-                validationEl.className = "mt-2 text-xs font-semibold text-amber-600 flex flex-col gap-2 bg-amber-50 p-3 rounded-lg border border-amber-100 animate-pulse";
+                validationEl.className = "text-xs font-bold text-warning bg-warning/10 p-3 rounded-xl border border-warning/20 flex items-center gap-1.5 animate-pulse";
                 validationEl.innerHTML = `
-                    <div class="flex items-center gap-1.5">
-                        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-                        <span>Terdeteksi di "${detectedRegion}". Klik tombol konfirmasi di samping untuk menyetujui alamat dan memilih wilayah ini secara otomatis.</span>
-                    </div>
+                    <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                    <span>Terdeteksi di "${detectedRegion}". Klik tombol konfirmasi untuk memilih wilayah ini otomatis.</span>
                 `;
                 lucide.createIcons();
                 return;
@@ -616,28 +723,26 @@
 
             // Kasus 3: Lokasi terdeteksi cocok dengan pilihan wilayah
             if (selectedVal === detectedRegion) {
-                btnConfirm.classList.add('bg-[#1e40af]', 'hover:bg-[#1e3a8a]');
+                btnConfirm.classList.add('btn-primary');
                 btnConfirm.textContent = "Konfirmasi Alamat";
                 delete btnConfirm.dataset.pendingRegion;
 
-                validationEl.className = "mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 bg-emerald-50 p-2.5 rounded-lg border border-emerald-100";
+                validationEl.className = "text-xs font-bold text-success bg-success/10 p-3 rounded-xl border border-success/20 flex items-center gap-1.5";
                 validationEl.innerHTML = `
-                    <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
-                    <span>Lokasi sesuai dengan wilayah jangkauan "${selectedVal}"</span>
+                    <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                    <span>Sesuai wilayah jangkauan "${selectedVal}"</span>
                 `;
             } else {
                 // Kasus 4: Alamat terdaftar tetapi salah memilih wilayah
-                btnConfirm.classList.add('bg-amber-600', 'hover:bg-amber-700');
-                btnConfirm.textContent = "Konfirmasi Alamat & Sesuaikan Wilayah";
+                btnConfirm.classList.add('btn-warning');
+                btnConfirm.textContent = "Konfirmasi & Sesuaikan Wilayah";
                 btnConfirm.dataset.pendingRegion = detectedRegion;
 
-                validationEl.className = "mt-2 text-xs font-semibold text-amber-600 flex flex-col gap-2 bg-amber-50 p-3 rounded-lg border border-amber-100";
+                validationEl.className = "text-xs font-bold text-warning bg-warning/10 p-3 rounded-xl border border-warning/20 flex items-start gap-1.5";
                 validationEl.innerHTML = `
-                    <div class="flex items-start gap-1.5">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5"></i>
-                        <div>
-                            <span>Lokasi terdeteksi di "${detectedRegion}", tetapi Anda memilih "${selectedVal}". Klik konfirmasi di samping untuk menyesuaikan secara otomatis.</span>
-                        </div>
+                    <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                    <div>
+                        <span>Lokasi terdeteksi di "${detectedRegion}", bukan "${selectedVal}". Klik konfirmasi untuk menyesuaikan otomatis.</span>
                     </div>
                 `;
             }
@@ -661,7 +766,7 @@
             } else {
                 var center = REGION_CENTERS[this.value];
                 if (center) {
-                    map.flyTo(center, 14); // Geser peta ke pusat wilayah yang dipilih secara dinamis!
+                    map.flyTo(center, 14); // Geser peta secara dinamis
                 }
             }
             validateWilayahLocation();
@@ -786,7 +891,7 @@
             isMapSelected = true;
             setTimeout(function () { isMapSelected = false; }, 5000);
 
-            // Tampilkan feedback mengambang premium di tengah bawah
+            // Floating premium feedback pop-up
             var successBanner = document.createElement('div');
             successBanner.className = "fixed bottom-8 left-1/2 z-[9999] bg-slate-900/95 text-white backdrop-blur-md px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-800/80 flex items-center gap-3.5 w-[92%] max-w-md";
             successBanner.style.transform = "translate(-50%, 30px)";
@@ -837,8 +942,8 @@
                     if (data && data.length > 0) {
                         const { lat, lon } = data[0];
                         map.setView([parseFloat(lat), parseFloat(lon)], 15);
-                        marker.setLatLng([parseFloat(lat), parseFloat(lon)]);
-                        syncLatLng({ lat: parseFloat(lat), lng: parseFloat(lon) });
+                        tempCenter = { lat: parseFloat(lat), lng: parseFloat(lon) };
+                        fetchAddress(parseFloat(lat), parseFloat(lon));
                     }
                 } catch (err) {
                     console.warn("Geocode lookup gracefully aborted (rate limit/network issue):", err);
@@ -959,7 +1064,7 @@
             var btn = document.getElementById('submit-btn');
             btn.disabled = true;
             btn.textContent = 'Memproses Data...';
-            btn.classList.add('opacity-70');
+            btn.classList.add('btn-disabled');
         });
     </script>
 </body>
