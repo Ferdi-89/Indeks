@@ -118,7 +118,7 @@
             {{-- Brand --}}
             <div class="flex items-center px-2">
                 <a href="/">
-                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-9 w-auto">
+                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-8 w-auto">
                 </a>
             </div>
         </div>
@@ -181,25 +181,25 @@
                 <div class="max-w-2xl">
                     {{-- Logo Hero (light = white, dark = black) --}}
                     <div class="flex justify-center mb-6">
-                        <img src="/logobasewhite.svg" alt="R-NET" class="h-45 w-auto hero-logo-light">
-                        <img src="/logobaseblack.svg" alt="R-NET" class="h-45 w-auto hero-logo-dark">
+                        <img src="/logobasewhite.svg" alt="R-NET" class="h-20 sm:h-28 md:h-36 lg:h-44 w-auto hero-logo-light">
+                        <img src="/logobaseblack.svg" alt="R-NET" class="h-20 sm:h-28 md:h-36 lg:h-44 w-auto hero-logo-dark">
                     </div>
 
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
-                        Internet <span class="text-primary">Cepat</span> &<br>
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+                        Internet <span class="text-primary">Cepat</span> &amp;<br class="hidden sm:inline">
                         <span class="text-primary">Stabil</span> Tanpa Batas
                     </h1>
-                    <p class="text-base sm:text-lg text-base-content/70 leading-relaxed mb-8 max-w-xl mx-auto">
+                    <p class="text-sm sm:text-base text-base-content/70 leading-relaxed mb-8 max-w-xl mx-auto">
                         R-NET menghadirkan koneksi internet berkualitas tinggi tanpa FUP,
                         unlimited quota, untuk kehidupan digital yang lebih produktif dan menyenangkan.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3 justify-center">
                         <a href="/daftar" id="btn-daftar-hero"
-                            class="btn btn-primary btn-lg rounded-2xl font-bold px-8">
+                            class="btn btn-primary sm:btn-lg rounded-2xl font-bold px-8">
                             Daftar Sekarang
                         </a>
                         <a href="#harga" id="btn-pelajari"
-                            class="btn btn-outline btn-primary btn-lg rounded-2xl font-bold px-8">
+                            class="btn btn-outline btn-primary sm:btn-lg rounded-2xl font-bold px-8">
                             Pilihan Paket
                         </a>
                     </div>
@@ -396,7 +396,7 @@
 
 
                 <p
-                    class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-5 py-2 rounded-full text-sm font-bold mx-auto w-fit border border-yellow-500 mt-10 shadow-sm">
+                    class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-5 py-2 rounded-full text-xs sm:text-sm font-bold mx-auto w-fit border border-yellow-500 mt-10 shadow-sm">
                     BIAYA PEMASANGAN HANYA 350k
                 </p>
             </div>
@@ -423,7 +423,7 @@
                 </aside>
 
                 {{-- Kolom Kanan: Nav Links --}}
-                <div class="flex flex-row flex-wrap gap-10 lg:gap-16">
+                <div class="grid grid-cols-2 sm:flex sm:flex-row gap-8 lg:gap-16">
                     <nav class="flex flex-col gap-2">
                         <h6 class="footer-title">Layanan</h6>
                         <a href="#fitur" class="link link-hover">Fitur Kami</a>
@@ -436,7 +436,7 @@
                         <a href="https://wa.me/6281373242673" id="link-whatsapp-footer" target="_blank"
                             rel="noopener noreferrer" class="link link-hover">Kontak</a>
                     </nav>
-                    <nav class="flex flex-col gap-2">
+                    <nav class="flex flex-col gap-2 col-span-2 sm:col-span-1">
                         <h6 class="footer-title">Legal</h6>
                         <a href="#" class="link link-hover">Syarat Penggunaan</a>
                         <a href="#" class="link link-hover">Kebijakan Privasi</a>
@@ -487,23 +487,26 @@
         });
 
         // ── Newsletter subscribe button ───────────────────────────
-        document.getElementById('btn-berlangganan').addEventListener('click', () => {
-            const emailInput = document.getElementById('input-email-newsletter');
-            const email = emailInput.value.trim();
-            if (!email || !email.includes('@')) {
-                emailInput.classList.add('input-error');
-                emailInput.focus();
-                return;
-            }
-            emailInput.classList.remove('input-error');
-            emailInput.value = '';
-            // Show a simple toast/alert
-            const toast = document.createElement('div');
-            toast.className = 'toast toast-top toast-center z-[9999]';
-            toast.innerHTML = `<div class="alert alert-success text-sm font-semibold"><span>✅ Terima kasih! Anda telah berlangganan.</span></div>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
-        });
+        const btnBerlangganan = document.getElementById('btn-berlangganan');
+        if (btnBerlangganan) {
+            btnBerlangganan.addEventListener('click', () => {
+                const emailInput = document.getElementById('input-email-newsletter');
+                const email = emailInput.value.trim();
+                if (!email || !email.includes('@')) {
+                    emailInput.classList.add('input-error');
+                    emailInput.focus();
+                    return;
+                }
+                emailInput.classList.remove('input-error');
+                emailInput.value = '';
+                // Show a simple toast/alert
+                const toast = document.createElement('div');
+                toast.className = 'toast toast-top toast-center z-[9999]';
+                toast.innerHTML = `<div class="alert alert-success text-sm font-semibold"><span>✅ Terima kasih! Anda telah berlangganan.</span></div>`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3500);
+            });
+        }
         // ── Init Lucide Icons ──────────────────────────────────────────────
         lucide.createIcons();
     </script>
