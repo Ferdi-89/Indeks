@@ -236,6 +236,10 @@
         const hash = window.location.hash.substring(1);
         switchTab(VALID_TABS.includes(hash) ? hash : 'dashboard');
 
+        if (typeof window.initPendaftaranPanel === 'function') {
+            window.initPendaftaranPanel();
+        }
+
         // --- UNIVERSAL AJAX HANDLER ---
 
         // 1. Intercept Pagination Links (SPA no-reload)
@@ -253,7 +257,10 @@
                         const newPanel = doc.getElementById(panel.id);
                         if (newPanel) {
                             panel.innerHTML = newPanel.innerHTML;
-                            if (typeof STATUS_COLORS !== 'undefined') {
+                            history.pushState(null, '', link.href);
+                            if (panel.id === 'panel-pendaftaran' && typeof window.initPendaftaranPanel === 'function') {
+                                window.initPendaftaranPanel();
+                            } else if (typeof STATUS_COLORS !== 'undefined') {
                                 document.querySelectorAll('.status-select').forEach(el => {
                                     const val = el.value;
                                     Object.values(STATUS_COLORS).forEach(c => el.classList.remove(c));
@@ -285,7 +292,14 @@
                 }
                 try {
                     const formData = new FormData(form);
-                    const response = await fetch(form.action, {
+                    let url = form.action.split('#')[0];
+                    if (form.method.toUpperCase() === 'GET') {
+                        const params = new URLSearchParams(formData).toString();
+                        if (params) {
+                            url += (url.includes('?') ? '&' : '?') + params;
+                        }
+                    }
+                    const response = await fetch(url, {
                         method: form.method.toUpperCase(),
                         body: form.method.toUpperCase() === 'GET' ? null : formData,
                         headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/html' }
@@ -325,6 +339,10 @@
                     const newPanel = doc.getElementById(panel.id);
                     if (newPanel) {
                         panel.innerHTML = newPanel.innerHTML;
+                        history.pushState(null, '', url);
+                        if (panel.id === 'panel-pendaftaran' && typeof window.initPendaftaranPanel === 'function') {
+                            window.initPendaftaranPanel();
+                        }
                         if (typeof showToast === 'function') showToast('Aksi berhasil dilakukan', 'success');
                         document.querySelectorAll('dialog.modal').forEach(m => m.close());
                     }
@@ -387,6 +405,173 @@
                 interaction: { intersect: false, mode: 'index' }
             }
         });
+    };
+
+    // ═══════════════════════════════════════════
+    // Pendaftaran Tab Functions (SPA Global Scope)
+    // ═══════════════════════════════════════════
+    window.STATUS_COLORS = {
+        pending:   'text-warning',
+        validated: 'text-info',
+        rejected:  'text-error',
+        setup:     'text-accent',
+        active:    'text-success'
+    };
+
+    window.resetPendaftaranFilters = async function(event) {
+        if (event) event.preventDefault();
+        
+        // Use the href attribute of the clicked element for dynamic routing (works in subdirectories)
+        const targetUrl = event.currentTarget.getAttribute('href') || '/admin#pendaftaran';
+        const cleanUrl = targetUrl.split('#')[0];
+        
+        const panel = document.getElementById('panel-pendaftaran');
+        if (panel) {
+            panel.style.opacity = '0.5';
+            try {
+                const response = await fetch(cleanUrl, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
+                
+                const html = await response.text();
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const newPanel = doc.getElementById('panel-pendaftaran');
+                if (newPanel) {
+                    panel.innerHTML = newPanel.innerHTML;
+                    history.pushState(null, '', targetUrl);
+                    window.initPendaftaranPanel();
+                }
+            } catch (err) {
+                console.error('Reset Error:', err);
+                // Fallback to standard link click navigation
+                window.location.href = targetUrl;
+            } finally {
+                panel.style.opacity = '1';
+            }
+        }
+    };
+
+    window.toggleFilterPanel = function() {
+        const panel = document.getElementById('filter-panel');
+        if (panel) {
+            panel.classList.toggle('hidden');
+        }
+    };
+
+    window.toggleAllExportColumns = function(select) {
+        const checkboxes = document.querySelectorAll('#export-columns-list input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = select);
+    };
+
+    window.moveExportColumn = function(btn, direction) {
+        const li = btn.closest('li');
+        const list = document.getElementById('export-columns-list');
+        if (direction === 'up') {
+            const prev = li.previousElementSibling;
+            if (prev) {
+                list.insertBefore(li, prev);
+            }
+        } else if (direction === 'down') {
+            const next = li.nextElementSibling;
+            if (next) {
+                list.insertBefore(li, next.nextElementSibling);
+            }
+        }
+    };
+
+    window.updateStatus = async function(el) {
+        const id = el.dataset.id;
+        const newStatus = el.value;
+        const prevValue = el.getAttribute('data-prev') || el.querySelector('option[selected]')?.value;
+        const url = el.dataset.url || `/admin/pendaftaran/${id}/status`;
+
+        el.disabled = true;
+        el.classList.add('opacity-50');
+
+        try {
+            const res = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!res.ok) throw new Error('Request gagal');
+
+            Object.values(window.STATUS_COLORS).forEach(c => el.classList.remove(c));
+            el.classList.add(window.STATUS_COLORS[newStatus] || '');
+            el.setAttribute('data-prev', newStatus);
+
+            const BADGE_MAP = {
+                pending: 'bg-warning/10 text-warning border-warning/20',
+                validated: 'bg-info/10 text-info border-info/20',
+                rejected: 'bg-error/10 text-error border-error/20',
+                setup: 'bg-accent/10 text-accent border-accent/20',
+                active: 'bg-success/10 text-success border-success/20'
+            };
+            const badge = document.getElementById('detail_status_' + id);
+            if (badge) {
+                badge.className = 'px-2 py-1 font-bold rounded-md border text-xs ' + (BADGE_MAP[newStatus] || 'bg-base-200 text-base-content/70 border-base-300');
+                badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+            }
+
+            spaToast(`Status berhasil diubah ke "${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}"`, 'success');
+        } catch (err) {
+            if (prevValue) el.value = prevValue;
+            spaToast('Gagal mengubah status. Coba lagi.', 'error');
+        } finally {
+            el.disabled = false;
+            el.classList.remove('opacity-50');
+        }
+    };
+
+    window.initExportDragAndDrop = function() {
+        const list = document.getElementById('export-columns-list');
+        if (!list) return;
+
+        let dragEl = null;
+
+        list.addEventListener('dragstart', (e) => {
+            const li = e.target.closest('li');
+            if (!li) return;
+            dragEl = li;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', '');
+            setTimeout(() => {
+                li.classList.add('opacity-40', 'border-primary', 'border-dashed');
+            }, 0);
+        });
+
+        list.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!dragEl) return;
+            const targetLi = e.target.closest('li');
+            if (targetLi && targetLi !== dragEl && targetLi.parentNode === list) {
+                const rect = targetLi.getBoundingClientRect();
+                const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                list.insertBefore(dragEl, next ? targetLi.nextSibling : targetLi);
+            }
+        });
+
+        list.addEventListener('dragend', (e) => {
+            if (!dragEl) return;
+            dragEl.classList.remove('opacity-40', 'border-primary', 'border-dashed');
+            dragEl = null;
+        });
+    };
+
+    window.initPendaftaranPanel = function() {
+        document.querySelectorAll('.status-select').forEach(el => {
+            const val = el.value;
+            Object.values(window.STATUS_COLORS).forEach(c => el.classList.remove(c));
+            el.classList.add(window.STATUS_COLORS[val] || '');
+            el.setAttribute('data-prev', val);
+        });
+        window.initExportDragAndDrop();
     };
 </script>
 @endsection

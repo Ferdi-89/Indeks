@@ -6,7 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar R-NET - Internet Rakyat</title>
     <meta name="description"
-        content="Daftarkan layanan internet R-NET di lokasi Anda. Fiber optik berkecepatan tinggi untuk rumah Anda.">
+        content="Daftarkan layanan internet R-NET di lokasi Anda. Internet berkecepatan tinggi untuk rumah Anda.">
+
+    <script>
+        (function() {
+            var t = localStorage.getItem('rnet-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,23 +121,39 @@
         </style>
     @endif
 
-    {{-- Header Area --}}
-    <header class="max-w-7xl mx-auto px-4 md:px-8 pt-8 flex justify-between items-center">
-        <a href="/" class="btn btn-ghost btn-sm rounded-xl gap-2 font-bold text-base-content/75">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Beranda
-        </a>
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-semibold text-base-content/40 uppercase tracking-widest">Portal Pendaftaran</span>
-            <span class="badge badge-primary font-bold py-2">R-NET</span>
-        </div>
+    {{-- Premium Navbar Area --}}
+    <header class="sticky top-0 z-50 w-full bg-base-100/80 backdrop-blur-md border-b border-base-300/15">
+        <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <!-- Left Side: Brand Logo & Title -->
+            <div class="flex items-center gap-6">
+                <a href="/" class="flex items-center gap-2 shrink-0">
+                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                </a>
+                <span class="text-xs font-semibold text-base-content/40 uppercase tracking-widest hidden sm:inline-block">| Portal Pendaftaran</span>
+            </div>
+
+            <!-- Right Side: Theme Toggle & Back Button -->
+            <div class="flex items-center gap-4">
+                {{-- Theme Switcher --}}
+                <label id="theme-toggle" class="btn btn-ghost btn-circle btn-sm swap swap-rotate" title="Ganti tema">
+                    <input type="checkbox" id="theme-checkbox" class="hidden" />
+                    <i data-lucide="sun" class="swap-on w-4 h-4 text-amber-500"></i>
+                    <i data-lucide="moon" class="swap-off w-4 h-4 text-primary"></i>
+                </label>
+
+                <a href="/" class="btn btn-ghost btn-sm rounded-xl gap-2 font-bold text-base-content/75 hover:bg-base-200">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Beranda
+                </a>
+            </div>
+        </nav>
     </header>
 
-    {{-- Progress Steps bar --}}
+    {{-- Progress Steps bar (Clickable Navigators) --}}
     <div class="max-w-xl mx-auto mt-8 mb-4 px-6">
         <ul class="steps steps-horizontal w-full text-xs font-bold">
-            <li id="step-indicator-1" class="step step-primary">Data &amp; Paket</li>
-            <li id="step-indicator-2" class="step">Lokasi Rumah</li>
-            <li id="step-indicator-3" class="step">Foto Verifikasi</li>
+            <li id="step-indicator-1" onclick="goToStep(1)" class="step step-primary cursor-pointer hover:text-primary transition-colors">Data &amp; Paket</li>
+            <li id="step-indicator-2" onclick="goToStep(2)" class="step cursor-pointer hover:text-primary transition-colors">Lokasi Rumah</li>
+            <li id="step-indicator-3" onclick="goToStep(3)" class="step cursor-pointer hover:text-primary transition-colors">Foto Verifikasi</li>
         </ul>
     </div>
 
@@ -260,13 +283,6 @@
                             </div>
                         </div>
 
-                        <!-- Footer Navigation -->
-                        <div class="pt-6 border-t border-base-300/40 flex justify-end">
-                            <button type="button" onclick="goToStep(2)"
-                                class="btn btn-primary font-bold px-8 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-primary/20">
-                                Lanjut Ke Lokasi <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
                     </div>
 
                     <!-- ==================== STEP 2: TITIK LOKASI & ALAMAT ==================== -->
@@ -369,17 +385,6 @@
                             </div>
                         </div>
 
-                        <!-- Footer Navigation -->
-                        <div class="pt-6 border-t border-base-300/40 flex justify-between gap-4">
-                            <button type="button" onclick="goToStep(1)"
-                                class="btn btn-outline btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5">
-                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-                            </button>
-                            <button type="button" onclick="goToStep(3)"
-                                class="btn btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-primary/20">
-                                Lanjut Ke Upload <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
                     </div>
 
                     <!-- ==================== STEP 3: FOTO VERIFIKASI ==================== -->
@@ -431,12 +436,8 @@
                             <p>Dengan menekan tombol <b>Kirim Pendaftaran</b>, Anda menyatakan bahwa data pendaftaran, nomor telepon, dan letak koordinat rumah yang Anda berikan adalah benar dan valid.</p>
                         </div>
 
-                        <!-- Footer Navigation -->
-                        <div class="pt-6 border-t border-base-300/40 flex justify-between gap-4">
-                            <button type="button" onclick="goToStep(2)"
-                                class="btn btn-outline btn-primary font-bold px-6 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5">
-                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-                            </button>
+                        <!-- Footer Navigation (Kirim Pendaftaran Only) -->
+                        <div class="pt-6 border-t border-base-300/40 flex justify-end">
                             <button type="submit" id="submit-btn"
                                 class="btn btn-success text-white font-bold px-8 rounded-xl active:scale-95 transition-transform flex items-center gap-1.5 shadow-md shadow-success/20">
                                 Kirim Pendaftaran <i data-lucide="send" class="w-4 h-4"></i>
@@ -493,12 +494,17 @@
         const guides = {
             1: "Silakan masukkan nama lengkap Anda dan nomor telepon WhatsApp aktif yang dapat dihubungi. Setelah itu, pilih salah satu paket layanan internet yang Anda inginkan.",
             2: "Tandai titik lokasi rumah Anda di peta dengan menggeser peta hingga pin merah berada di posisi yang tepat. Gunakan tombol GPS jika Anda sedang berada di lokasi rumah.",
-            3: "Upload foto bagian depan rumah Anda dengan jelas. Foto ini digunakan untuk memudahkan teknisi kami memetakan kabel fiber optik ke rumah Anda."
+            3: "Upload foto bagian depan rumah Anda dengan jelas. Foto ini digunakan untuk memudahkan teknisi kami memetakan kabel ke rumah Anda."
         };
 
         function goToStep(step) {
-            // Validation before moving forward
-            if (step > currentStep) {
+            if (step === currentStep) return;
+            
+            // Allow going back to any previous step without validation
+            if (step < currentStep) {
+                // proceed
+            } else if (step === currentStep + 1) {
+                // Validate current step before going to next
                 if (currentStep === 1) {
                     const name = document.querySelector('input[name="nama"]').value.trim();
                     const tel = document.querySelector('input[name="nomor_tlpn"]').value.trim();
@@ -519,7 +525,6 @@
                 } else if (currentStep === 2) {
                     const selectWilayah = document.getElementById('select-wilayah');
                     const selectedVal = selectWilayah ? selectWilayah.value : "";
-                    const latInput = document.getElementById('lat');
                     const isConfirmed = !document.getElementById('btn-confirm-address').disabled;
                     const addressVal = document.getElementById('alamat-input').value.trim();
 
@@ -540,6 +545,10 @@
                         return;
                     }
                 }
+            } else {
+                // Prevent skipping steps forward (e.g. going to step 3 from step 1)
+                alert("Silakan selesaikan langkah sebelumnya terlebih dahulu.");
+                return;
             }
 
             // Update content display
@@ -1066,6 +1075,22 @@
             btn.textContent = 'Memproses Data...';
             btn.classList.add('btn-disabled');
         });
+
+        // ── Theme Switcher Initializer ──────────────────────────────────────
+        (function() {
+            const checkbox = document.getElementById('theme-checkbox');
+            const html = document.documentElement;
+            const THEME_KEY = 'rnet-theme';
+            if (checkbox) {
+                const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+                checkbox.checked = savedTheme === 'dark';
+                checkbox.addEventListener('change', () => {
+                    const t = checkbox.checked ? 'dark' : 'light';
+                    html.setAttribute('data-theme', t);
+                    localStorage.setItem(THEME_KEY, t);
+                });
+            }
+        })();
     </script>
 </body>
 

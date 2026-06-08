@@ -159,9 +159,9 @@
 
 /* Glassmorphism */
 .glass-card {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme="light"] .glass-card {
@@ -205,3 +205,5 @@
 #speedtest-dial {
     transition: stroke-dashoffset 0.1s linear;
 }
+
+/* Theme switching — instant via CSS variables, no per-element transitions needed */

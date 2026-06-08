@@ -25,11 +25,12 @@ use Illuminate\Support\Str;
 Route::get('/', function () {
     $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
     $pakets = paket::where('is_hidden', false)->get();
+    $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
 
     if (empty($pengumuman)) {
         $pengumuman = ['Selamat datang dan Pilihlah paket anda :> '];
     }
-    return view('welcome', compact('pengumuman', 'pakets'));
+    return view('welcome', compact('pengumuman', 'pakets', 'areaLayanan'));
 });
 
 // ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
@@ -192,6 +193,142 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         App\Models\pendaftaran::findOrFail($id)->update($data);
         return redirect()->back()->with('success', 'Data pendaftaran diperbarui.');
     })->name('pendaftaran.update');
+
+    Route::post('/pendaftaran/export', function(Illuminate\Http\Request $request) {
+        $search = $request->input('search');
+        $exportOption = $request->input('export_option', 'all');
+        $selectedColumns = $request->input('columns', []);
+
+        $statusFilter = $request->input('filter_status');
+        $paketFilter = $request->input('filter_paket');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortOrder = $request->input('sort_order', 'desc');
+
+        $query = App\Models\pendaftaran::with('paket');
+
+        if ($exportOption === 'filtered') {
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                      ->orWhere('nama', 'LIKE', "%{$search}%")
+                      ->orWhere('nomor_tlpn', 'LIKE', "%{$search}%")
+                      ->orWhere('wilayah', 'LIKE', "%{$search}%")
+                      ->orWhere('alamat', 'LIKE', "%{$search}%")
+                      ->orWhereHas('paket', function($pq) use ($search) {
+                          $pq->where('title_paket', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+
+            if (!empty($statusFilter)) {
+                $query->where('status', $statusFilter);
+            }
+
+            if (!empty($paketFilter)) {
+                $query->where('id_paket', $paketFilter);
+            }
+
+            if (!empty($startDate)) {
+                $query->whereDate('created_at', '>=', $startDate);
+            }
+
+            if (!empty($endDate)) {
+                $query->whereDate('created_at', '<=', $endDate);
+            }
+        }
+
+        $allowedSort = ['created_at', 'status', 'id_paket', 'nama'];
+        $sortBy = in_array($sortBy, $allowedSort) ? $sortBy : 'created_at';
+        $sortOrder = in_array(strtolower($sortOrder), ['asc', 'desc']) ? strtolower($sortOrder) : 'desc';
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        $records = $query->get();
+
+        $columnMap = [
+            'id_pendaftaran' => 'ID Pendaftaran',
+            'nama'           => 'Nama Lengkap',
+            'nomor_tlpn'     => 'No. Telepon / WA',
+            'wilayah'        => 'Wilayah',
+            'alamat'         => 'Alamat Pemasangan',
+            'latitude'       => 'Latitude',
+            'longtitude'     => 'Longitude',
+            'paket'          => 'Paket Layanan',
+            'harga'          => 'Harga Paket',
+            'status'         => 'Status',
+            'created_at'     => 'Tanggal Daftar',
+        ];
+
+        $filename = "data_pendaftaran_" . date('Ymd_His') . ".csv";
+
+        $headers = [
+            "Content-Type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=\"$filename\"",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use ($records, $selectedColumns, $columnMap) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF)); // UTF-8 BOM
+
+            $headerRow = [];
+            foreach ($selectedColumns as $colKey) {
+                if (isset($columnMap[$colKey])) {
+                    $headerRow[] = $columnMap[$colKey];
+                }
+            }
+            fputcsv($file, $headerRow);
+
+            foreach ($records as $row) {
+                $dataRow = [];
+                foreach ($selectedColumns as $colKey) {
+                    switch ($colKey) {
+                        case 'id_pendaftaran':
+                            $dataRow[] = $row->id_pendaftaran;
+                            break;
+                        case 'nama':
+                            $dataRow[] = $row->nama;
+                            break;
+                        case 'nomor_tlpn':
+                            $dataRow[] = $row->nomor_tlpn;
+                            break;
+                        case 'wilayah':
+                            $dataRow[] = $row->wilayah;
+                            break;
+                        case 'alamat':
+                            $dataRow[] = $row->alamat;
+                            break;
+                        case 'latitude':
+                            $dataRow[] = $row->latitude;
+                            break;
+                        case 'longtitude':
+                            $dataRow[] = $row->longtitude;
+                            break;
+                        case 'paket':
+                            $dataRow[] = $row->paket ? $row->paket->title_paket : $row->id_paket;
+                            break;
+                        case 'harga':
+                            $dataRow[] = $row->paket ? $row->paket->harga_paket : 0;
+                            break;
+                        case 'status':
+                            $dataRow[] = ucfirst($row->status);
+                            break;
+                        case 'created_at':
+                            $dataRow[] = $row->created_at->format('Y-m-d H:i:s');
+                            break;
+                    }
+                }
+                fputcsv($file, $dataRow);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    })->name('pendaftaran.export');
 
     // --- Paket ---
     Route::post('/paket', function(Illuminate\Http\Request $request) {
@@ -485,7 +622,51 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('/', function (Illuminate\Http\Request $request) {
         // Pendaftaran: paginasi 10 data, totalPendaftaran diambil dari paginator (bukan query count terpisah)
-        $pendaftaran = App\Models\pendaftaran::with('paket')->latest('created_at')->paginate(10)->fragment('pendaftaran');
+        $search = $request->query('search');
+        $statusFilter = $request->query('filter_status');
+        $paketFilter = $request->query('filter_paket');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $sortBy = $request->query('sort_by', 'created_at');
+        $sortOrder = $request->query('sort_order', 'desc');
+
+        $pendaftaranQuery = App\Models\pendaftaran::with('paket');
+
+        if (!empty($search)) {
+            $pendaftaranQuery->where(function($q) use ($search) {
+                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhere('nama', 'LIKE', "%{$search}%")
+                  ->orWhere('nomor_tlpn', 'LIKE', "%{$search}%")
+                  ->orWhere('wilayah', 'LIKE', "%{$search}%")
+                  ->orWhere('alamat', 'LIKE', "%{$search}%")
+                  ->orWhereHas('paket', function($pq) use ($search) {
+                      $pq->where('title_paket', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
+        if (!empty($statusFilter)) {
+            $pendaftaranQuery->where('status', $statusFilter);
+        }
+
+        if (!empty($paketFilter)) {
+            $pendaftaranQuery->where('id_paket', $paketFilter);
+        }
+
+        if (!empty($startDate)) {
+            $pendaftaranQuery->whereDate('created_at', '>=', $startDate);
+        }
+        if (!empty($endDate)) {
+            $pendaftaranQuery->whereDate('created_at', '<=', $endDate);
+        }
+
+        $allowedSort = ['created_at', 'status', 'id_paket', 'nama'];
+        $sortBy = in_array($sortBy, $allowedSort) ? $sortBy : 'created_at';
+        $sortOrder = in_array(strtolower($sortOrder), ['asc', 'desc']) ? strtolower($sortOrder) : 'desc';
+
+        $pendaftaranQuery->orderBy($sortBy, $sortOrder);
+
+        $pendaftaran = $pendaftaranQuery->paginate(10)->withQueryString()->fragment('pendaftaran');
         $totalPendaftaran = $pendaftaran->total(); // Gunakan hasil dari paginator, bukan ::count() terpisah
         
         // Paket: limit 100, count dari collection (bukan query terpisah)

@@ -273,6 +273,7 @@
 const NOTIF_API      = '{{ route("admin.api.notifications") }}';
 const NOTIF_READ_ALL = '{{ route("admin.api.notifications.read_all") }}';
 const NOTIF_CLEAR    = '{{ route("admin.api.notifications.clear") }}';
+const NOTIF_READ_SINGLE_PATTERN = '{{ route("admin.api.notifications.read", ":id") }}';
 const CSRF_TOKEN     = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
 let _notifData     = [];
@@ -379,7 +380,8 @@ async function notifMarkRead(id, tab) {
 
     // Kirim ke server
     try {
-        await fetch(`/admin/api/notifications/${id}/read`, {
+        const url = NOTIF_READ_SINGLE_PATTERN.replace(':id', id);
+        await fetch(url, {
             method: 'PATCH',
             headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'X-Requested-With': 'XMLHttpRequest' }
         });

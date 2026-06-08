@@ -1,13 +1,136 @@
 <!-- Pendaftaran Partial -->
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
     <div>
         <h3 class="text-2xl font-bold text-base-content">Data Pendaftaran</h3>
         <p class="text-sm text-base-content/70 mt-1">Kelola semua pendaftaran pelanggan baru</p>
     </div>
-    <button onclick="document.getElementById('modal_tambah_pendaftaran').showModal()" class="btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tambah Pendaftaran
-    </button>
+    
+    <div class="flex flex-wrap items-center gap-2">
+        <!-- Search Form -->
+        <form action="{{ route('admin.index') }}#pendaftaran" method="GET" class="join">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, wilayah, dll..." class="input input-bordered input-sm join-item w-40 sm:w-48 md:w-56 focus:w-64 transition-all duration-300" />
+            
+            <!-- Hidden inputs to preserve filters -->
+            <input type="hidden" name="filter_status" value="{{ request('filter_status') }}">
+            <input type="hidden" name="filter_paket" value="{{ request('filter_paket') }}">
+            <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+            <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+            <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
+            <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+
+            <button type="submit" class="btn btn-sm btn-primary join-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            @if(request('search'))
+                @php
+                    $clearSearchUrl = route('admin.index', request()->except('search')) . '#pendaftaran';
+                @endphp
+                <a href="{{ $clearSearchUrl }}" onclick="resetPendaftaranFilters(event)" class="btn btn-sm btn-ghost join-item" title="Hapus Pencarian">✕</a>
+            @endif
+        </form>
+
+        <!-- Filter Toggle Button -->
+        <button onclick="toggleFilterPanel()" class="btn btn-sm btn-outline btn-primary relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Filter & Urutkan
+            @if(request('filter_status') || request('filter_paket') || request('start_date') || request('end_date') || (request('sort_by') && request('sort_by') !== 'created_at'))
+                <span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full animate-ping"></span>
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+            @endif
+        </button>
+
+        <!-- Export Excel Button -->
+        <button onclick="document.getElementById('modal_export_pendaftaran').showModal()" class="btn btn-sm btn-success text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Ekspor Excel
+        </button>
+
+        <!-- Tambah Pendaftaran Button -->
+        <button onclick="document.getElementById('modal_tambah_pendaftaran').showModal()" class="btn btn-sm btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah
+        </button>
+    </div>
+</div>
+
+<!-- Filter Panel -->
+<div id="filter-panel" class="{{ (request('filter_status') || request('filter_paket') || request('start_date') || request('end_date') || (request('sort_by') && request('sort_by') !== 'created_at')) ? '' : 'hidden' }} bg-base-100 rounded-xl border border-base-200 p-5 mb-6 shadow-sm">
+    <form action="{{ route('admin.index') }}#pendaftaran" method="GET" class="space-y-4">
+        <!-- Keep the active search -->
+        <input type="hidden" name="search" value="{{ request('search') }}">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Status Filter -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Status</span></label>
+                <select name="filter_status" class="select select-bordered select-sm w-full rounded-lg">
+                    <option value="">Semua Status</option>
+                    <option value="pending" {{ request('filter_status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="validated" {{ request('filter_status') === 'validated' ? 'selected' : '' }}>Validated</option>
+                    <option value="rejected" {{ request('filter_status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    <option value="setup" {{ request('filter_status') === 'setup' ? 'selected' : '' }}>Setup</option>
+                    <option value="active" {{ request('filter_status') === 'active' ? 'selected' : '' }}>Active</option>
+                </select>
+            </div>
+
+            <!-- Paket Filter -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Paket Layanan</span></label>
+                <select name="filter_paket" class="select select-bordered select-sm w-full rounded-lg">
+                    <option value="">Semua Paket</option>
+                    @foreach($paket as $p)
+                        <option value="{{ $p->id_paket }}" {{ request('filter_paket') === $p->id_paket ? 'selected' : '' }}>{{ $p->id_paket }} - {{ $p->title_paket }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Date Range: Start Date -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Dari Tanggal</span></label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="input input-bordered input-sm w-full rounded-lg" />
+            </div>
+
+            <!-- Date Range: End Date -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Sampai Tanggal</span></label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="input input-bordered input-sm w-full rounded-lg" />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end pt-2 border-t border-base-200/60">
+            <!-- Sort By -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Urutkan</span></label>
+                <select name="sort_by" class="select select-bordered select-sm w-full rounded-lg">
+                    <option value="created_at" {{ request('sort_by') === 'created_at' ? 'selected' : '' }}>Tanggal Daftar</option>
+                    <option value="status" {{ request('sort_by') === 'status' ? 'selected' : '' }}>Status</option>
+                    <option value="id_paket" {{ request('sort_by') === 'id_paket' ? 'selected' : '' }}>Paket</option>
+                    <option value="nama" {{ request('sort_by') === 'nama' ? 'selected' : '' }}>Nama Lengkap</option>
+                </select>
+            </div>
+
+            <!-- Sort Order -->
+            <div class="form-control w-full">
+                <label class="label py-1"><span class="label-text text-xs font-semibold text-base-content/70">Urutan</span></label>
+                <select name="sort_order" class="select select-bordered select-sm w-full rounded-lg">
+                    <option value="desc" {{ request('sort_order') === 'desc' ? 'selected' : '' }}>Terbaru / Menurun</option>
+                    <option value="asc" {{ request('sort_order') === 'asc' ? 'selected' : '' }}>Terlama / Menaik</option>
+                </select>
+            </div>
+
+            <!-- Spacer for desktop layout alignment -->
+            <div class="hidden md:block"></div>
+
+            <!-- Filter Actions -->
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-sm btn-primary flex-1 rounded-lg">Terapkan</button>
+                @php
+                    $resetFiltersUrl = route('admin.index', request()->only('search')) . '#pendaftaran';
+                @endphp
+                <a href="{{ $resetFiltersUrl }}" onclick="resetPendaftaranFilters(event)" class="btn btn-sm btn-ghost border border-base-300 rounded-lg">Reset</a>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div class="bg-base-100 rounded-xl shadow-sm border border-base-200 overflow-hidden">
@@ -43,6 +166,7 @@
                     <td>
                         <select
                             data-id="{{ $item->id_pendaftaran }}"
+                            data-url="{{ route('admin.pendaftaran.update_status', $item->id_pendaftaran) }}"
                             class="select select-bordered select-sm w-full max-w-xs status-select rounded-md font-semibold bg-base-50/50"
                             onchange="updateStatus(this)"
                         >
@@ -276,6 +400,105 @@
 </dialog>
 @endforeach
 
+<!-- Modal Ekspor Excel -->
+<dialog id="modal_export_pendaftaran" class="modal">
+  <div class="modal-box max-w-md">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-2 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Ekspor Data Pendaftaran
+    </h3>
+    <p class="text-sm text-base-content/70 mb-4">Pilih dan urutkan kolom yang ingin diekspor ke file Excel/CSV.</p>
+    
+    <form action="{{ route('admin.pendaftaran.export') }}" method="POST" data-no-ajax class="space-y-4">
+        @csrf
+        
+        <!-- Opsi Ekspor (Semua vs Filter) -->
+        @php
+            $hasActiveFilters = request('search') || request('filter_status') || request('filter_paket') || request('start_date') || request('end_date') || (request('sort_by') && request('sort_by') !== 'created_at');
+        @endphp
+        <div class="form-control">
+            <span class="label-text font-semibold mb-2 block">Cakupan Data</span>
+            <div class="flex flex-col gap-2 p-3 bg-base-100 rounded-lg border border-base-200">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="radio" name="export_option" value="all" {{ !$hasActiveFilters ? 'checked' : '' }} class="radio radio-primary radio-sm">
+                    <span class="text-sm font-medium">Semua Data (Total: {{ $totalPendaftaran }})</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer {{ !$hasActiveFilters ? 'opacity-50 cursor-not-allowed' : '' }}">
+                    <input type="radio" name="export_option" value="filtered" {{ $hasActiveFilters ? 'checked' : '' }} {{ !$hasActiveFilters ? 'disabled' : '' }} class="radio radio-primary radio-sm">
+                    <span class="text-sm font-medium">Hasil Filter / Pencarian Saja</span>
+                </label>
+            </div>
+            <!-- Query Parameters Hidden -->
+            <input type="hidden" name="search" value="{{ request('search') }}">
+            <input type="hidden" name="filter_status" value="{{ request('filter_status') }}">
+            <input type="hidden" name="filter_paket" value="{{ request('filter_paket') }}">
+            <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+            <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+            <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
+            <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+        </div>
+
+        <!-- Kolom yang akan diekspor -->
+        <div class="form-control">
+            <span class="label-text font-semibold mb-2 block">Pilih & Urutkan Kolom</span>
+            
+            <div class="flex justify-between items-center mb-2">
+                <button type="button" onclick="toggleAllExportColumns(true)" class="text-xs text-primary font-semibold hover:underline">Pilih Semua</button>
+                <button type="button" onclick="toggleAllExportColumns(false)" class="text-xs text-base-content/50 font-semibold hover:underline">Hapus Semua</button>
+            </div>
+
+            <ul id="export-columns-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                @php
+                    $defaultColumns = [
+                        'id_pendaftaran' => 'ID Pendaftaran',
+                        'nama'           => 'Nama Lengkap',
+                        'nomor_tlpn'     => 'No. Telepon / WA',
+                        'wilayah'        => 'Wilayah',
+                        'alamat'         => 'Alamat Pemasangan',
+                        'latitude'       => 'Latitude',
+                        'longtitude'     => 'Longitude',
+                        'paket'          => 'Paket Layanan',
+                        'harga'          => 'Harga Paket',
+                        'status'         => 'Status',
+                        'created_at'     => 'Tanggal Daftar'
+                    ];
+                @endphp
+                @foreach($defaultColumns as $key => $label)
+                <li draggable="true" class="flex items-center justify-between p-2.5 bg-base-50 hover:bg-base-200/50 border border-base-200 rounded-lg cursor-grab active:cursor-grabbing transition-colors duration-150" data-col="{{ $key }}">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base-content/40 cursor-grab">
+                            <!-- Grip Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                        </span>
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="columns[]" value="{{ $key }}" checked class="checkbox checkbox-primary checkbox-xs rounded">
+                            <span class="text-sm font-medium text-base-content">{{ $label }}</span>
+                        </label>
+                    </div>
+                    <!-- Up/Down Action Buttons for quick sorting -->
+                    <div class="flex items-center">
+                        <button type="button" onclick="moveExportColumn(this, 'up')" class="btn btn-ghost btn-xs btn-square text-base-content/60 hover:text-primary" title="Pindahkan ke atas">▲</button>
+                        <button type="button" onclick="moveExportColumn(this, 'down')" class="btn btn-ghost btn-xs btn-square text-base-content/60 hover:text-primary" title="Pindahkan ke bawah">▼</button>
+                    </div>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="modal-action">
+            <button type="button" onclick="document.getElementById('modal_export_pendaftaran').close()" class="btn btn-ghost">Batal</button>
+            <button type="submit" class="btn btn-success text-white">Unduh Excel</button>
+        </div>
+    </form>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
 <!-- Toast Notification Container -->
 <div id="toast-container" class="toast toast-top toast-end z-50" style="display:none;">
     <div id="toast-msg" class="alert alert-success shadow-lg">
@@ -283,83 +506,4 @@
     </div>
 </div>
 
-<script>
-    const STATUS_COLORS = {
-        pending:   'text-warning',
-        validated: 'text-info',
-        rejected:  'text-error',
-        setup:     'text-accent',
-        active:    'text-success'
-    };
 
-    function showToast(message, type = 'success') {
-        const container = document.getElementById('toast-container');
-        const msg = document.getElementById('toast-msg');
-        msg.className = 'alert shadow-lg alert-' + type;
-        msg.querySelector('span').textContent = message;
-        container.style.display = '';
-        setTimeout(() => { container.style.display = 'none'; }, 2500);
-    }
-
-    async function updateStatus(el) {
-        const id = el.dataset.id;
-        const newStatus = el.value;
-        const prevValue = el.getAttribute('data-prev') || el.querySelector('option[selected]')?.value;
-
-        // Disable select while processing
-        el.disabled = true;
-        el.classList.add('opacity-50');
-
-        try {
-            const res = await fetch(`/admin/pendaftaran/${id}/status`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-
-            if (!res.ok) throw new Error('Request gagal');
-
-            // Update color classes on select
-            Object.values(STATUS_COLORS).forEach(c => el.classList.remove(c));
-            el.classList.add(STATUS_COLORS[newStatus] || '');
-            el.setAttribute('data-prev', newStatus);
-
-            // Sync badge in detail modal
-            const BADGE_MAP = {
-                pending: 'bg-warning/10 text-warning border-warning/20',
-                validated: 'bg-info/10 text-info border-info/20',
-                rejected: 'bg-error/10 text-error border-error/20',
-                setup: 'bg-accent/10 text-accent border-accent/20',
-                active: 'bg-success/10 text-success border-success/20'
-            };
-            const badge = document.getElementById('detail_status_' + id);
-            if (badge) {
-                badge.className = 'px-2 py-1 font-bold rounded-md border text-xs ' + (BADGE_MAP[newStatus] || 'bg-base-200 text-base-content/70 border-base-300');
-                badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-            }
-
-            showToast(`Status berhasil diubah ke "${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}"`, 'success');
-        } catch (err) {
-            // Rollback to previous value
-            if (prevValue) el.value = prevValue;
-            showToast('Gagal mengubah status. Coba lagi.', 'error');
-        } finally {
-            el.disabled = false;
-            el.classList.remove('opacity-50');
-        }
-    }
-
-    // Set initial colors on load
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.status-select').forEach(el => {
-            const val = el.value;
-            Object.values(STATUS_COLORS).forEach(c => el.classList.remove(c));
-            el.classList.add(STATUS_COLORS[val] || '');
-            el.setAttribute('data-prev', val);
-        });
-    });
-</script>
