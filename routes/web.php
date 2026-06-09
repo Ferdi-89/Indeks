@@ -100,6 +100,32 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
     }
 })->name('pendaftaran.store');
 
+// ─── Cek Status Pendaftaran (GET) ──────────────────────────────────────
+Route::get('/cek-status/{id}', function ($id) {
+    // Cari pendaftaran berdasarkan ID (case-insensitive & clean)
+    $cleanId = strtoupper(trim($id));
+    $pendaftaran = App\Models\pendaftaran::with('paket')->where('id_pendaftaran', $cleanId)->first();
+
+    if (!$pendaftaran) {
+        return response()->json([
+            'success' => false,
+            'message' => 'ID Pendaftaran tidak ditemukan.'
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'id_pendaftaran' => $pendaftaran->id_pendaftaran,
+            'nama' => $pendaftaran->nama,
+            'wilayah' => $pendaftaran->wilayah,
+            'paket' => $pendaftaran->paket ? $pendaftaran->paket->title_paket : $pendaftaran->id_paket,
+            'status' => $pendaftaran->status,
+            'tanggal_daftar' => $pendaftaran->created_at->format('d M Y')
+        ]
+    ]);
+})->name('cek-status');
+
 // ─── Otentikasi Admin ───────────────────────────────────────────────────
 Route::get('/login', function () {
     return view('auth.login');

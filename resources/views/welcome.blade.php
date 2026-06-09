@@ -196,6 +196,8 @@
                         class="text-xs font-semibold text-base-content/70 hover:text-primary transition-colors py-2">Kalkulator</a>
                     <a href="#harga"
                         class="text-xs font-semibold text-base-content/70 hover:text-primary transition-colors py-2">Paket</a>
+                    <a href="#cek-status"
+                        class="text-xs font-semibold text-base-content/70 hover:text-primary transition-colors py-2">Cek Status</a>
                     <a href="#terminal-faq"
                         class="text-xs font-semibold text-base-content/70 hover:text-primary transition-colors py-2">FAQ</a>
                 </div>
@@ -227,6 +229,7 @@
                         <li><a href="#speedtest">Speed Test</a></li>
                         <li><a href="#kalkulator">Kalkulator</a></li>
                         <li><a href="#harga">Paket</a></li>
+                        <li><a href="#cek-status">Cek Status</a></li>
                         <li><a href="#terminal-faq">FAQ</a></li>
                     </ul>
                 </div>
@@ -695,6 +698,136 @@
         </section>
 
 
+        {{-- ==================== SECTION: CEK STATUS INSTALASI ==================== --}}
+        <section id="cek-status" class="space-y-10 py-10 max-w-4xl mx-auto scroll-mt-20">
+            <div class="text-center max-w-xl mx-auto">
+                <div
+                    class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold border border-primary/20 uppercase tracking-widest">
+                    <i data-lucide="search" class="w-3.5 h-3.5"></i> Pelacakan Pemasangan
+                </div>
+                <h2 class="text-3xl font-extrabold mt-3">Cek Status Instalasi</h2>
+                <p class="text-sm text-base-content/60 mt-2">Masukkan 5-karakter ID Pendaftaran Anda untuk memantau proses instalasi WiFi R-NET secara real-time.</p>
+            </div>
+
+            <div class="glass-card p-6 md:p-8 rounded-3xl border border-base-300/30 shadow-lg space-y-6">
+                <!-- Search Form -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-base-content/40">
+                            <i data-lucide="key" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="input-id-pendaftaran" placeholder="Masukkan ID Pendaftaran (misal: ABCDE)" 
+                            maxlength="5" 
+                            class="w-full input input-bordered pl-11 pr-4 py-3 bg-base-200/50 focus:bg-base-100 border-base-300/80 rounded-2xl text-sm font-semibold tracking-widest uppercase placeholder:tracking-normal placeholder:font-normal"
+                            oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')" />
+                    </div>
+                    <button type="button" id="btn-cek-status" onclick="fetchStatusInstalasi()" 
+                        class="btn btn-primary rounded-2xl font-bold px-6 flex items-center gap-2 active:scale-95 transition-all">
+                        <i data-lucide="search" class="w-4 h-4"></i> Cari Status
+                    </button>
+                </div>
+
+                <!-- Status Detail Container -->
+                <div id="status-result-container" class="hidden animate-fade-in space-y-6">
+                    <div class="divider my-2"></div>
+                    
+                    <!-- Customer Details Info Card -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-base-200/40 border border-base-300/30 p-5 rounded-2xl">
+                        <div>
+                            <span class="text-[10px] text-base-content/40 uppercase font-bold tracking-widest block mb-0.5">Nama Pelanggan</span>
+                            <span id="result-nama" class="font-bold text-base-content text-sm">-</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-base-content/40 uppercase font-bold tracking-widest block mb-0.5">ID Pendaftaran</span>
+                            <span id="result-id" class="font-mono font-extrabold text-primary text-sm">-</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-base-content/40 uppercase font-bold tracking-widest block mb-0.5">Paket Layanan</span>
+                            <span id="result-paket" class="font-bold text-base-content text-sm">-</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-base-content/40 uppercase font-bold tracking-widest block mb-0.5">Tanggal Registrasi</span>
+                            <span id="result-tanggal" class="font-bold text-base-content text-sm">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Rejected Alert (Hidden by default) -->
+                    <div id="status-rejected-alert" class="hidden bg-error/15 text-error-content border border-error/20 p-5 rounded-2xl space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="x-circle" class="w-6 h-6 shrink-0 text-error"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Pendaftaran Ditangguhkan / Ditolak</h4>
+                                <p class="text-xs text-base-content/75 mt-1 leading-relaxed">
+                                    Maaf, pendaftaran Anda saat ini tidak dapat disetujui. Hal ini biasanya dikarenakan lokasi rumah di luar batas penarikan kabel atau kendala administratif lainnya.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/6281373242673?text=Halo%20Admin%20R-NET,%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20" 
+                            id="btn-wa-rejected" target="_blank" class="btn btn-error btn-sm w-full text-white font-bold rounded-xl flex items-center gap-1.5 justify-center">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi Customer Service
+                        </a>
+                    </div>
+
+                    <!-- Stepper Progress Tracker (Hidden for rejected) -->
+                    <div id="status-stepper-container" class="space-y-6">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-primary/95 flex items-center gap-1.5">
+                            <i data-lucide="activity" class="w-4 h-4"></i> Timeline Instalasi
+                        </h4>
+                        
+                        <!-- Visual Steps -->
+                        <div class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-4 md:px-4">
+                            <!-- Horizontal Progress bar (desktop) -->
+                            <div class="absolute top-5 left-10 right-10 h-0.5 bg-base-300 hidden md:block -z-10">
+                                <div id="stepper-progress-bar" class="h-full bg-primary transition-all duration-500 w-0"></div>
+                            </div>
+
+                            <!-- Step 1 -->
+                            <div class="step-item flex md:flex-col items-center gap-4 md:gap-2 text-left md:text-center md:flex-1 relative">
+                                <div id="step-node-1" class="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-base-100 transition-all duration-300">1</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-base-content">Pendaftaran</h5>
+                                    <p class="text-[10px] text-base-content/50 leading-relaxed md:max-w-[120px] mx-auto mt-0.5">Registrasi diterima admin.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="step-item flex md:flex-col items-center gap-4 md:gap-2 text-left md:text-center md:flex-1 relative">
+                                <div id="step-node-2" class="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-base-100 transition-all duration-300">2</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-base-content">Verifikasi</h5>
+                                    <p class="text-[10px] text-base-content/50 leading-relaxed md:max-w-[120px] mx-auto mt-0.5">Validasi berkas &amp; lokasi.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="step-item flex md:flex-col items-center gap-4 md:gap-2 text-left md:text-center md:flex-1 relative">
+                                <div id="step-node-3" class="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-base-100 transition-all duration-300">3</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-base-content">Instalasi</h5>
+                                    <p class="text-[10px] text-base-content/50 leading-relaxed md:max-w-[120px] mx-auto mt-0.5">Penarikan kabel &amp; modem.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="step-item flex md:flex-col items-center gap-4 md:gap-2 text-left md:text-center md:flex-1 relative">
+                                <div id="step-node-4" class="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-base-100 transition-all duration-300">4</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-base-content">Aktif</h5>
+                                    <p class="text-[10px] text-base-content/50 leading-relaxed md:max-w-[120px] mx-auto mt-0.5">Layanan siap digunakan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Indicator -->
+                <div id="status-error-msg" class="hidden alert alert-warning rounded-2xl flex items-center gap-2 text-xs font-semibold">
+                    <i data-lucide="alert-circle" class="w-4 h-4 text-warning"></i>
+                    <span></span>
+                </div>
+            </div>
+        </section>
+
         {{-- ==================== SECTION: DYNAMIC TERMINAL FAQ ==================== --}}
         <section id="terminal-faq" class="space-y-10 py-10 max-w-4xl mx-auto">
             <div class="text-center max-w-xl mx-auto">
@@ -1058,6 +1191,130 @@
             if (typeof L !== 'undefined') initMap();
             if (typeof lucide !== 'undefined') lucide.createIcons();
         });
+
+        // ── Pelacakan Status Instalasi (AJAX) ───────────────────
+        function fetchStatusInstalasi() {
+            const inputId = document.getElementById('input-id-pendaftaran');
+            const resultContainer = document.getElementById('status-result-container');
+            const errorMsg = document.getElementById('status-error-msg');
+            const btnCek = document.getElementById('btn-cek-status');
+            
+            const idVal = inputId.value.trim().toUpperCase();
+            
+            if (idVal.length !== 5) {
+                showStatusError('ID Pendaftaran harus terdiri dari 5 karakter.');
+                return;
+            }
+
+            // Show loading state
+            btnCek.disabled = true;
+            btnCek.innerHTML = `<span class="loading loading-spinner loading-xs"></span> Mencari...`;
+            errorMsg.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+
+            fetch(`/cek-status/${idVal}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw new Error(err.message || 'Gagal mengambil data.') });
+                    }
+                    return response.json();
+                })
+                .then(res => {
+                    if (res.success && res.data) {
+                        renderStatusData(res.data);
+                    } else {
+                        throw new Error('Terjadi kesalahan pada format data.');
+                    }
+                })
+                .catch(err => {
+                    showStatusError(err.message || 'Koneksi bermasalah. Silakan coba lagi.');
+                })
+                .finally(() => {
+                    btnCek.disabled = false;
+                    btnCek.innerHTML = `<i data-lucide="search" class="w-4 h-4"></i> Cari Status`;
+                    lucide.createIcons();
+                });
+        }
+
+        function showStatusError(msg) {
+            const errorMsg = document.getElementById('status-error-msg');
+            const resultContainer = document.getElementById('status-result-container');
+            errorMsg.querySelector('span').textContent = msg;
+            errorMsg.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+        }
+
+        function renderStatusData(data) {
+            const resultContainer = document.getElementById('status-result-container');
+            const rejectedAlert = document.getElementById('status-rejected-alert');
+            const stepperContainer = document.getElementById('status-stepper-container');
+            
+            // Populate text info
+            document.getElementById('result-nama').textContent = data.nama;
+            document.getElementById('result-id').textContent = data.id_pendaftaran;
+            document.getElementById('result-paket').textContent = data.paket;
+            document.getElementById('result-tanggal').textContent = data.tanggal_daftar;
+            
+            const waBtn = document.getElementById('btn-wa-rejected');
+            if (waBtn) {
+                waBtn.href = `https://wa.me/6281373242673?text=Halo%20Admin%20R-NET,%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20${data.id_pendaftaran}`;
+            }
+
+            const status = data.status.toLowerCase();
+            
+            if (status === 'rejected') {
+                rejectedAlert.classList.remove('hidden');
+                stepperContainer.classList.add('hidden');
+            } else {
+                rejectedAlert.classList.add('hidden');
+                stepperContainer.classList.remove('hidden');
+                
+                // Reset nodes
+                for (let i = 1; i <= 4; i++) {
+                    const node = document.getElementById(`step-node-${i}`);
+                    node.className = "w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-base-100 text-base-content/50 border-base-300 transition-all duration-300";
+                    node.innerHTML = i;
+                }
+                
+                const progressBar = document.getElementById('stepper-progress-bar');
+                
+                // Map status to progress bar width and step styles
+                if (status === 'pending') {
+                    setNodeState(1, 'active');
+                    progressBar.style.width = '0%';
+                } else if (status === 'validated') {
+                    setNodeState(1, 'done');
+                    setNodeState(2, 'active');
+                    progressBar.style.width = '33.33%';
+                } else if (status === 'setup') {
+                    setNodeState(1, 'done');
+                    setNodeState(2, 'done');
+                    setNodeState(3, 'active');
+                    progressBar.style.width = '66.66%';
+                } else if (status === 'active' || status === 'aktif') {
+                    setNodeState(1, 'done');
+                    setNodeState(2, 'done');
+                    setNodeState(3, 'done');
+                    setNodeState(4, 'done');
+                    progressBar.style.width = '100%';
+                }
+            }
+            
+            resultContainer.classList.remove('hidden');
+        }
+
+        function setNodeState(step, state) {
+            const node = document.getElementById(`step-node-${step}`);
+            if (!node) return;
+            
+            if (state === 'done') {
+                node.className = "w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-primary text-primary-content border-primary shadow transition-all duration-300";
+                node.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+            } else if (state === 'active') {
+                node.className = "w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold text-xs bg-primary/10 text-primary border-primary animate-pulse shadow-md transition-all duration-300";
+                node.innerHTML = step;
+            }
+        }
     </script>
 </body>
 

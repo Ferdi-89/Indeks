@@ -6,6 +6,21 @@ Semua perubahan penting pada proyek **R-NET** akan dicatat di dalam dokumen ini 
 
 ## [Unreleased] - Rencana Implementasi Mingguan (Mulai Minggu Depan)
 
+## [Planned] - Version 1.1.0-beta.3
+
+### Added
+- Fitur pelacakan status instalasi (installation status tracking) mandiri untuk pelanggan R-NET.
+
+### Changed
+- Penambahan rute backend `/cek-status/{id}` untuk AJAX query status pendaftaran.
+- Penambahan layout dan interaksi visual stepper timeline status instalasi di halaman utama.
+
+### Impacted Modules
+- Customer Portal (Landing Page & Registration Form)
+- Routing Engine (`routes/web.php`)
+
+---
+
 Dokumen ini akan terus diupdate seiring berjalannya implementasi mingguan. Berikut adalah agenda target pengembangan mulai minggu depan:
 
 ### 📅 Minggu 1 (Prioritas Utama): Keamanan & Autentikasi

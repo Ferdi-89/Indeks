@@ -10,12 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('promosis', function (Blueprint $table) {
-            $table->id_promosi
-            varchar(5)
-            primary key;
-            $table->value_
-        });
+        // Already handled by subsequent migration
     }
 
     /**
@@ -23,8 +18,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('promosis', function (Blueprint $table) {
-            //
-        });
+        // Already handled by subsequent migration
     }
 };

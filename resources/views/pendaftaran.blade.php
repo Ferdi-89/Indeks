@@ -141,6 +141,9 @@
                     <i data-lucide="moon" class="swap-off w-4 h-4 text-primary"></i>
                 </label>
 
+                <a href="/#cek-status" class="btn btn-ghost btn-sm rounded-xl gap-2 font-bold text-base-content/75 hover:bg-base-200">
+                    <i data-lucide="search" class="w-4 h-4"></i> Cek Status
+                </a>
                 <a href="/" class="btn btn-ghost btn-sm rounded-xl gap-2 font-bold text-base-content/75 hover:bg-base-200">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Beranda
                 </a>
