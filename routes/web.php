@@ -21,6 +21,11 @@ use Illuminate\Support\Str;
 |
 */
 
+// ─── Test Route ─────────────────────────────────────────────────────────
+Route::get('/hello', function () {
+    return 'Hello World';
+});
+
 // ─── Landing Page ───────────────────────────────────────────────────────
 Route::get('/', function () {
     $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
