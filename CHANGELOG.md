@@ -6,7 +6,7 @@ Semua perubahan penting pada proyek **R-NET** akan dicatat di dalam dokumen ini 
 
 ## [Unreleased] - Rencana Implementasi Mingguan (Mulai Minggu Depan)
 
-## [Planned] - Version 1.1.0-beta.3
+## [1.1.0-beta.3] - 2026-06-09
 
 ### Added
 - Fitur pelacakan status instalasi (installation status tracking) mandiri untuk pelanggan R-NET.
