@@ -15,9 +15,15 @@ Semua perubahan penting pada proyek **R-NET** akan dicatat di dalam dokumen ini 
 - Penambahan rute backend `/cek-status/{id}` untuk AJAX query status pendaftaran.
 - Penambahan layout dan interaksi visual stepper timeline status instalasi di halaman utama.
 
+### Fixed
+- Memperbaiki kegagalan *bootstrapping* Laravel Cloud (HTTP 500) dengan menghapus folder `vendor/` dari indeks git (`git rm --cached`), memaksa server melakukan instalasi dependensi yang bersih dari awal (mengatasi masalah trait `RebindsCallbacksToSelf` tidak ditemukan).
+- Memperbaiki kompatibilitas database driver di `config/database.php` dengan mengubah pemanggilan kelas PHP 8.4+ `Pdo\Mysql` menjadi pemeriksaan dinamis (`defined()`), mencegah crash server pada versi PHP 8.2 dan 8.3 di Laravel Cloud.
+
 ### Impacted Modules
 - Customer Portal (Landing Page & Registration Form)
 - Routing Engine (`routes/web.php`)
+- Database Connection (`config/database.php`)
+- Deployment Environment (`.gitignore` & vendor files)
 
 ---
 
