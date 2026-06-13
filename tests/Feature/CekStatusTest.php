@@ -89,4 +89,12 @@ class CekStatusTest extends TestCase
                 'message' => 'ID Pendaftaran tidak ditemukan.'
             ]);
     }
+
+    public function test_can_access_cek_status_view_page(): void
+    {
+        $response = $this->get('/cek-status');
+
+        $response->assertStatus(200);
+        $response->assertSee('Cek Status Instalasi');
+    }
 }

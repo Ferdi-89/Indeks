@@ -101,6 +101,10 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
 })->name('pendaftaran.store');
 
 // ─── Cek Status Pendaftaran (GET) ──────────────────────────────────────
+Route::get('/cek-status', function () {
+    return view('cek-status');
+})->name('cek-status.index');
+
 Route::get('/cek-status/{id}', function ($id) {
     // Cari pendaftaran berdasarkan ID (case-insensitive & clean)
     $cleanId = strtoupper(trim($id));
@@ -124,7 +128,7 @@ Route::get('/cek-status/{id}', function ($id) {
             'tanggal_daftar' => $pendaftaran->created_at->format('d M Y')
         ]
     ]);
-})->name('cek-status');
+})->name('cek-status.api');
 
 // ─── Otentikasi Admin ───────────────────────────────────────────────────
 Route::get('/login', function () {

@@ -573,6 +573,59 @@
         });
         window.initExportDragAndDrop();
     };
+
+    window.sharePendaftaran = function(nama, alamat, lat, lng, imageUrl) {
+        let text = `Data Pemasangan Teknisi R-NET:\n` +
+                   `Nama Pelanggan: ${nama}\n` +
+                   `Alamat: ${alamat}\n` +
+                   `Koordinat: ${lat}, ${lng}\n` +
+                   `Lihat di Peta: https://maps.google.com/?q=${lat},${lng}`;
+        
+        if (imageUrl) {
+            text += `\nFoto Rumah: ${imageUrl}`;
+        }
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Data Pemasangan R-NET',
+                text: text
+            }).catch(err => {
+                console.error('Error sharing:', err);
+            });
+        } else {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    if (typeof spaToast === 'function') {
+                        spaToast('Data disalin ke papan klip! Silakan bagikan ke teknisi.', 'success');
+                    } else {
+                        alert('Data disalin ke papan klip! Silakan bagikan ke teknisi.');
+                    }
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert(text);
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    if (typeof spaToast === 'function') {
+                        spaToast('Data disalin ke papan klip! Silakan bagikan ke teknisi.', 'success');
+                    } else {
+                        alert('Data disalin ke papan klip! Silakan bagikan ke teknisi.');
+                    }
+                } catch (err) {
+                    console.error('Copy failed: ', err);
+                    alert(text);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+    };
 </script>
 @endsection
 
