@@ -478,6 +478,96 @@ class PendaftaranExtendedAdminTest extends TestCase
         $this->assertTrue((bool)$this->paket->fresh()->is_hidden);
     }
 
+    public function test_admin_can_create_new_paket_with_theme_and_promotion(): void
+    {
+        $promosi = \App\Models\promosi::create([
+            'id_promosi' => 'PR99',
+            'value_promosi' => 10000,
+            'text_promosi' => 'Diskon Awal',
+            'tema' => '1',
+            'valid_start' => now()->subDay(),
+            'valid_end' => now()->addDays(5),
+        ]);
+
+        $response = $this->actingAs($this->admin)->post('/admin/paket', [
+            'id_paket' => 'PK99',
+            'title_paket' => 'Paket Premium Max',
+            'harga_paket' => 500000,
+            'id_promosi' => 'PR99',
+            'nama_tema' => 'Tema Orange',
+            'warna_bg' => '#ff8c00',
+            'warna_font' => '#ffffff',
+            'font_family' => 'Poppins',
+            'warna_border' => '#ff8c00',
+            'warna_button' => '#ff4500',
+            'badge_text' => 'TERBATAS',
+            'point_keunggulan' => ['Poin 1', 'Poin 2', 'Poin 3'],
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('pakets', [
+            'id_paket' => 'PK99',
+            'id_promosi' => 'PR99',
+            'nama_tema' => 'Tema Orange',
+            'badge_text' => 'TERBATAS',
+        ]);
+        
+        $paket = \App\Models\paket::find('PK99');
+        $this->assertEquals(['Poin 1', 'Poin 2', 'Poin 3'], $paket->point_keunggulan);
+    }
+
+    public function test_admin_can_create_new_paket_with_automatic_announcement(): void
+    {
+        $response = $this->actingAs($this->admin)->post('/admin/paket', [
+            'id_paket' => 'PK98',
+            'title_paket' => 'Paket Hemat',
+            'harga_paket' => 99000,
+            'create_announcement' => '1',
+            'announcement_id' => 'P987',
+            'announcement_tema' => 'Promo Hemat',
+            'announcement_text' => 'Telah hadir paket hemat baru!',
+            'announcement_valid_start' => '2026-06-13',
+            'announcement_valid_end' => '2026-07-13',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('pakets', [
+            'id_paket' => 'PK98',
+        ]);
+        $this->assertDatabaseHas('pengumumans', [
+            'id_pengumuman' => 'P987',
+            'tema' => 'Promo Hemat',
+            'text_pengumuman' => 'Telah hadir paket hemat baru!',
+        ]);
+    }
+
+    public function test_admin_can_update_paket_with_theme(): void
+    {
+        $response = $this->actingAs($this->admin)->put("/admin/paket/{$this->paket->id_paket}", [
+            'title_paket' => 'Paket Premium Ter-update',
+            'harga_paket' => 320000,
+            'id_promosi' => null,
+            'nama_tema' => 'Tema Cyberpunk',
+            'warna_bg' => '#000000',
+            'warna_font' => '#00ff00',
+            'font_family' => 'Inter',
+            'warna_border' => '#ff00ff',
+            'warna_button' => '#00ffff',
+            'badge_text' => 'HOT',
+            'point_keunggulan' => ['Poin Update 1', 'Poin Update 2'],
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('pakets', [
+            'id_paket' => $this->paket->id_paket,
+            'nama_tema' => 'Tema Cyberpunk',
+            'badge_text' => 'HOT',
+        ]);
+        
+        $paket = \App\Models\paket::find($this->paket->id_paket);
+        $this->assertEquals(['Poin Update 1', 'Poin Update 2'], $paket->point_keunggulan);
+    }
+
     // ==========================================
     // 5. ANNOUNCEMENTS & PROMOTIONS (UC20 - UC25)
     // ==========================================
@@ -716,13 +806,11 @@ class PendaftaranExtendedAdminTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->admin)->put('/admin/profil/preferences', [
-            'dark_mode' => '1',
             'email_notif' => '1',
         ]);
 
         $response->assertRedirect();
         $profile = AdminProfile::first();
-        $this->assertTrue((bool)$profile->dark_mode);
         $this->assertTrue((bool)$profile->email_notif);
         $this->assertFalse((bool)$profile->sound_notif);
     }

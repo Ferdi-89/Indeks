@@ -277,12 +277,17 @@
 
         // 2. Intercept Form Submissions (SPA no-reload)
         document.addEventListener('submit', async function(e) {
-            if (e.target.closest('.admin-tab-panel') && !e.target.hasAttribute('data-no-ajax')) {
+            if (!e.target.hasAttribute('data-no-ajax')) {
                 if (e.target.getAttribute('method') && e.target.getAttribute('method').toLowerCase() === 'dialog') return;
                 
                 e.preventDefault();
                 const form = e.target;
-                const panel = form.closest('.admin-tab-panel');
+                let panel = form.closest('.admin-tab-panel');
+                if (!panel) {
+                    const hash = window.location.hash.substring(1) || 'dashboard';
+                    panel = document.getElementById('panel-' + hash);
+                }
+                if (!panel) return;
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn ? submitBtn.innerHTML : '';
 
@@ -313,6 +318,40 @@
                             spaToast(json.message || 'Berhasil disimpan.', 'success');
                             // Reset password form jika ada
                             if (form.id === 'passwordForm') form.reset();
+                            
+                            // Custom update UI for profile info form
+                            if (form.id === 'profil-info-form') {
+                                const newName = form.querySelector('[name="nama_lengkap"]')?.value || '';
+                                const nameEl = document.getElementById('navbar-admin-name');
+                                if (nameEl && newName) {
+                                    nameEl.textContent = newName;
+                                }
+                                const profileNameEl = document.querySelector('#panel-profil h2');
+                                if (profileNameEl && newName) {
+                                    profileNameEl.textContent = newName;
+                                }
+                                // Compute and update initials
+                                const words = newName.split(' ');
+                                let initials = '';
+                                words.slice(0, 2).forEach(w => {
+                                    if (w) initials += w[0].toUpperCase();
+                                });
+                                const initialsEl = document.getElementById('navbar-initials');
+                                if (initialsEl && initials) {
+                                    initialsEl.textContent = initials;
+                                    const profileInitialsEl = document.querySelector('#panel-profil .avatar span');
+                                    if (profileInitialsEl) profileInitialsEl.textContent = initials;
+                                }
+                            }
+                            
+                            // Custom update UI for company settings info form
+                            if (form.querySelector('[name="nama_perusahaan"]')) {
+                                const newCompanyName = form.querySelector('[name="nama_perusahaan"]')?.value || '';
+                                const companyNameEl = document.getElementById('sidebar-company-name');
+                                if (companyNameEl && newCompanyName) {
+                                    companyNameEl.textContent = newCompanyName;
+                                }
+                            }
                         } else {
                             const errMsg = json.message || (json.errors ? Object.values(json.errors).flat().join(' ') : 'Terjadi kesalahan.');
                             spaToast(errMsg, 'error');
@@ -339,7 +378,9 @@
                     const newPanel = doc.getElementById(panel.id);
                     if (newPanel) {
                         panel.innerHTML = newPanel.innerHTML;
-                        history.pushState(null, '', url);
+                        if (form.method.toUpperCase() === 'GET') {
+                            history.pushState(null, '', url);
+                        }
                         if (panel.id === 'panel-pendaftaran' && typeof window.initPendaftaranPanel === 'function') {
                             window.initPendaftaranPanel();
                         }

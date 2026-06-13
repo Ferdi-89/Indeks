@@ -38,7 +38,11 @@
             <!-- Left Side: Brand Logo & Title -->
             <div class="flex items-center gap-6">
                 <a href="/" class="flex items-center gap-2 shrink-0">
-                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ $company->logo_path }}" alt="{{ $company->nama_perusahaan }}" class="h-7 w-auto object-contain">
+                    @else
+                        <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @endif
                 </a>
                 <span class="text-xs font-semibold text-base-content/40 uppercase tracking-widest hidden sm:inline-block">| Pelacakan Pemasangan</span>
             </div>
@@ -125,7 +129,7 @@
                             </p>
                         </div>
                     </div>
-                    <a href="https://wa.me/6281373242673?text=Halo%20Admin%20R-NET,%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20" 
+                    <a href="https://wa.me/{{ isset($company) && $company->whatsapp ? preg_replace('/[^0-9]/', '', $company->whatsapp) : '6281373242673' }}?text=Halo%20Admin%20{{ isset($company) ? urlencode($company->nama_perusahaan) : 'R-NET' }},%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20" 
                         id="btn-wa-rejected" target="_blank" class="btn btn-error btn-sm w-full text-white font-bold rounded-xl flex items-center gap-1.5 justify-center">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi Customer Service
                     </a>
@@ -290,7 +294,9 @@
             
             const waBtn = document.getElementById('btn-wa-rejected');
             if (waBtn) {
-                waBtn.href = `https://wa.me/6281373242673?text=Halo%20Admin%20R-NET,%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20${data.id_pendaftaran}`;
+                const waNumber = '{{ isset($company) && $company->whatsapp ? preg_replace('/[^0-9]/', '', $company->whatsapp) : "6281373242673" }}';
+                const companyName = '{{ isset($company) ? addslashes($company->nama_perusahaan) : "R-NET" }}';
+                waBtn.href = `https://wa.me/${waNumber}?text=Halo%20Admin%20${encodeURIComponent(companyName)},%20saya%20ingin%20bertanya%20mengenai%20status%20pendaftaran%20saya%20dengan%20ID%20${data.id_pendaftaran}`;
             }
 
             const status = data.status.toLowerCase();

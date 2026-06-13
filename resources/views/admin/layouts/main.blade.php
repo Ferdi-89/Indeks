@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>R-NET Admin - @yield('title', 'Dasbor')</title>
+
+    <script>
+        // Inline script to prevent flash of light/dark theme
+        (function() {
+            const savedTheme = localStorage.getItem('admin-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 
     <!-- Preconnect hints untuk CDN yang digunakan -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -39,9 +47,9 @@
             <div class="flex-none lg:hidden">
                 <label for="admin-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        class="inline-block w-6 h-6 stroke-current">
+                         class="inline-block w-6 h-6 stroke-current">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
+                              d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </label>
             </div>
@@ -50,6 +58,18 @@
             </div>
 
             <div class="flex-none gap-2">
+                <!-- ═══ Toggle Tema Gelap/Terang ═══ -->
+                <button id="theme-toggle-btn" class="btn btn-ghost btn-circle" onclick="toggleTheme()" title="Ubah Tema">
+                    <!-- Sun Icon (shown when theme is dark) -->
+                    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                    <!-- Moon Icon (shown when theme is light) -->
+                    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+
                 <!-- ═══ Notifikasi Live ═══ -->
                 <div class="dropdown dropdown-end" id="notif-dropdown">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle" id="notif-bell-btn" onclick="notifOpen()">
@@ -93,11 +113,15 @@
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost flex items-center gap-2">
                         <div class="text-right hidden sm:block">
-                            <p class="font-bold text-sm leading-none" id="navbar-admin-name">Admin R-NET</p>
+                            <p class="font-bold text-sm leading-none" id="navbar-admin-name">{{ $adminProfile->nama_lengkap ?? 'Admin R-NET' }}</p>
                         </div>
-                        <div class="avatar placeholder">
-                            <div class="bg-primary text-primary-content rounded-full w-10" id="navbar-avatar">
-                                <span class="font-bold" id="navbar-initials">AR</span>
+                        <div class="avatar {{ ($adminProfile && $adminProfile->avatar_path) ? '' : 'placeholder' }}">
+                            <div class="bg-primary text-primary-content rounded-full w-10 h-10 overflow-hidden" id="navbar-avatar">
+                                @if($adminProfile && $adminProfile->avatar_path)
+                                    <img src="{{ $adminProfile->avatar_path }}" alt="Avatar" class="rounded-full w-full h-full object-cover" id="navbar-avatar-img">
+                                @else
+                                    <span class="font-bold" id="navbar-initials">{{ $adminProfile->initials ?? 'AR' }}</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -130,15 +154,19 @@
         <ul class="menu p-4 w-72 min-h-full bg-base-100 border-r border-base-200 text-base-content">
             <!-- Brand -->
             <li class="mb-4 pointer-events-none">
-                <h1 class="text-xl md:text-2xl font-black flex items-center gap-3 text-primary px-2 py-4 border-b border-base-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 20h.01" />
-                        <path d="M2 8.82a15 15 0 0 1 20 0" />
-                        <path d="M5 12.859a10 10 0 0 1 14 0" />
-                        <path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                    </svg>
-                    R-NET Admin
+                <h1 class="text-xl md:text-2xl font-black flex items-center gap-3 text-primary px-2 py-4 border-b border-base-200" id="sidebar-brand">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ $company->logo_path }}" alt="Logo" class="w-8 h-8 object-contain" id="sidebar-logo">
+                    @else
+                        <svg id="sidebar-logo-fallback" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h.01" />
+                            <path d="M2 8.82a15 15 0 0 1 20 0" />
+                            <path d="M5 12.859a10 10 0 0 1 14 0" />
+                            <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+                        </svg>
+                    @endif
+                    <span id="sidebar-company-name">{{ $company->nama_perusahaan ?? 'R-NET Admin' }}</span>
                 </h1>
             </li>
 
@@ -419,7 +447,51 @@ document.addEventListener('DOMContentLoaded', () => {
     notifFetch(true);
     // Poll
     _pollInterval = setInterval(() => notifFetch(true), 60_000);
+
+    // Initialize Sun/Moon icons on load
+    const currentTheme = localStorage.getItem('admin-theme') || 'light';
+    const sunIcon = document.getElementById('theme-icon-sun');
+    const moonIcon = document.getElementById('theme-icon-moon');
+    if (currentTheme === 'dark') {
+        sunIcon?.classList.remove('hidden');
+        moonIcon?.classList.add('hidden');
+    } else {
+        sunIcon?.classList.add('hidden');
+        moonIcon?.classList.remove('hidden');
+    }
 });
+
+// ── Theme Toggle Script ──
+async function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Update DOM
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('admin-theme', newTheme);
+    
+    // Show/hide icons
+    const sunIcon = document.getElementById('theme-icon-sun');
+    const moonIcon = document.getElementById('theme-icon-moon');
+    if (newTheme === 'dark') {
+        sunIcon?.classList.remove('hidden');
+        moonIcon?.classList.add('hidden');
+    } else {
+        sunIcon?.classList.add('hidden');
+        moonIcon?.classList.remove('hidden');
+    }
+    
+    // Sync preference toggle in profil tab if it exists
+    const profilDarkToggle = document.getElementById('pref-dark_mode');
+    if (profilDarkToggle) {
+        profilDarkToggle.checked = (newTheme === 'dark');
+    }
+
+    if (typeof spaToast === 'function') {
+        spaToast('Tema berhasil diubah.', 'success');
+    }
+}
 </script>
 
 </body>

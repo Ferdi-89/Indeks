@@ -127,7 +127,11 @@
             <!-- Left Side: Brand Logo & Title -->
             <div class="flex items-center gap-6">
                 <a href="/" class="flex items-center gap-2 shrink-0">
-                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ $company->logo_path }}" alt="{{ $company->nama_perusahaan }}" class="h-7 w-auto object-contain">
+                    @else
+                        <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @endif
                 </a>
                 <span class="text-xs font-semibold text-base-content/40 uppercase tracking-widest hidden sm:inline-block">| Portal Pendaftaran</span>
             </div>
@@ -460,12 +464,24 @@
                     <h4 class="font-bold text-base-content text-base">Butuh Bantuan Pendaftaran?</h4>
                     <p class="text-sm text-base-content/50 mt-1 mb-3">Customer service kami siap memandu proses pemasangan Anda.</p>
                     <div class="flex flex-col sm:flex-row gap-4 text-xs font-bold uppercase tracking-wider">
-                        <a href="tel:+6281373242873" class="flex items-center gap-2 text-base-content/75 hover:text-primary transition">
-                            <i data-lucide="phone" class="w-4 h-4 text-primary"></i> 0813-7324-2873
-                        </a>
-                        <a href="https://wa.me/6281373242873" target="_blank" class="flex items-center gap-2 text-success hover:text-success-focus transition">
-                            <i data-lucide="message-square" class="w-4 h-4"></i> Chat WhatsApp
-                        </a>
+                        @if(isset($company) && $company->telepon_perusahaan)
+                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $company->telepon_perusahaan) }}" class="flex items-center gap-2 text-base-content/75 hover:text-primary transition">
+                                <i data-lucide="phone" class="w-4 h-4 text-primary"></i> {{ $company->telepon_perusahaan }}
+                            </a>
+                        @else
+                            <a href="tel:+6281373242873" class="flex items-center gap-2 text-base-content/75 hover:text-primary transition">
+                                <i data-lucide="phone" class="w-4 h-4 text-primary"></i> 0813-7324-2873
+                            </a>
+                        @endif
+                        @if(isset($company) && $company->whatsapp)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp) }}" target="_blank" class="flex items-center gap-2 text-success hover:text-success-focus transition">
+                                <i data-lucide="message-square" class="w-4 h-4"></i> Chat WhatsApp
+                            </a>
+                        @else
+                            <a href="https://wa.me/6281373242873" target="_blank" class="flex items-center gap-2 text-success hover:text-success-focus transition">
+                                <i data-lucide="message-square" class="w-4 h-4"></i> Chat WhatsApp
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

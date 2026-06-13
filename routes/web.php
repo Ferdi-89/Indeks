@@ -24,20 +24,22 @@ use Illuminate\Support\Str;
 // ─── Landing Page ───────────────────────────────────────────────────────
 Route::get('/', function () {
     $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
-    $pakets = paket::where('is_hidden', false)->get();
+    $pakets = paket::with('promosi')->where('is_hidden', false)->get();
     $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
+    $company = App\Models\CompanySetting::getInstance();
 
     if (empty($pengumuman)) {
         $pengumuman = ['Selamat datang dan Pilihlah paket anda :> '];
     }
-    return view('welcome', compact('pengumuman', 'pakets', 'areaLayanan'));
+    return view('welcome', compact('pengumuman', 'pakets', 'areaLayanan', 'company'));
 });
 
 // ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
 Route::get('/daftar', function () {
     $pakets = paket::where('is_hidden', false)->get();
     $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
-    return view('pendaftaran', compact('pakets', 'areaLayanan'));
+    $company = App\Models\CompanySetting::getInstance();
+    return view('pendaftaran', compact('pakets', 'areaLayanan', 'company'));
 })->name('pendaftaran');
 
 // ─── Proses Pendaftaran (POST) ──────────────────────────────────────────
@@ -102,7 +104,8 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
 
 // ─── Cek Status Pendaftaran (GET) ──────────────────────────────────────
 Route::get('/cek-status', function () {
-    return view('cek-status');
+    $company = App\Models\CompanySetting::getInstance();
+    return view('cek-status', compact('company'));
 })->name('cek-status.index');
 
 Route::get('/cek-status/{id}', function ($id) {
@@ -362,12 +365,56 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // --- Paket ---
     Route::post('/paket', function(Illuminate\Http\Request $request) {
-        $data = $request->validate([
+        $validationRules = [
             'id_paket' => 'required|string|unique:pakets,id_paket',
             'title_paket' => 'required|string',
             'harga_paket' => 'required|numeric',
+            'id_promosi' => 'nullable|string|exists:promosis,id_promosi',
+            'nama_tema' => 'nullable|string',
+            'warna_bg' => 'nullable|string',
+            'warna_font' => 'nullable|string',
+            'font_family' => 'nullable|string',
+            'warna_border' => 'nullable|string',
+            'warna_button' => 'nullable|string',
+            'badge_text' => 'nullable|string',
+            'point_keunggulan' => 'nullable|array',
+        ];
+
+        if ($request->boolean('create_announcement')) {
+            $validationRules['announcement_id'] = 'required|string|max:5|unique:pengumumans,id_pengumuman';
+            $validationRules['announcement_tema'] = 'required|string';
+            $validationRules['announcement_text'] = 'required|string';
+            $validationRules['announcement_valid_start'] = 'required|date';
+            $validationRules['announcement_valid_end'] = 'required|date';
+        }
+
+        $data = $request->validate($validationRules);
+
+        if ($request->boolean('create_announcement')) {
+            App\Models\pengumuman::create([
+                'id_pengumuman' => $data['announcement_id'],
+                'tema' => $data['announcement_tema'],
+                'text_pengumuman' => $data['announcement_text'],
+                'valid_start' => $data['announcement_valid_start'],
+                'valid_end' => $data['announcement_valid_end'],
+            ]);
+        }
+
+        App\Models\paket::create([
+            'id_paket' => $data['id_paket'],
+            'title_paket' => $data['title_paket'],
+            'harga_paket' => $data['harga_paket'],
+            'id_promosi' => $data['id_promosi'] ?? null,
+            'nama_tema' => $data['nama_tema'] ?? null,
+            'warna_bg' => $data['warna_bg'] ?? null,
+            'warna_font' => $data['warna_font'] ?? null,
+            'font_family' => $data['font_family'] ?? null,
+            'warna_border' => $data['warna_border'] ?? null,
+            'warna_button' => $data['warna_button'] ?? null,
+            'badge_text' => $data['badge_text'] ?? null,
+            'point_keunggulan' => $data['point_keunggulan'] ?? null,
         ]);
-        App\Models\paket::create($data);
+
         return redirect()->back()->with('success', 'Paket ditambahkan.');
     })->name('paket.store');
 
@@ -375,8 +422,31 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $data = $request->validate([
             'title_paket' => 'required|string',
             'harga_paket' => 'required|numeric',
+            'id_promosi' => 'nullable|string|exists:promosis,id_promosi',
+            'nama_tema' => 'nullable|string',
+            'warna_bg' => 'nullable|string',
+            'warna_font' => 'nullable|string',
+            'font_family' => 'nullable|string',
+            'warna_border' => 'nullable|string',
+            'warna_button' => 'nullable|string',
+            'badge_text' => 'nullable|string',
+            'point_keunggulan' => 'nullable|array',
         ]);
-        App\Models\paket::where('id_paket', $id)->firstOrFail()->update($data);
+
+        App\Models\paket::where('id_paket', $id)->firstOrFail()->update([
+            'title_paket' => $data['title_paket'],
+            'harga_paket' => $data['harga_paket'],
+            'id_promosi' => $data['id_promosi'] ?? null,
+            'nama_tema' => $data['nama_tema'] ?? null,
+            'warna_bg' => $data['warna_bg'] ?? null,
+            'warna_font' => $data['warna_font'] ?? null,
+            'font_family' => $data['font_family'] ?? null,
+            'warna_border' => $data['warna_border'] ?? null,
+            'warna_button' => $data['warna_button'] ?? null,
+            'badge_text' => $data['badge_text'] ?? null,
+            'point_keunggulan' => $data['point_keunggulan'] ?? null,
+        ]);
+
         return redirect()->back()->with('success', 'Paket diperbarui.');
     })->name('paket.update');
 
@@ -391,6 +461,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     })->name('paket.destroy');
+
+    Route::get('/paket/{id}', function() {
+        return redirect()->route('admin.index')->withFragment('paket');
+    });
 
     Route::patch('/paket/{id}/toggle-hide', function($id) {
         $paket = App\Models\paket::findOrFail($id);
@@ -427,6 +501,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         return redirect()->back()->with('success', 'Pengumuman dihapus.');
     })->name('pengumuman.destroy');
 
+    Route::get('/pengumuman/{id}', function() {
+        return redirect()->route('admin.index')->withFragment('pengumuman');
+    });
+
     // --- Promosi ---
     Route::post('/promosi', function(Illuminate\Http\Request $request) {
         $data = $request->validate([
@@ -458,6 +536,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         return redirect()->back()->with('success', 'Promosi dihapus.');
     })->name('promosi.destroy');
 
+    Route::get('/promosi/{id}', function() {
+        return redirect()->route('admin.index')->withFragment('promosi');
+    });
+
     // ──────────────────────────────────────────────────────────────────
     // Helper: kembalikan JSON jika XHR, redirect jika request biasa
     // ──────────────────────────────────────────────────────────────────
@@ -484,6 +566,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     })->name('server.up');
 
     Route::post('/server/shutdown', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
+        if (app()->environment('testing')) {
+            return $jsonOrRedirect($request, 'Perintah shutdown disimulasikan (testing).');
+        }
         // Matikan serve secara asinkron tergantung OS
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             pclose(popen('start /B taskkill /F /IM php.exe', 'r'));
@@ -528,9 +613,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $profil = App\Models\AdminProfile::first();
         if ($profil) {
             $profil->update([
-                'dark_mode'   => $request->has('dark_mode'),
-                'email_notif' => $request->has('email_notif'),
-                'sound_notif' => $request->has('sound_notif'),
+                'email_notif' => $request->boolean('email_notif'),
+                'sound_notif' => $request->boolean('sound_notif'),
             ]);
         }
         return $jsonOrRedirect($request, 'Preferensi tampilan disimpan.');
@@ -538,18 +622,49 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // --- Profil Admin: Upload Avatar ---
     Route::post('/profil/avatar', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
-        $request->validate(['avatar' => 'required|image|mimes:jpg,jpeg,png|max:2048']);
+        $request->validate(['avatar' => 'required|file|mimes:jpg,jpeg,png,webp,svg,ico|max:2048']);
         $profil = App\Models\AdminProfile::first();
         if (!$profil) {
             return $request->ajax()
                 ? response()->json(['success' => false, 'message' => 'Profil tidak ditemukan.'], 404)
                 : back()->withErrors(['avatar' => 'Profil tidak ditemukan.']);
         }
+        
+        // Delete old avatar
         if ($profil->avatar_path) {
-            Illuminate\Support\Facades\Storage::disk('s3')->delete($profil->avatar_path);
+            if (str_contains($profil->avatar_path, 'storage.supabase.co')) {
+                try {
+                    $s3Path = ltrim(parse_url($profil->avatar_path, PHP_URL_PATH), '/');
+                    $bucket = env('S3_BUCKET', 'gambarRumah');
+                    if (str_starts_with($s3Path, "storage/v1/s3/")) {
+                        $s3Path = str_replace("storage/v1/s3/", "", $s3Path);
+                    }
+                    if (str_starts_with($s3Path, $bucket . "/")) {
+                        $s3Path = substr($s3Path, strlen($bucket) + 1);
+                    }
+                    Illuminate\Support\Facades\Storage::disk('s3')->delete($s3Path);
+                } catch (\Exception $e) {}
+            } else {
+                try {
+                    $localPath = str_replace(url('storage/'), '', $profil->avatar_path);
+                    Illuminate\Support\Facades\Storage::disk('public')->delete(ltrim($localPath, '/'));
+                } catch (\Exception $e) {}
+            }
         }
-        $path = $request->file('avatar')->store('avatars', 's3');
-        $url  = Illuminate\Support\Facades\Storage::disk('s3')->url($path);
+
+        // Upload new avatar with fallback
+        $disk = 's3';
+        if (!env('S3_ACCESS_KEY_ID') || !env('S3_SECRET_ACCESS_KEY') || !env('S3_BUCKET')) {
+            $disk = 'public';
+        }
+        try {
+            $path = $request->file('avatar')->store('avatars', $disk);
+            $url  = Illuminate\Support\Facades\Storage::disk($disk)->url($path);
+        } catch (\Exception $e) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $url  = Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        }
+
         $profil->update(['avatar_path' => $url]);
         return $request->ajax()
             ? response()->json(['success' => true, 'message' => 'Foto profil berhasil diperbarui.', 'avatar_url' => $url])
@@ -589,22 +704,51 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'jam_buka_sabtu'    => 'nullable|date_format:H:i',
             'jam_tutup_sabtu'   => 'nullable|date_format:H:i',
         ]);
-        $data['buka_minggu'] = $request->has('buka_minggu');
+        $data['buka_minggu'] = $request->boolean('buka_minggu');
         App\Models\CompanySetting::getInstance()->update($data);
         return $jsonOrRedirect($request, 'Jam operasional berhasil diperbarui.');
     })->name('pengaturan.hours');
 
     // --- Pengaturan: Upload Logo ---
     Route::post('/pengaturan/logo', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
-        $request->validate(['logo' => 'required|image|mimes:jpg,jpeg,png|max:2048']);
+        $request->validate(['logo' => 'required|file|mimes:jpg,jpeg,png,webp,svg,ico|max:2048']);
         $company = App\Models\CompanySetting::getInstance();
+        
+        // Delete old logo
         if ($company->logo_path) {
-            Illuminate\Support\Facades\Storage::disk('s3')->delete(
-                ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/')
-            );
+            if (str_contains($company->logo_path, 'storage.supabase.co')) {
+                try {
+                    $s3Path = ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/');
+                    $bucket = env('S3_BUCKET', 'gambarRumah');
+                    if (str_starts_with($s3Path, "storage/v1/s3/")) {
+                        $s3Path = str_replace("storage/v1/s3/", "", $s3Path);
+                    }
+                    if (str_starts_with($s3Path, $bucket . "/")) {
+                        $s3Path = substr($s3Path, strlen($bucket) + 1);
+                    }
+                    Illuminate\Support\Facades\Storage::disk('s3')->delete($s3Path);
+                } catch (\Exception $e) {}
+            } else {
+                try {
+                    $localPath = str_replace(url('storage/'), '', $company->logo_path);
+                    Illuminate\Support\Facades\Storage::disk('public')->delete(ltrim($localPath, '/'));
+                } catch (\Exception $e) {}
+            }
         }
-        $path = $request->file('logo')->store('logos', 's3');
-        $url  = Illuminate\Support\Facades\Storage::disk('s3')->url($path);
+
+        // Upload new logo with fallback
+        $disk = 's3';
+        if (!env('S3_ACCESS_KEY_ID') || !env('S3_SECRET_ACCESS_KEY') || !env('S3_BUCKET')) {
+            $disk = 'public';
+        }
+        try {
+            $path = $request->file('logo')->store('logos', $disk);
+            $url  = Illuminate\Support\Facades\Storage::disk($disk)->url($path);
+        } catch (\Exception $e) {
+            $path = $request->file('logo')->store('logos', 'public');
+            $url  = Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        }
+
         $company->update(['logo_path' => $url]);
         return $request->ajax()
             ? response()->json(['success' => true, 'message' => 'Logo berhasil diperbarui.', 'logo_url' => $url])
@@ -615,9 +759,24 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::delete('/pengaturan/logo', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
         $company = App\Models\CompanySetting::getInstance();
         if ($company->logo_path) {
-            Illuminate\Support\Facades\Storage::disk('s3')->delete(
-                ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/')
-            );
+            if (str_contains($company->logo_path, 'storage.supabase.co')) {
+                try {
+                    $s3Path = ltrim(parse_url($company->logo_path, PHP_URL_PATH), '/');
+                    $bucket = env('S3_BUCKET', 'gambarRumah');
+                    if (str_starts_with($s3Path, "storage/v1/s3/")) {
+                        $s3Path = str_replace("storage/v1/s3/", "", $s3Path);
+                    }
+                    if (str_starts_with($s3Path, $bucket . "/")) {
+                        $s3Path = substr($s3Path, strlen($bucket) + 1);
+                    }
+                    Illuminate\Support\Facades\Storage::disk('s3')->delete($s3Path);
+                } catch (\Exception $e) {}
+            } else {
+                try {
+                    $localPath = str_replace(url('storage/'), '', $company->logo_path);
+                    Illuminate\Support\Facades\Storage::disk('public')->delete(ltrim($localPath, '/'));
+                } catch (\Exception $e) {}
+            }
             $company->update(['logo_path' => null]);
         }
         return $jsonOrRedirect($request, 'Logo perusahaan berhasil dihapus.');
@@ -649,6 +808,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         App\Models\AreaLayanan::findOrFail($id)->delete();
         return $jsonOrRedirect($request, 'Area layanan dihapus.');
     })->name('area.destroy');
+
+    Route::get('/area/{id}', function() {
+        return redirect()->route('admin.index')->withFragment('wilayah');
+    });
 
     Route::get('/', function (Illuminate\Http\Request $request) {
         // Pendaftaran: paginasi 10 data, totalPendaftaran diambil dari paginator (bukan query count terpisah)

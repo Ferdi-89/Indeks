@@ -34,7 +34,7 @@
                 <!-- Hidden avatar upload form -->
                 <form id="avatar-upload-form" action="{{ route('admin.profil.avatar') }}" method="POST" enctype="multipart/form-data" style="display:none;">
                     @csrf
-                    <input type="file" id="avatar-upload-trigger" name="avatar" accept="image/*" onchange="document.getElementById('avatar-upload-form').submit();">
+                    <input type="file" id="avatar-upload-trigger" name="avatar" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,image/x-icon">
                 </form>
             </div>
             <div class="text-center md:text-left">
@@ -217,6 +217,26 @@
         const key   = toggleEl.dataset.pref;
         const value = toggleEl.checked ? '1' : '0';
 
+        // Update theme in DOM instantly for dark_mode
+        if (key === 'dark_mode') {
+            const isDark = toggleEl.checked;
+            const newTheme = isDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('admin-theme', newTheme);
+            
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            if (isDark) {
+                sunIcon?.classList.remove('hidden');
+                moonIcon?.classList.add('hidden');
+            } else {
+                sunIcon?.classList.add('hidden');
+                moonIcon?.classList.remove('hidden');
+            }
+            spaToast('Tema berhasil diubah.', 'success');
+            return; // Don't call server/database AJAX for dark_mode
+        }
+
         // Ambil semua state toggle sekarang
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
                        || document.querySelector('input[name="_token"]')?.value
@@ -225,7 +245,6 @@
         const body = new URLSearchParams({
             _token:      csrfToken,
             _method:     'PUT',
-            dark_mode:   document.getElementById('pref-dark_mode')?.checked  ? '1' : '0',
             email_notif: document.getElementById('pref-email_notif')?.checked ? '1' : '0',
             sound_notif: document.getElementById('pref-sound_notif')?.checked ? '1' : '0',
         });
@@ -285,6 +304,12 @@
 
     // Avatar upload via AJAX — preview langsung tanpa reload
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize dark mode preference toggle state from localStorage
+        const prefDarkMode = document.getElementById('pref-dark_mode');
+        if (prefDarkMode) {
+            prefDarkMode.checked = (localStorage.getItem('admin-theme') === 'dark');
+        }
+
         const avatarInput = document.getElementById('avatar-upload-trigger');
         if (!avatarInput) return;
         avatarInput.addEventListener('change', async function() {
@@ -307,6 +332,19 @@
                     headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
                 });
                 const json = await res.json();
+                if (json.success && json.avatar_url) {
+                    // Update main profile panel avatar
+                    const avatarDiv = document.querySelector('#panel-profil .avatar div');
+                    if (avatarDiv) {
+                        avatarDiv.innerHTML = `<img src="${json.avatar_url}" class="rounded-full w-full h-full object-cover">`;
+                    }
+                    // Update navbar avatar
+                    const navbarAvatar = document.getElementById('navbar-avatar');
+                    if (navbarAvatar) {
+                        navbarAvatar.parentNode.classList.remove('placeholder');
+                        navbarAvatar.innerHTML = `<img src="${json.avatar_url}" alt="Avatar" class="rounded-full w-full h-full object-cover" id="navbar-avatar-img">`;
+                    }
+                }
                 spaToast(json.message || (json.success ? 'Avatar diperbarui.' : 'Gagal upload.'), json.success ? 'success' : 'error');
             } catch (err) {
                 spaToast('Gagal mengupload avatar.', 'error');

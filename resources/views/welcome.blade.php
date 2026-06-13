@@ -182,7 +182,11 @@
             <!-- Left Side: Brand Logo & Links -->
             <div class="flex items-center gap-10">
                 <a href="/" class="flex items-center gap-2 shrink-0">
-                    <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ $company->logo_path }}" alt="{{ $company->nama_perusahaan }}" class="h-7 w-auto object-contain">
+                    @else
+                        <img src="/logoprimary.svg" alt="R-NET Logo" class="h-7 w-auto">
+                    @endif
                 </a>
 
                 <!-- Center Links (Desktop) -->
@@ -325,60 +329,114 @@
                 @foreach($pakets as $index => $paket)
                     @php
                         $isPopular = ($index == 1);
+                        $hasPromo = false;
+                        $promoDiscount = 0;
+                        $promoText = '';
+                        if ($paket->promosi) {
+                            $now = now();
+                            if ($now->between($paket->promosi->valid_start, $paket->promosi->valid_end)) {
+                                $hasPromo = true;
+                                $promoDiscount = $paket->promosi->value_promosi;
+                                $promoText = $paket->promosi->text_promosi;
+                            }
+                        }
                     @endphp
                     <div id="card-paket-{{ $paket->id_paket }}"
-                        class="glass-card rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between {{ $isPopular ? 'border-primary border-2 premium-glow-active' : 'border border-base-300/60' }}">
+                        class="glass-card rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between {{ $isPopular ? 'border-primary border-2 premium-glow-active' : 'border border-base-300/60' }}"
+                        @if($paket->warna_bg || $paket->warna_font || $paket->warna_border || $paket->warna_button)
+                        data-theme-card
+                        data-theme-bg="{{ $paket->warna_bg ?? '' }}"
+                        data-theme-font="{{ $paket->warna_font ?? '' }}"
+                        data-theme-border="{{ $paket->warna_border ?? '' }}"
+                        data-theme-button="{{ $paket->warna_button ?? '' }}"
+                        @endif
+                        style="@if($paket->warna_bg) background-color: {{ $paket->warna_bg }} !important; @endif @if($paket->warna_border) border-color: {{ $paket->warna_border }} !important; box-shadow: 0 10px 30px -10px {{ $paket->warna_border }}40 !important; @endif @if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif @if($paket->font_family) font-family: '{{ $paket->font_family }}', sans-serif !important; @endif">
 
                         <div class="p-6 md:p-8 space-y-6 flex-1 flex flex-col justify-between">
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-primary uppercase tracking-widest">Jaringan
-                                        FTTH</span>
-                                    @if($isPopular)
-                                        <span
-                                            class="badge badge-warning text-[10px] font-black uppercase tracking-wider py-2">Terpopuler</span>
+                                    <span class="text-xs font-bold text-primary uppercase tracking-widest" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.8; @endif">
+                                        Jaringan FTTH
+                                    </span>
+                                    @if($paket->badge_text)
+                                        <span class="badge font-black text-[10px] uppercase tracking-wider py-2 text-white" style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; @else background-color: #2563eb !important; @endif">
+                                            {{ $paket->badge_text }}
+                                        </span>
+                                    @elseif($isPopular)
+                                        <span class="badge badge-warning text-[10px] font-black uppercase tracking-wider py-2">
+                                            Terpopuler
+                                        </span>
                                     @endif
                                 </div>
-                                <h3 class="text-xl font-extrabold text-base-content">{{ $paket->title_paket }}</h3>
+                                <h3 class="text-xl font-extrabold text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                    {{ $paket->title_paket }}
+                                </h3>
                             </div>
 
-                            <div class="flex items-end justify-start gap-1 py-4">
-                                <span
-                                    class="text-5xl font-black text-base-content">{{ number_format($paket->harga_paket / 1000, 0) }}K</span>
-                                <span class="text-xs text-base-content/50 font-bold mb-1.5">/bulan</span>
-                            </div>
+                            @if($hasPromo)
+                                <div class="py-2 space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-base-content/40 line-through" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.5; @endif">
+                                        Rp {{ number_format($paket->harga_paket, 0, ',', '.') }}
+                                    </div>
+                                    <div class="flex items-end justify-start gap-1">
+                                        <span class="text-5xl font-black text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                            {{ number_format(($paket->harga_paket - $promoDiscount) / 1000, 0) }}K
+                                        </span>
+                                        <span class="text-xs text-base-content/50 font-bold mb-1.5" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
+                                    </div>
+                                    <div class="text-[10px] font-bold uppercase tracking-wider text-secondary mt-1" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.9; @endif">
+                                        PROMO: {{ $promoText }}
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-end justify-start gap-1 py-4">
+                                    <span class="text-5xl font-black text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                        {{ number_format($paket->harga_paket / 1000, 0) }}K
+                                    </span>
+                                    <span class="text-xs text-base-content/50 font-bold mb-1.5" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
+                                </div>
+                            @endif
 
                             <div class="border-t border-base-300/40 my-1"></div>
 
-                            <ul class="space-y-3.5 text-xs text-base-content/85 font-medium flex-1 pt-2">
-                                <li class="flex items-center gap-3">
-                                    <span
-                                        class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
-                                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                                    </span>
-                                    <span>Kuota 100% Unlimited Murni</span>
-                                </li>
-                                <li class="flex items-center gap-3">
-                                    <span
-                                        class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
-                                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                                    </span>
-                                    <span>Bebas Lag &amp; Throttling FUP</span>
-                                </li>
-                                <li class="flex items-center gap-3">
-                                    <span
-                                        class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
-                                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                                    </span>
-                                    <span>Modem WiFi ONT Dipinjamkan Gratis</span>
-                                </li>
+                            <ul class="space-y-3.5 text-xs text-base-content/85 font-medium flex-1 pt-2" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                @if($paket->point_keunggulan && is_array($paket->point_keunggulan))
+                                    @foreach($paket->point_keunggulan as $point)
+                                        <li class="flex items-center gap-3">
+                                            <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style="background-color: {{ $paket->warna_button ? $paket->warna_button . '20' : 'rgba(34, 197, 94, 0.15)' }}; color: {{ $paket->warna_button ? $paket->warna_button : '#22c55e' }};">
+                                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                            </span>
+                                            <span>{{ $point }}</span>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        </span>
+                                        <span>Kuota 100% Unlimited Murni</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        </span>
+                                        <span>Bebas Lag &amp; Throttling FUP</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        </span>
+                                        <span>Modem WiFi ONT Dipinjamkan Gratis</span>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
 
                         <!-- Action Button Card -->
-                        <div class="p-6 bg-base-200/40 border-t border-base-300/40">
+                        <div class="p-6 bg-base-200/40 border-t border-base-300/40" style="@if($paket->warna_border) border-color: {{ $paket->warna_border }}40 !important; @endif">
                             <a href="/daftar?paket={{ $paket->id_paket }}"
-                                class="btn w-full rounded-xl font-bold text-xs active:scale-95 transition-transform {{ $isPopular ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline btn-primary' }}">
+                                class="btn w-full rounded-xl font-bold text-xs active:scale-95 transition-transform text-white"
+                                style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; @else background-color: #2563eb !important; border-color: #2563eb !important; @endif">
                                 PILIH PAKET
                             </a>
                         </div>
@@ -771,11 +829,15 @@
             <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12">
                 <!-- Left side -->
                 <aside class="max-w-xs space-y-4">
-                    <img src="/logoprimary.svg" alt="R-NET" class="h-8 w-auto">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ $company->logo_path }}" alt="{{ $company->nama_perusahaan }}" class="h-8 w-auto object-contain">
+                    @else
+                        <img src="/logoprimary.svg" alt="R-NET" class="h-8 w-auto">
+                    @endif
                     <p class="text-base-content/60 text-xs leading-relaxed">
                         Penyedia layanan internet rakyat terpercaya. Menghadirkan koneksi handal tanpa kuota
                         FUP untuk kedaulatan digital bersama.<br><br>
-                        Hak Cipta &copy; {{ date('Y') }} R-NET — Seluruh hak cipta dilindungi.
+                        Hak Cipta &copy; {{ date('Y') }} {{ $company->nama_perusahaan ?? 'R-NET' }} — Seluruh hak cipta dilindungi.
                     </p>
                 </aside>
 
@@ -791,9 +853,14 @@
                     <nav class="flex flex-col gap-2.5 text-xs font-semibold">
                         <h6 class="text-[10px] font-bold text-base-content/40 uppercase tracking-widest mb-1">Perusahaan
                         </h6>
-                        <a href="#" class="link link-hover text-base-content/75">Tentang R-NET</a>
-                        <a href="https://wa.me/6281373242673" target="_blank" rel="noopener noreferrer"
-                            class="link link-hover text-base-content/75">Hubungi Kami</a>
+                        <a href="#" class="link link-hover text-base-content/75">Tentang {{ $company->nama_perusahaan ?? 'R-NET' }}</a>
+                        @if(isset($company) && $company->whatsapp)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp) }}" target="_blank" rel="noopener noreferrer"
+                                class="link link-hover text-base-content/75">Hubungi Kami</a>
+                        @else
+                            <a href="https://wa.me/6281373242673" target="_blank" rel="noopener noreferrer"
+                                class="link link-hover text-base-content/75">Hubungi Kami</a>
+                        @endif
                     </nav>
                     <nav class="flex flex-col gap-2.5 text-xs font-semibold col-span-2 sm:col-span-1">
                         <h6 class="text-[10px] font-bold text-base-content/40 uppercase tracking-widest mb-1">Legal</h6>
@@ -817,16 +884,128 @@
             // No background image swaps needed anymore as we are using a custom tech-grid background!
         }
 
+        // ── Algoritma Pembalik Warna untuk Kartu Paket ───────────
+        function hexToHSL(hex) {
+            hex = hex.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
+            const r = parseInt(hex.substring(0,2), 16) / 255;
+            const g = parseInt(hex.substring(2,4), 16) / 255;
+            const b = parseInt(hex.substring(4,6), 16) / 255;
+            const max = Math.max(r,g,b), min = Math.min(r,g,b);
+            let h, s, l = (max+min)/2;
+            if (max === min) { h = s = 0; }
+            else {
+                const d = max - min;
+                s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+                switch(max) {
+                    case r: h = ((g-b)/d + (g<b?6:0))/6; break;
+                    case g: h = ((b-r)/d + 2)/6; break;
+                    case b: h = ((r-g)/d + 4)/6; break;
+                }
+            }
+            return { h: h*360, s: s*100, l: l*100 };
+        }
+
+        function hslToHex(h, s, l) {
+            s /= 100; l /= 100;
+            const a = s * Math.min(l, 1-l);
+            const f = n => { const k = (n+h/30) % 12; return l - a*Math.max(Math.min(k-3,9-k,1),-1); };
+            return '#' + [f(0),f(8),f(4)].map(x => Math.round(x*255).toString(16).padStart(2,'0')).join('');
+        }
+
+        function invertColor(hex, isDark) {
+            if (!hex || hex.length < 4) return hex;
+            const hsl = hexToHSL(hex);
+            // Invert lightness: dark mode → make light colors dark and vice versa
+            hsl.l = 100 - hsl.l;
+            // Slight saturation boost for dark mode to maintain vibrancy
+            if (isDark) hsl.s = Math.min(100, hsl.s * 1.15);
+            return hslToHex(hsl.h, hsl.s, hsl.l);
+        }
+
+        function invertPaketCardColors(theme) {
+            const isDark = theme === 'dark';
+            document.querySelectorAll('[data-theme-card]').forEach(card => {
+                const origBg = card.dataset.themeBg;
+                const origFont = card.dataset.themeFont;
+                const origBorder = card.dataset.themeBorder;
+                const origButton = card.dataset.themeButton;
+
+                // Determine if original colors are "light" (meant for light mode)
+                const bgHSL = origBg ? hexToHSL(origBg) : null;
+                const isOriginallyLight = bgHSL ? bgHSL.l > 50 : true;
+
+                // Only invert if mismatch: dark mode with light colors, or light mode with dark colors
+                const needsInversion = isDark === isOriginallyLight;
+
+                if (needsInversion) {
+                    if (origBg) card.style.backgroundColor = invertColor(origBg, isDark);
+                    if (origFont) {
+                        card.style.color = invertColor(origFont, isDark);
+                        card.querySelectorAll('[style*="color"]').forEach(el => {
+                            if (el.style.color && !el.closest('[data-no-invert]')) {
+                                el.style.color = invertColor(origFont, isDark);
+                            }
+                        });
+                    }
+                    if (origBorder) {
+                        card.style.borderColor = invertColor(origBorder, isDark);
+                        card.style.boxShadow = `0 10px 30px -10px ${invertColor(origBorder, isDark)}40`;
+                    }
+                    if (origButton) {
+                        card.querySelectorAll('.btn, .badge').forEach(el => {
+                            if (el.style.backgroundColor) el.style.backgroundColor = invertColor(origButton, isDark);
+                            if (el.style.borderColor) el.style.borderColor = invertColor(origButton, isDark);
+                        });
+                        card.querySelectorAll('.rounded-full').forEach(el => {
+                            if (el.style.backgroundColor) el.style.backgroundColor = invertColor(origButton, isDark) + '20';
+                            if (el.style.color) el.style.color = invertColor(origButton, isDark);
+                        });
+                    }
+                    const footerDiv = card.querySelector('.border-t.border-base-300\\/40, .bg-base-200\\/40');
+                    if (footerDiv && origBorder) footerDiv.style.borderColor = invertColor(origBorder, isDark) + '40';
+                } else {
+                    // Restore original colors
+                    if (origBg) card.style.backgroundColor = origBg;
+                    if (origFont) {
+                        card.style.color = origFont;
+                        card.querySelectorAll('[style*="color"]').forEach(el => {
+                            if (el.style.color && !el.closest('[data-no-invert]')) {
+                                el.style.color = origFont;
+                            }
+                        });
+                    }
+                    if (origBorder) {
+                        card.style.borderColor = origBorder;
+                        card.style.boxShadow = `0 10px 30px -10px ${origBorder}40`;
+                    }
+                    if (origButton) {
+                        card.querySelectorAll('.btn, .badge').forEach(el => {
+                            if (el.style.backgroundColor) el.style.backgroundColor = origButton;
+                            if (el.style.borderColor) el.style.borderColor = origButton;
+                        });
+                        card.querySelectorAll('.rounded-full').forEach(el => {
+                            if (el.style.backgroundColor) el.style.backgroundColor = origButton + '20';
+                            if (el.style.color) el.style.color = origButton;
+                        });
+                    }
+                }
+            });
+        }
+
         const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
         html.setAttribute('data-theme', savedTheme);
         checkbox.checked = savedTheme === 'dark';
         updateHeroBg(savedTheme);
+        // Apply color inversion on initial load
+        invertPaketCardColors(savedTheme);
 
         checkbox.addEventListener('change', () => {
             const t = checkbox.checked ? 'dark' : 'light';
             html.setAttribute('data-theme', t);
             localStorage.setItem(THEME_KEY, t);
             updateHeroBg(t);
+            invertPaketCardColors(t);
             if (typeof updateMapTheme === 'function') {
                 updateMapTheme(t);
             }

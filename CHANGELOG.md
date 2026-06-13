@@ -1,102 +1,95 @@
-# 📝 Changelog — R-NET Internet Provider
-
-Semua perubahan penting pada proyek **R-NET** akan dicatat di dalam dokumen ini secara berkala. Format penulisan berkas ini mengikuti prinsip [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) dan menggunakan [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+# CHANGELOG — R-NET Indeks
 
 ---
 
-## [Unreleased] - Rencana Implementasi Mingguan (Mulai Minggu Depan)
+## [2026-06-13] Jumat, 13 Juni 2026 — 16:06 WIB
 
-## [1.1.0-beta.3] - 2026-06-09
+### 🔧 Perbaikan Bug
 
-### Added
-- Fitur pelacakan status instalasi (installation status tracking) mandiri untuk pelanggan R-NET.
+- **Foto Navbar Admin** — Memperbaiki foto profil admin yang tidak muncul di navbar halaman admin.
+- **Route MethodNotAllowed (GET promosi/{id})** — Menambahkan route fallback `GET /admin/promosi/{id}` agar tidak error 405 saat browser mengakses URL promosi secara langsung.
+- **DNS Database Error** — Menangani error koneksi Supabase (`could not translate host name`) dengan fallback dan penanganan exception yang lebih baik.
 
-### Changed
-- Penambahan rute backend `/cek-status/{id}` untuk AJAX query status pendaftaran.
-- Penambahan layout dan interaksi visual stepper timeline status instalasi di halaman utama.
+### 🖼️ Upload Format Baru
 
-### Fixed
-- Memperbaiki kegagalan *bootstrapping* Laravel Cloud (HTTP 500) dengan menghapus folder `vendor/` dari indeks git (`git rm --cached`), memaksa server melakukan instalasi dependensi yang bersih dari awal (mengatasi masalah trait `RebindsCallbacksToSelf` tidak ditemukan).
-- Memperbaiki kompatibilitas database driver di `config/database.php` dengan mengubah pemanggilan kelas PHP 8.4+ `Pdo\Mysql` menjadi pemeriksaan dinamis (`defined()`), mencegah crash server pada versi PHP 8.2 dan 8.3 di Laravel Cloud.
+- **Format File Upload** — Memperbolehkan format `.ico`, `.svg`, `.webp` untuk upload logo perusahaan dan foto profil admin (selain `.jpg`, `.jpeg`, `.png` yang sudah ada).
+  - File terdampak: `web.php` route `profil.avatar` dan `pengaturan.logo`.
 
-### Impacted Modules
-- Customer Portal (Landing Page & Registration Form)
-- Routing Engine (`routes/web.php`)
-- Database Connection (`config/database.php`)
-- Deployment Environment (`.gitignore` & vendor files)
+### 🎨 Tema Admin — LocalStorage Only
 
----
+- **Migrasi Tema ke LocalStorage** — Tema halaman admin (dark/light mode) tidak lagi disinkronkan ke database. Disimpan sepenuhnya di `localStorage('admin-theme')`.
+- **Anti-Flash Script** — Menambahkan inline script di `<head>` untuk menerapkan tema sebelum DOM selesai dimuat, menghilangkan efek flash putih saat tema gelap aktif.
 
-Dokumen ini akan terus diupdate seiring berjalannya implementasi mingguan. Berikut adalah agenda target pengembangan mulai minggu depan:
+### 📦 Fitur Paket — Relasi Promosi & Tema Kustom
 
-### 📅 Minggu 1 (Prioritas Utama): Keamanan & Autentikasi
-*   **Target**: Mengunci akses rute `/admin` agar tidak dapat diakses publik.
-*   **Rencana Perubahan**:
-    *   [ ] Membuat Controller login admin (`AdminAuthController.php`).
-    *   [ ] Membuat tampilan UI form login yang elegan menggunakan DaisyUI.
-    *   [ ] Menambahkan Middleware `auth` bawaan Laravel pada kelompok rute `/admin` di `routes/web.php`.
-    *   [ ] Menambahkan rute POST untuk verifikasi kredensial dan logout aman.
+#### Database & Backend
+- **Kolom `id_promosi`** — Menambahkan foreign key `id_promosi` (nullable) di tabel `pakets` → relasi ke `promosis(id_promosi)` dengan `onDelete('set null')`.
+- **Kolom Tema** — Menambahkan kolom `nama_tema`, `warna_bg`, `warna_font`, `warna_border`, `warna_button`, `font_family`, `badge_text`, `point_keunggulan` ke migrasi tabel `pakets`.
+- **Eloquent Relations** — `paket belongsTo promosi`, `promosi hasMany paket`.
+- **Casting** — `point_keunggulan` di-cast ke `array` pada model `paket.php`.
+- **Eager Loading** — Route landing page dan admin dashboard menggunakan `paket::with('promosi')`.
 
-### 📅 Minggu 2: Fitur Upload Media ke Cloud Storage
-*   **Target**: Menyelesaikan implementasi upload berkas tambahan langsung ke Supabase S3.
-*   **Rencana Perubahan**:
-    *   [ ] Mengimplementasikan fungsionalitas upload Logo Perusahaan pada halaman Pengaturan ke S3 bucket.
-    *   [ ] Mengimplementasikan fungsionalitas upload Foto Profil Admin pada halaman Profil ke S3 bucket.
-    *   [ ] Menambahkan penanganan fallback gambar default jika file tidak ditemukan di cloud storage.
+#### Landing Page (`welcome.blade.php`)
+- **Harga Promo Dinamis** — Jika paket terhubung promosi aktif, tampilkan harga asli (coret) + harga diskon + deskripsi promo.
+- **Tema Kartu Dinamis** — Inline CSS kustom (warna latar, font, border/glow, tombol, font family) diterapkan per kartu paket dari database.
+- **Poin Keunggulan Dinamis** — Daftar keunggulan dari array `point_keunggulan`, fallback ke 3 poin standar.
+- **Badge/Pill Informasi** — Label seperti "Terpopuler", "Promo", "Terbatas" muncul dari kolom `badge_text`.
 
-### 📅 Minggu 3: Validasi Form & Toast Notification Global
-*   **Target**: Mengoptimalkan user experience dan validasi input.
-*   **Rencana Perubahan**:
-    *   [ ] Membuat helper JavaScript untuk Toast Notification global yang dinamis dan terpadu (sukses/gagal).
-    *   [ ] Menambahkan validasi client-side di seluruh formulir (seperti kecocokan format telepon, pencegahan upload file melebihi 2MB, validasi ID paket unik sebelum dikirim ke backend).
+#### Admin Panel — Jendela Kustomisasi Tema (`paket.blade.php`)
+- **Panel Tema Side-by-Side** — Panel kustomisasi tema muncul di samping (desktop) atau di bawah (mobile) form paket, dalam satu wrapper Flexbox.
+- **Input Warna** — Color picker + text input untuk: Warna Latar, Warna Font, Warna Border/Glow, Warna Tombol.
+- **Font Family Selector** — Dropdown: Inter, Poppins, Roboto, Montserrat, Outfit.
+- **Pill Badge Selector** — Quick-select badge: Terpopuler, Promo, Terbatas, Unlimited, Weekend.
+- **Poin Keunggulan** — Input dinamis dengan tombol tambah/hapus.
+- **HTML5 `form` attribute** — Input di panel tema terhubung ke form induk (Tambah/Edit) via `form="..."`.
 
-### 📅 Minggu 4: Modul Laporan & Export Data
-*   **Target**: Menyediakan fitur rekapitulasi data pendaftar bagi administrator.
-*   **Rencana Perubahan**:
-    *   [ ] Mengintegrasikan library `maatwebsite/excel` untuk fitur ekspor rekap pendaftaran ke file Excel (.xlsx).
-    *   [ ] Mengintegrasikan library `barryvdh/laravel-dompdf` untuk mencetak kwitansi bukti pendaftaran atau rekap PDF dengan layout premium.
+### 📢 Toggle Pengumuman Otomatis
 
----
+- **Checkbox Toggle** — Saat menambah paket, admin bisa centang "Buat Pengumuman Otomatis untuk Paket Ini".
+- **Auto-Fill** — Isi pengumuman otomatis terisi berdasarkan nama dan harga paket yang diketik secara real-time.
+- **Backend** — Validasi dinamis dan pembuatan entri pengumuman dalam satu transaksi pada route `paket.store`.
 
-## [1.1.0-beta.2] - 2026-05-01
-### Refactored: Arsitektur Single-View SPA (Tab-Based)
+### 🖥️ Posisi & Layout Modal
 
-Pada rilis ini, seluruh sistem administrasi admin dikonsolidasikan dari model multi-route modular menjadi satu halaman tunggal (SPA) berbasis Vanilla JS untuk mengeliminasi latensi query Supabase PostgreSQL.
+- **Breakpoint Diperbesar** — Side-by-side layout berubah dari `md` (768px) ke `lg` (1024px) agar tablet tetap stack vertikal.
+- **Container Diperlebar** — `max-w-4xl` → `max-w-5xl` untuk ruang lebih lega.
+- **Centering Fix** — `w-full` diganti `mx-auto` agar dialog grid `place-items:center` bisa memusatkan modal di tengah layar.
+- **Mobile Scroll Fix** — Panel tema pada mobile menggunakan `overflow-visible h-auto` (tanpa double-scroll trap), scroll hanya di desktop via `lg:max-h-[450px] lg:overflow-y-auto`.
+- **Touch-Friendly** — Color picker diperbesar (`w-10 h-10`), input dari `input-xs` ke `input-sm`, button dari `btn-xs` ke `btn-sm`, badge mendapat padding dan hover efek warna.
 
-### Added (Ditambahkan)
-*   **Single-View Entry Point**: Membuat `resources/views/admin/index.blade.php` sebagai container utama aplikasi SPA.
-*   **Vanilla JS Tab Switcher**: Menambahkan fungsi `switchTab()` untuk perpindahan tab konten instan (0ms) tanpa memicu reload browser.
-*   **Health & Resource Checking**: Menambahkan modul visual untuk pemantauan penggunaan RAM server, PHP Info, database stats, dan connectivity check Supabase S3.
-*   **PostgreSQL DB Connection Stats**: Menambahkan query asinkron untuk mengukur ukuran fisik DB PostgreSQL dan memonitor koneksi aktif.
-*   **Chart.js Tren Pendaftaran**: Menambahkan visualisasi grafik garis interaktif untuk data statistik pendaftaran 7 hari terakhir pada dasbor.
+### 🎭 Preset Tema & Algoritma Pembalik Warna
 
-### Changed (Diubah)
-*   **Folder View Re-organization**: Semua blade file admin dipindahkan ke folder partial baru `resources/views/admin/partials/` sebagai komponen modular.
-*   **Optimized Query Route**: Menggabungkan query database dari 5 rute terpisah menjadi 1 batch query di `web.php` serta membatasi penarikan pendaftaran terbaru sebanyak 100 baris (`take(100)`) untuk mencegah *memory bloat*.
-*   **URL Dynamic Anchoring**: Mengubah perpindahan menu sidebar dari rute konvensional menjadi hash URL (`/admin#pendaftaran`, `/admin#paket`) agar tautan tetap dapat dibagikan (shareable).
-*   **Interactive Maps Detail**: Integrasi peta Leaflet.js dipindahkan ke dalam modal detail asinkron pendaftar.
+#### Admin — Preset Tema (`paket.blade.php`)
+- **4 Tombol Preset** ditambahkan di panel kustomisasi tema (Tambah & Edit):
+  - **Default** — Reset ke warna standar (#ffffff bg, #1f2937 font, #2563eb button, Inter font).
+  - **🌙 Dark** — Tema gelap (#1a1a2e bg, #e0e0e0 font, #6366f1 button).
+  - **🌊 Ocean** — Biru laut (#0f172a bg, #e2e8f0 font, #3b82f6 button, Poppins).
+  - **🌅 Sunset** — Hangat (#fef3c7 bg, #78350f font, #d97706 button, Outfit).
+- Klik preset otomatis sinkron ke semua color picker, text input, nama tema, dan font family.
 
-### Removed (Dihapus)
-*   **Hotwire Turbo & Alpine.js**: Dihapus karena konflik CSS `x-show` dan kegagalan mengatasi latency database secara tuntas.
-*   **Vite DaisyUI v5 Package**: Dicabut dan diganti menggunakan DaisyUI 4.10.2 CDN guna mempertahankan stabilitas markup visual yang sudah ada.
-
-### Fixed (Diperbaiki)
-*   **Closing Tag Table Bug**: Memperbaiki tag `</div>` penutup pembungkus tabel di `pendaftaran.blade.php` yang sempat terhapus saat pembersihan pagination links, sehingga memperbaiki bug panel kosong pada tab paket, pengumuman, dan promosi.
-*   **Section Terminating Error**: Menghapus direktif `@section` dan `@endsection` yang tertinggal di file-file parsial pasca migrasi `@include`.
-*   **RouteNotFoundException**: Memperbaiki pemanggilan rute usang admin di menu sidebar dan card tautan internal dasbor.
+#### Landing Page — Algoritma Pembalik Warna (`welcome.blade.php`)
+- **HSL Lightness Inversion** — Algoritma `L → 100 - L` untuk membalik warna saat toggle dark/light mode.
+- **Deteksi Otomatis** — Mengecek apakah warna asli "light" (lightness > 50%) atau "dark".
+- **Invert Hanya Jika Mismatch** — Kartu warna terang di dark mode → diinvert. Kartu warna gelap di light mode → diinvert. Kartu tanpa custom theme → tidak terpengaruh.
+- **Saturation Boost** — Dark mode mendapat +15% saturasi untuk menjaga vibrancy warna.
+- **Data Attributes** — `data-theme-card`, `data-theme-bg`, `data-theme-font`, `data-theme-border`, `data-theme-button` disimpan di setiap kartu paket untuk referensi warna asli.
+- Diterapkan saat **page load** dan setiap **toggle tema**.
 
 ---
 
-## [1.0.0-beta.1] - 2026-04-15
-### Rilis Awal: Arsitektur Modular Multi-Route
+### File yang Dimodifikasi
 
-### Added (Ditambahkan)
-*   **Laravel Framework Setup**: Inisialisasi awal proyek R-NET berbasis Laravel 11.x.
-*   **PostgreSQL Database Integration**: Konfigurasi koneksi ke Supabase PostgreSQL database.
-*   **Supabase S3 Cloud Storage Integration**: Menambahkan driver `league/flysystem-aws-s3-v3` untuk mendukung upload berkas foto identitas pendaftar.
-*   **Portal Pelanggan Landing Page**: Membuat halaman depan R-NET yang memuat informasi penawaran layanan.
-*   **Formulir Pendaftaran**: Membuat halaman formulir pendaftaran pelanggan yang terintegrasi dengan upload berkas ke S3.
-*   **Multi-Route Admin Panel**: Membuat antarmuka admin modular di `/admin/*` yang terdiri dari rute Dasbor, Pendaftaran, Paket Internet, Pengumuman, dan Promosi secara terpisah.
+| File | Perubahan |
+|------|-----------|
+| `resources/views/admin/partials/paket.blade.php` | Modal layout, tema panel, preset, tombol |
+| `resources/views/welcome.blade.php` | Data attributes kartu, algoritma pembalik warna |
+| `resources/views/admin/layouts/main.blade.php` | Navbar foto, anti-flash tema |
+| `routes/web.php` | Route fallback, upload format, validasi tema |
+| `database/migrations/*_create_paket_table.php` | Kolom tema & id_promosi |
+| `app/Models/paket.php` | Relasi promosi, cast point_keunggulan |
+| `app/Models/promosi.php` | Relasi hasMany paket |
 
----
-*Changelog ini dikelola secara berkala oleh tim pengembang PBL R-NET.*
+### Hasil Pengujian
+
+- ✅ **PHPUnit**: 66/66 tests passed (186 assertions)
+- ✅ **Visual**: Modal terpusat, responsive, tema kartu dinamis

@@ -21,4 +21,9 @@ class promosi extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function pakets()
+    {
+        return $this->hasMany(paket::class, 'id_promosi', 'id_promosi');
+    }
 }

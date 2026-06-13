@@ -196,20 +196,20 @@
                             </div>
                         @endif
                     </div>
-                    <p class="text-sm text-base-content/50 mb-4">Format: PNG, JPG. Maks 2MB</p>
+                    <p class="text-sm text-base-content/50 mb-4">Format: PNG, JPG, WEBP, SVG, ICO. Maks 2MB</p>
                     <form action="{{ route('admin.pengaturan.logo') }}" method="POST" enctype="multipart/form-data" id="logo-upload-form">
                         @csrf
-                        <input type="file" name="logo" id="logo-file-input" accept="image/png,image/jpeg,image/jpg" class="hidden" onchange="document.getElementById('logo-upload-form').submit()">
+                        <input type="file" name="logo" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,image/x-icon" class="hidden">
                         <button type="button" onclick="document.getElementById('logo-file-input').click()" class="btn btn-outline btn-primary btn-sm w-full gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                             Upload Logo
                         </button>
                     </form>
                     @if($company->logo_path)
-                    <form action="{{ route('admin.pengaturan.logo.delete') }}" method="POST" class="mt-2 w-full">
+                    <form action="{{ route('admin.pengaturan.logo.delete') }}" method="POST" class="mt-2 w-full" id="logo-delete-form">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-ghost btn-sm text-error w-full" onclick="return confirm('Hapus logo perusahaan?')">Hapus Logo</button>
+                        <button type="submit" class="btn btn-ghost btn-sm text-error w-full">Hapus Logo</button>
                     </form>
                     @endif
                 </div>
@@ -249,4 +249,130 @@
 
 
 {{-- Toast dari sesi (fallback non-AJAX) ditangani oleh spaToast global --}}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoInput = document.getElementById('logo-file-input');
+        if (logoInput) {
+            logoInput.addEventListener('change', async function() {
+                const file = this.files[0];
+                if (!file) return;
+
+                // Preview locally
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const previewContainer = document.querySelector('#panel-pengaturan img[alt="Logo Perusahaan"]')?.parentNode 
+                                         || document.querySelector('#panel-pengaturan .bg-primary\\/10');
+                    if (previewContainer) {
+                        previewContainer.outerHTML = `<div class="rounded-2xl w-32 h-32 overflow-hidden border border-base-200 mx-auto">
+                            <img src="${e.target.result}" alt="Logo Perusahaan" class="w-full h-full object-contain p-2">
+                        </div>`;
+                    }
+                };
+                reader.readAsDataURL(file);
+
+                // Upload via AJAX
+                const form = document.getElementById('logo-upload-form');
+                const formData = new FormData(form);
+                
+                try {
+                    const res = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                    });
+                    const json = await res.json();
+                    
+                    if (json.success && json.logo_url) {
+                        // Update settings preview
+                        const logoArea = document.querySelector('#panel-pengaturan img[alt="Logo Perusahaan"]');
+                        if (logoArea) logoArea.src = json.logo_url;
+                        
+                        // Update sidebar logo
+                        const sidebarBrand = document.getElementById('sidebar-brand');
+                        if (sidebarBrand) {
+                            const fallbackSvg = document.getElementById('sidebar-logo-fallback');
+                            const existingLogo = document.getElementById('sidebar-logo');
+                            if (existingLogo) {
+                                existingLogo.src = json.logo_url;
+                            } else if (fallbackSvg) {
+                                fallbackSvg.outerHTML = `<img src="${json.logo_url}" alt="Logo" class="w-8 h-8 object-contain" id="sidebar-logo">`;
+                            }
+                        }
+                        
+                        // Show delete form if not present
+                        let deleteForm = document.getElementById('logo-delete-form');
+                        if (!deleteForm) {
+                            const logoCardBody = logoInput.closest('.card-body');
+                            const deleteFormHtml = `
+                            <form action="{{ route('admin.pengaturan.logo.delete') }}" method="POST" class="mt-2 w-full" id="logo-delete-form">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]')?.content || ''}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-ghost btn-sm text-error w-full">Hapus Logo</button>
+                            </form>`;
+                            logoCardBody.insertAdjacentHTML('beforeend', deleteFormHtml);
+                            initLogoDeleteHandler();
+                        }
+                        
+                        spaToast(json.message || 'Logo berhasil diperbarui.', 'success');
+                    } else {
+                        spaToast(json.message || 'Gagal mengunggah logo.', 'error');
+                    }
+                } catch (err) {
+                    spaToast('Gagal mengunggah logo.', 'error');
+                }
+            });
+        }
+
+        function initLogoDeleteHandler() {
+            const deleteForm = document.getElementById('logo-delete-form');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    if (!confirm('Hapus logo perusahaan?')) return;
+                    
+                    const formData = new FormData(deleteForm);
+                    try {
+                        const res = await fetch(deleteForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                        });
+                        const json = await res.json();
+                        
+                        if (json.success) {
+                            // Update settings preview
+                            const container = document.querySelector('#panel-pengaturan img[alt="Logo Perusahaan"]')?.parentNode;
+                            if (container) {
+                                container.outerHTML = `<div class="bg-primary/10 text-primary rounded-2xl w-32 h-32 flex items-center justify-center mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>
+                                </div>`;
+                            }
+                            
+                            // Restore sidebar fallback icon
+                            const sidebarLogo = document.getElementById('sidebar-logo');
+                            if (sidebarLogo) {
+                                sidebarLogo.outerHTML = `<svg id="sidebar-logo-fallback" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h.01" />
+                                    <path d="M2 8.82a15 15 0 0 1 20 0" />
+                                    <path d="M5 12.859a10 10 0 0 1 14 0" />
+                                    <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+                                </svg>`;
+                            }
+                            
+                            deleteForm.remove();
+                            spaToast(json.message || 'Logo berhasil dihapus.', 'success');
+                        } else {
+                            spaToast(json.message || 'Gagal menghapus logo.', 'error');
+                        }
+                    } catch (err) {
+                        spaToast('Gagal menghapus logo.', 'error');
+                    }
+                });
+            }
+        }
+        
+        initLogoDeleteHandler();
+    });
+</script>
 
