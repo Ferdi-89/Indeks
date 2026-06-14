@@ -377,12 +377,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'warna_border' => 'nullable|string',
             'warna_button' => 'nullable|string',
             'badge_text' => 'nullable|string',
-            'point_keunggulan' => 'nullable|array',
+            'point_informasi' => 'nullable|array',
         ];
 
         if ($request->boolean('create_announcement')) {
             $validationRules['announcement_id'] = 'required|string|max:5|unique:pengumumans,id_pengumuman';
-            $validationRules['announcement_tema'] = 'required|string';
+            $validationRules['announcement_tema'] = 'required|string|max:50';
             $validationRules['announcement_text'] = 'required|string';
             $validationRules['announcement_valid_start'] = 'required|date';
             $validationRules['announcement_valid_end'] = 'required|date';
@@ -412,7 +412,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'warna_border' => $data['warna_border'] ?? null,
             'warna_button' => $data['warna_button'] ?? null,
             'badge_text' => $data['badge_text'] ?? null,
-            'point_keunggulan' => $data['point_keunggulan'] ?? null,
+            'point_keunggulan' => $data['point_informasi'] ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Paket ditambahkan.');
@@ -430,7 +430,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'warna_border' => 'nullable|string',
             'warna_button' => 'nullable|string',
             'badge_text' => 'nullable|string',
-            'point_keunggulan' => 'nullable|array',
+            'point_informasi' => 'nullable|array',
         ]);
 
         App\Models\paket::where('id_paket', $id)->firstOrFail()->update([
@@ -444,7 +444,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'warna_border' => $data['warna_border'] ?? null,
             'warna_button' => $data['warna_button'] ?? null,
             'badge_text' => $data['badge_text'] ?? null,
-            'point_keunggulan' => $data['point_keunggulan'] ?? null,
+            'point_keunggulan' => $data['point_informasi'] ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Paket diperbarui.');
@@ -477,7 +477,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $data = $request->validate([
             'id_pengumuman' => 'required|string|unique:pengumumans,id_pengumuman',
             'text_pengumuman' => 'required|string',
-            'tema' => 'nullable|string',
+            'tema' => 'nullable|string|max:50',
             'valid_start' => 'nullable|date',
             'valid_end' => 'nullable|date'
         ]);
@@ -488,7 +488,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/pengumuman/{id}', function(Illuminate\Http\Request $request, $id) {
         $data = $request->validate([
             'text_pengumuman' => 'required|string',
-            'tema' => 'nullable|string',
+            'tema' => 'nullable|string|max:50',
             'valid_start' => 'nullable|date',
             'valid_end' => 'nullable|date'
         ]);

@@ -2,6 +2,38 @@
 
 ---
 
+## [2026-06-14] Minggu, 14 Juni 2026 — 21:20 WIB
+
+### 🔧 Perbaikan Bug
+
+- **Error Truncate Kolom Tema Pengumuman** — Mengubah ukuran kolom `tema` di tabel `pengumumans` dari `10` menjadi `50` karakter lewat database migration. Memperbarui aturan validasi request di file `routes/web.php` untuk membatasi `announcement_tema` dan `tema` maksimal `50` karakter agar tidak memicu error data terpotong (SQLSTATE[22001]).
+
+### 🎨 Landing Page & UI Fixes
+
+- **Border Kartu Tengah Dinamis** — Memperbaiki logika border kartu paket bagian tengah di landing page agar menggunakan warna border tema kustom dari database (bukan hardcoded biru terang).
+- **Logika Badge "Terpopuler"** — Memperbaiki badge "Terpopuler" di landing page agar hanya muncul jika diatur secara eksplisit oleh admin melalui field `badge_text`, menghilangkan badge otomatis/hardcoded.
+- **Ukuran Font Poin Keunggulan** — Memperbesar ukuran teks poin informasi/keunggulan dari `text-[11px]` (landing) dan `text-[9px]` (admin preview) menjadi `text-[13px]` agar lebih mudah dibaca.
+- **Pengumuman Melayang (Sticky Marquee)** — Memindahkan baris marquee pengumuman ke dalam tag `<header>` agar ikut melayang secara persisten bersama dengan navbar saat halaman di-scroll.
+
+### 💼 Desain Ulang Halaman Admin & Jendela Kustomisasi Paket
+
+- **Admin Package Card Grid** — Mengganti list paket lama dengan grid kartu modern yang dilengkapi panel status (aktif/sembunyi), visualisasi warna tema (swatches), info promosi terintegrasi, dan tombol aksi bergaya outline premium.
+- **Modul 3-Kolom Unified** — Menyusun ulang modal Tambah dan Edit paket menjadi layout 3-kolom yang rapi:
+  1. *Detail Informasi* (Form data utama)
+  2. *Kustomisasi Desain* (Konfigurasi tema, bisa disembunyikan/ditampilkan)
+  3. *Pratinjau Tampilan* (Real-time live preview mockup kartu, bisa disembunyikan/ditampilkan)
+- **Desain Panel Kustomisasi** — Merapikan input color picker dengan preview warna di dalam text box monospaced, tombol preset minimalis, dan pill selector untuk badge rekomendasi.
+- **Sinkronisasi Live Preview** — Memperbaiki bugs di JavaScript (`updateLivePreview`) sehingga input warna, font, harga, nama, dan detail deskripsi langsung ter-render secara real-time pada mockup kartu di kolom kanan modal.
+
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `resources/views/admin/partials/paket.blade.php` | Redesign list paket admin, layout modal 3-kolom, refaktor JS & live preview |
+| `resources/views/welcome.blade.php` | Border dinamis kartu tengah, logika badge terpopuler, perbaikan ukuran font |
+
+---
+
 ## [2026-06-13] Jumat, 13 Juni 2026 — 16:06 WIB
 
 ### 🔧 Perbaikan Bug

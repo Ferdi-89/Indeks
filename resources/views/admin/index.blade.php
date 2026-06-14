@@ -260,6 +260,8 @@
                             history.pushState(null, '', link.href);
                             if (panel.id === 'panel-pendaftaran' && typeof window.initPendaftaranPanel === 'function') {
                                 window.initPendaftaranPanel();
+                            } else if (panel.id === 'panel-paket' && typeof window.initAllPreviews === 'function') {
+                                window.initAllPreviews();
                             } else if (typeof STATUS_COLORS !== 'undefined') {
                                 document.querySelectorAll('.status-select').forEach(el => {
                                     const val = el.value;
@@ -383,6 +385,8 @@
                         }
                         if (panel.id === 'panel-pendaftaran' && typeof window.initPendaftaranPanel === 'function') {
                             window.initPendaftaranPanel();
+                        } else if (panel.id === 'panel-paket' && typeof window.initAllPreviews === 'function') {
+                            window.initAllPreviews();
                         }
                         if (typeof showToast === 'function') showToast('Aksi berhasil dilakukan', 'success');
                         document.querySelectorAll('dialog.modal').forEach(m => m.close());

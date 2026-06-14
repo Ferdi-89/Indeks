@@ -59,6 +59,64 @@
         .animate-flow-slow {
             animation: flow-slow 6s linear infinite;
         }
+
+        /* Card premium effects */
+        .pricing-card-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .pricing-card-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(25, 119, 191, 0.04) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .pricing-card-premium:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card-premium:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+        }
+
+        .pricing-mesh-bg {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(25, 119, 191, 0.05) 1px, transparent 1px);
+            background-size: 16px 16px;
+            pointer-events: none;
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        .premium-glow-active {
+            --glow-color: var(--theme-border, var(--color-primary, #1977BF));
+            box-shadow: 0 10px 30px -10px var(--glow-color) !important;
+            border-color: var(--glow-color) !important;
+            animation: pulseGlowPremium 3s ease-in-out infinite !important;
+        }
+
+        @keyframes pulseGlowPremium {
+            0%, 100% {
+                box-shadow: 0 10px 30px -10px var(--glow-color) !important;
+                border-color: var(--glow-color) !important;
+            }
+            50% {
+                box-shadow: 0 15px 45px -5px var(--glow-color) !important;
+                border-color: var(--glow-color) !important;
+                filter: brightness(1.1);
+            }
+        }
     </style>
     <!-- Icons (pinned version + deferred) -->
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
@@ -239,22 +297,21 @@
                 </div>
             </div>
         </nav>
-    </header>
-
-    {{-- ==================== MARQUEE PENGUMUMAN ==================== --}}
-    <div id="marquee-bar" class="bg-primary/10 border-b border-primary/20 overflow-hidden h-9 flex items-center">
-        <div class="marquee-track text-primary text-xs font-bold gap-16" id="marquee-content">
-            @foreach ($pengumuman as $ann)
-                <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
-            @endforeach
-            @foreach ($pengumuman as $ann)
-                <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
-            @endforeach
-            @foreach ($pengumuman as $ann)
-                <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
-            @endforeach
+        {{-- ==================== MARQUEE PENGUMUMAN ==================== --}}
+        <div id="marquee-bar" class="bg-primary/10 border-b border-primary/20 overflow-hidden h-9 flex items-center">
+            <div class="marquee-track text-primary text-xs font-bold gap-16" id="marquee-content">
+                @foreach ($pengumuman as $ann)
+                    <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
+                @endforeach
+                @foreach ($pengumuman as $ann)
+                    <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
+                @endforeach
+                @foreach ($pengumuman as $ann)
+                    <span class="shrink-0 flex items-center gap-2">• {{ $ann }}</span>
+                @endforeach
+            </div>
         </div>
-    </div>
+    </header>
 
     <main class="max-w-7xl mx-auto px-1 py-8 space-y-24">
 
@@ -342,7 +399,7 @@
                         }
                     @endphp
                     <div id="card-paket-{{ $paket->id_paket }}"
-                        class="glass-card rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between {{ $isPopular ? 'border-primary border-2 premium-glow-active' : 'border border-base-300/60' }}"
+                        class="glass-card pricing-card-premium rounded-3xl overflow-hidden shadow-lg flex flex-col justify-between {{ $isPopular ? 'border-primary border-2 premium-glow-active' : 'border border-base-300/60' }}"
                         @if($paket->warna_bg || $paket->warna_font || $paket->warna_border || $paket->warna_button)
                         data-theme-card
                         data-theme-bg="{{ $paket->warna_bg ?? '' }}"
@@ -350,93 +407,98 @@
                         data-theme-border="{{ $paket->warna_border ?? '' }}"
                         data-theme-button="{{ $paket->warna_button ?? '' }}"
                         @endif
-                        style="@if($paket->warna_bg) background-color: {{ $paket->warna_bg }} !important; @endif @if($paket->warna_border) border-color: {{ $paket->warna_border }} !important; box-shadow: 0 10px 30px -10px {{ $paket->warna_border }}40 !important; @endif @if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif @if($paket->font_family) font-family: '{{ $paket->font_family }}', sans-serif !important; @endif">
+                        style="@if($paket->warna_bg) background-color: {{ $paket->warna_bg }} !important; @endif @if($paket->warna_border) border-color: {{ $paket->warna_border }} !important; box-shadow: 0 10px 30px -10px {{ $paket->warna_border }}40 !important; --theme-border: {{ $paket->warna_border }} !important; @endif @if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif @if($paket->font_family) font-family: '{{ $paket->font_family }}', sans-serif !important; @endif">
 
-                        <div class="p-6 md:p-8 space-y-6 flex-1 flex flex-col justify-between">
-                            <div class="space-y-3">
+                        <!-- Mesh Grid & Glow decoration -->
+                        <div class="pricing-mesh-bg"></div>
+                        <div class="absolute -top-12 -right-12 w-28 h-28 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                        <div class="p-6 md:p-8 space-y-6 flex-1 flex flex-col justify-between relative z-10">
+                            <div class="space-y-4">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-primary uppercase tracking-widest" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.8; @endif">
+                                    <span class="text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-1 rounded-md" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.8; @endif @if($paket->warna_button) background-color: {{ $paket->warna_button }}15 !important; @endif">
                                         Jaringan FTTH
                                     </span>
                                     @if($paket->badge_text)
-                                        <span class="badge font-black text-[10px] uppercase tracking-wider py-2 text-white" style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; @else background-color: #2563eb !important; @endif">
+                                        <span class="badge font-black text-[9px] uppercase tracking-wider py-2.5 px-3 text-white border-none shadow-md" style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; box-shadow: 0 4px 12px -2px {{ $paket->warna_button }}40 !important; @else background-color: #2563eb !important; @endif">
                                             {{ $paket->badge_text }}
-                                        </span>
-                                    @elseif($isPopular)
-                                        <span class="badge badge-warning text-[10px] font-black uppercase tracking-wider py-2">
-                                            Terpopuler
                                         </span>
                                     @endif
                                 </div>
-                                <h3 class="text-xl font-extrabold text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
-                                    {{ $paket->title_paket }}
-                                </h3>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center text-primary shrink-0" style="@if($paket->warna_button) background-color: {{ $paket->warna_button }}15 !important; color: {{ $paket->warna_button }} !important; @endif">
+                                        <i data-lucide="gauge" class="w-5 h-5"></i>
+                                    </div>
+                                    <h3 class="text-xl font-black text-base-content leading-tight tracking-tight" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                        {{ $paket->title_paket }}
+                                    </h3>
+                                </div>
                             </div>
 
                             @if($hasPromo)
-                                <div class="py-2 space-y-1">
+                                <div class="py-2 space-y-1 relative">
                                     <div class="flex items-center gap-2 text-xs font-semibold text-base-content/40 line-through" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.5; @endif">
                                         Rp {{ number_format($paket->harga_paket, 0, ',', '.') }}
                                     </div>
-                                    <div class="flex items-end justify-start gap-1">
-                                        <span class="text-5xl font-black text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                    <div class="flex items-baseline justify-start gap-1">
+                                        <span class="text-5xl font-black text-base-content tracking-tight" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
                                             {{ number_format(($paket->harga_paket - $promoDiscount) / 1000, 0) }}K
                                         </span>
-                                        <span class="text-xs text-base-content/50 font-bold mb-1.5" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
+                                        <span class="text-xs text-base-content/50 font-bold" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
                                     </div>
-                                    <div class="text-[10px] font-bold uppercase tracking-wider text-secondary mt-1" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.9; @endif">
-                                        PROMO: {{ $promoText }}
+                                    <div class="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-secondary mt-1 bg-secondary/15 px-2 py-0.5 rounded" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.9; @endif">
+                                        <i data-lucide="sparkles" class="w-3 h-3"></i> PROMO: {{ $promoText }}
                                     </div>
                                 </div>
                             @else
-                                <div class="flex items-end justify-start gap-1 py-4">
-                                    <span class="text-5xl font-black text-base-content" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                                <div class="flex items-baseline justify-start gap-1 py-4">
+                                    <span class="text-5xl font-black text-base-content tracking-tight" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
                                         {{ number_format($paket->harga_paket / 1000, 0) }}K
                                     </span>
-                                    <span class="text-xs text-base-content/50 font-bold mb-1.5" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
+                                    <span class="text-xs text-base-content/50 font-bold" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; opacity: 0.7; @endif">/bulan</span>
                                 </div>
                             @endif
 
                             <div class="border-t border-base-300/40 my-1"></div>
 
-                            <ul class="space-y-3.5 text-xs text-base-content/85 font-medium flex-1 pt-2" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
+                            <ul class="space-y-3 text-xs text-base-content/85 font-medium flex-1 pt-2" style="@if($paket->warna_font) color: {{ $paket->warna_font }} !important; @endif">
                                 @if($paket->point_keunggulan && is_array($paket->point_keunggulan))
                                     @foreach($paket->point_keunggulan as $point)
-                                        <li class="flex items-center gap-3">
-                                            <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style="background-color: {{ $paket->warna_button ? $paket->warna_button . '20' : 'rgba(34, 197, 94, 0.15)' }}; color: {{ $paket->warna_button ? $paket->warna_button : '#22c55e' }};">
+                                        <li class="flex items-center gap-3 transition-transform duration-200 hover:translate-x-1">
+                                            <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 shadow-sm" style="background-color: {{ $paket->warna_button ? $paket->warna_button . '20' : 'rgba(34, 197, 94, 0.15)' }}; color: {{ $paket->warna_button ? $paket->warna_button : '#22c55e' }};">
                                                 <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                             </span>
-                                            <span>{{ $point }}</span>
+                                            <span class="text-[13px]">{{ $point }}</span>
                                         </li>
                                     @endforeach
                                 @else
-                                    <li class="flex items-center gap-3">
-                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                    <li class="flex items-center gap-3 transition-transform duration-200 hover:translate-x-1">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0 shadow-sm">
                                             <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                         </span>
-                                        <span>Kuota 100% Unlimited Murni</span>
+                                        <span class="text-[13px]">Kuota 100% Unlimited Murni</span>
                                     </li>
-                                    <li class="flex items-center gap-3">
-                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                    <li class="flex items-center gap-3 transition-transform duration-200 hover:translate-x-1">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0 shadow-sm">
                                             <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                         </span>
-                                        <span>Bebas Lag &amp; Throttling FUP</span>
+                                        <span class="text-[13px]">Bebas Lag &amp; Throttling FUP</span>
                                     </li>
-                                    <li class="flex items-center gap-3">
-                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                    <li class="flex items-center gap-3 transition-transform duration-200 hover:translate-x-1">
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0 shadow-sm">
                                             <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                         </span>
-                                        <span>Modem WiFi ONT Dipinjamkan Gratis</span>
+                                        <span class="text-[13px]">Modem WiFi ONT Dipinjamkan Gratis</span>
                                     </li>
                                 @endif
                             </ul>
                         </div>
 
                         <!-- Action Button Card -->
-                        <div class="p-6 bg-base-200/40 border-t border-base-300/40" style="@if($paket->warna_border) border-color: {{ $paket->warna_border }}40 !important; @endif">
+                        <div class="p-6 bg-base-200/40 border-t border-base-300/40 relative z-10" style="@if($paket->warna_border) border-color: {{ $paket->warna_border }}40 !important; @endif">
                             <a href="/daftar?paket={{ $paket->id_paket }}"
-                                class="btn w-full rounded-xl font-bold text-xs active:scale-95 transition-transform text-white"
-                                style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; @else background-color: #2563eb !important; border-color: #2563eb !important; @endif">
+                                class="btn w-full rounded-xl font-bold text-xs active:scale-95 transition-all text-white border-none shadow-lg"
+                                style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; box-shadow: 0 4px 14px -2px {{ $paket->warna_button }}50 !important; @else background-color: #2563eb !important; border-color: #2563eb !important; box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4) !important; @endif">
                                 PILIH PAKET
                             </a>
                         </div>

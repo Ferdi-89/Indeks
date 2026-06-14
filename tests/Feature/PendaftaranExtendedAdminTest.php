@@ -501,7 +501,7 @@ class PendaftaranExtendedAdminTest extends TestCase
             'warna_border' => '#ff8c00',
             'warna_button' => '#ff4500',
             'badge_text' => 'TERBATAS',
-            'point_keunggulan' => ['Poin 1', 'Poin 2', 'Poin 3'],
+            'point_informasi' => ['Poin 1', 'Poin 2', 'Poin 3'],
         ]);
 
         $response->assertRedirect();
@@ -554,7 +554,7 @@ class PendaftaranExtendedAdminTest extends TestCase
             'warna_border' => '#ff00ff',
             'warna_button' => '#00ffff',
             'badge_text' => 'HOT',
-            'point_keunggulan' => ['Poin Update 1', 'Poin Update 2'],
+            'point_informasi' => ['Poin Update 1', 'Poin Update 2'],
         ]);
 
         $response->assertRedirect();
