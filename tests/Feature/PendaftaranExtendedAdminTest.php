@@ -903,6 +903,9 @@ class PendaftaranExtendedAdminTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->post('/admin/area', [
             'nama_area' => 'Semarang',
+            'latitude' => -2.0337714,
+            'longitude' => 101.3963373,
+            'radius' => 1000,
         ]);
 
         $response->assertRedirect();
@@ -917,11 +920,17 @@ class PendaftaranExtendedAdminTest extends TestCase
         $area = AreaLayanan::create([
             'nama_area' => 'Surabaya',
             'is_active' => true,
+            'latitude' => -2.0337714,
+            'longitude' => 101.3963373,
+            'radius' => 1000,
         ]);
 
         $response = $this->actingAs($this->admin)->put("/admin/area/{$area->id}", [
             'nama_area' => 'Surabaya Barat',
             'is_active' => '0',
+            'latitude' => -2.0337714,
+            'longitude' => 101.3963373,
+            'radius' => 1500,
         ]);
 
         $response->assertRedirect();

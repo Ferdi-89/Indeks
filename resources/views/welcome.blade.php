@@ -117,6 +117,28 @@
                 filter: brightness(1.1);
             }
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.35s ease-out forwards;
+        }
+
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
     <!-- Icons (pinned version + deferred) -->
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
@@ -313,19 +335,19 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-1 py-8 space-y-24">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16 md:space-y-24">
 
         {{-- ==================== SECTION 1: HERO ==================== --}}
         <header id="hero-section"
-            class="grid lg:grid-cols-12 gap-12 items-center py-12 px-6 md:px-12 rounded-3xl border border-base-300/20 shadow-xl min-h-[70vh]">
+            class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-8 px-5 sm:py-12 sm:px-10 md:px-12 rounded-3xl border border-base-300/20 shadow-xl min-h-[50vh] lg:min-h-[70vh]">
             <!-- Left Info column -->
-            <div class="lg:col-span-7 space-y-8 text-left animate-slide-up">
+            <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-left animate-slide-up">
                 <div
                     class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold border border-primary/20 uppercase tracking-widest">
                     <i data-lucide="wifi" class="w-3.5 h-3.5"></i>Internet Cepat & Terjangkau
                 </div>
 
-                <h1 class="text-4xl sm:text-6xl font-black leading-tight tracking-tight text-base-content">
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight text-base-content">
                     Koneksi Tanpa Batas.<br>
                     <span
                         class="bg-gradient-to-r from-primary via-cyan-500 to-blue-500 bg-clip-text text-transparent">Stabil
@@ -337,20 +359,20 @@
                     merancang layanan tanpa batasan FUP agar internet cepat merata di seluruh kalangan masyarakat.
                 </p>
 
-                <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
                     <a href="/daftar"
-                        class="btn btn-primary btn-lg rounded-2xl font-bold px-8 shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all text-sm">
+                        class="btn btn-primary btn-md sm:btn-lg rounded-2xl font-bold px-8 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm">
                         Daftar Sekarang
                     </a>
                     <a href="#harga"
-                        class="btn btn-outline btn-primary btn-lg rounded-2xl font-bold px-8 hover:scale-105 active:scale-95 transition-all text-sm">
+                        class="btn btn-outline btn-primary btn-md sm:btn-lg rounded-2xl font-bold px-8 hover:scale-[1.02] active:scale-95 transition-all text-sm">
                         Lihat Paket Langganan
                     </a>
                 </div>
 
                 <!-- Small Trust Indicator -->
-                <div class="flex items-center gap-4 pt-6 border-t border-base-300/30">
-                    <div class="flex -space-x-3">
+                <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-6 border-t border-base-300/30">
+                    <div class="flex -space-x-3 shrink-0">
                         <div
                             class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border-2 border-base-100 text-[10px] font-bold">
                             U1</div>
@@ -361,8 +383,7 @@
                             class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border-2 border-base-100 text-[10px] font-bold">
                             U3</div>
                     </div>
-                    <p class="text-xs font-semibold text-base-content/60">Didukung penuh oleh 500+ pelanggan aktif
-                        daerah</p>
+                    <p class="text-xs font-semibold text-base-content/60 leading-normal">Didukung penuh oleh 500+ pelanggan aktif daerah</p>
                 </div>
             </div>
 
@@ -507,8 +528,8 @@
             </div>
 
             <p
-                class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-5 py-2 rounded-full text-xs font-bold mx-auto w-fit border border-yellow-500 shadow-md">
-                <i data-lucide="info" class="w-4 h-4"></i> BIAYA PENARIKAN KABEL &amp; INSTALASI MODEM HANYA 350K
+                class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-4 py-2.5 rounded-2xl sm:rounded-full text-xs font-bold mx-auto w-fit text-center border border-yellow-500 shadow-md">
+                <i data-lucide="info" class="w-4 h-4 shrink-0"></i> BIAYA PENARIKAN KABEL &amp; INSTALASI MODEM HANYA 350K
             </p>
         </section>
 
@@ -525,133 +546,132 @@
                     wilayah berikut. Klik wilayah untuk informasi detail.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                <!-- Map display area (8/12 width) -->
-                <div
-                    class="lg:col-span-8 glass-card p-4 rounded-3xl border border-base-300/30 shadow-sm overflow-hidden min-h-[400px] relative">
-                    <div id="map" class="w-full h-full min-h-[380px] rounded-2xl z-10"></div>
-                </div>
-
-                <!-- Info and active area list (4/12 width) -->
-                <div
-                    class="lg:col-span-4 glass-card p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
-                    <div class="space-y-6">
-                        <div class="space-y-1">
-                            <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Daftar
-                                Wilayah</span>
-                            <h3 class="text-lg font-bold text-base-content tracking-tight">Area yang Didukung</h3>
-                            <p class="text-xs text-base-content/60 leading-relaxed">Data wilayah aktif diambil langsung
-                                secara real-time dari database layanan kami.</p>
-                        </div>
-
-                        <!-- Dynamic list of areas from database -->
-                        <div class="space-y-3 max-h-[220px] overflow-y-auto pr-1">
-                            @forelse($areaLayanan as $area)
-                                <button onclick="focusArea('{{ $area->nama_area }}')"
-                                    class="w-full text-left p-3.5 rounded-xl border border-base-300/20 hover:border-primary/40 bg-base-200/20 hover:bg-primary/5 transition-all duration-300 flex items-center justify-between group">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-2 h-2 rounded-full bg-success group-hover:scale-125 transition-transform">
-                                        </div>
-                                        <span class="text-xs font-bold text-base-content">{{ $area->nama_area }}</span>
-                                    </div>
-                                    <i data-lucide="chevron-right"
-                                        class="w-4 h-4 text-base-content/30 group-hover:text-primary transition-colors"></i>
-                                </button>
-                            @empty
-                                <div class="text-center py-6 text-xs text-base-content/40">
-                                    Belum ada area layanan aktif terdaftar.
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-
-                    <!-- Bottom Info Card -->
-                    <div class="bg-primary/5 border border-primary/10 rounded-2xl p-4 mt-6">
-                        <div class="flex gap-3">
-                            <i data-lucide="info" class="w-5 h-5 text-primary shrink-0"></i>
-                            <div class="space-y-1">
-                                <h4 class="text-xs font-bold text-base-content">Ajukan Wilayah Baru?</h4>
-                                <p class="text-[10px] text-base-content/60 leading-relaxed">Wilayah Anda belum
-                                    terjangkau? Kirim pengajuan ekspansi jaringan saat melakukan pendaftaran.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="glass-card p-4 rounded-3xl border border-base-300/30 shadow-sm overflow-hidden h-[320px] sm:h-[450px] relative">
+                <div id="map" class="w-full h-full min-h-[290px] sm:min-h-[420px] rounded-2xl z-10"></div>
             </div>
         </section>
 
 
         {{-- ==================== BENTO INTERACTIVE DASHBOARD ==================== --}}
-        <section class="space-y-10">
+        <section id="speedtest" class="space-y-10">
             <div class="text-center max-w-xl mx-auto">
                 <div
                     class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold border border-primary/20 uppercase tracking-widest">
                     <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Panel Kontrol
                 </div>
-                <h2 class="text-3xl font-extrabold mt-3">Konsol Jaringan Interaktif</h2>
-                <p class="text-sm text-base-content/60 mt-2">Pantau latensi, simulasikan bandwidth, dan kalkulasikan
-                    skalabilitas infrastruktur R-NET.</p>
+                <h2 class="text-3xl font-extrabold mt-3">Simulasi &amp; Kebutuhan Internet</h2>
+                <p class="text-sm text-base-content/60 mt-2">Ketahui kecocokan paket, bandingkan performa tanpa batas kuota, dan pantau kestabilan latensi R-NET.</p>
             </div>
 
             <!-- The Bento Grid -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
 
-                <!-- Card 2: Interactive Cost Calculator (12/12 width) -->
+                <!-- Card 2: Interactive Cost Configurator (12/12 width) -->
                 <div id="kalkulator"
-                    class="md:col-span-12 glass-card p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
+                    class="md:col-span-12 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
                     <div class="space-y-1 mb-6">
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Kalkulator
-                            Interaktif</span>
-                        <h3 class="text-lg font-bold text-base-content tracking-tight">Kalkulator Kebutuhan &
-                            Rekomendasi Paket</h3>
-                        <p class="text-xs text-base-content/60 leading-relaxed">Sesuaikan jumlah perangkat aktif untuk
-                            menemukan rekomendasi paket yang paling efisien.</p>
+                        <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Konfigurator Layanan</span>
+                        <h3 class="text-lg font-bold text-base-content tracking-tight">Rekomendasi Paket Berdasarkan Aktivitas</h3>
+                        <p class="text-xs text-base-content/60 leading-relaxed">Pilih profil penggunaan dan jenis aktivitas internet Anda untuk mendapatkan rekomendasi kapasitas jaringan yang paling tepat.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                        <!-- Left Side: Range slider input -->
-                        <div class="space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                        <!-- Left Side: Interactive Configurator -->
+                        <div class="space-y-6 flex flex-col justify-between">
+                            <!-- Step 1: User Profile -->
                             <div class="space-y-3">
-                                <div class="flex justify-between items-center text-xs font-bold text-base-content">
-                                    <span>Jumlah Perangkat aktif secara bersamaan</span>
-                                    <span class="bg-primary/10 text-primary px-3 py-1 rounded-lg text-xs font-bold"
-                                        id="calc-devices-val">5</span>
-                                </div>
-                                <input type="range" min="1" max="20" value="5" class="range range-primary range-sm"
-                                    id="calc-devices" oninput="updateCalc()" />
-                                <div class="flex justify-between text-[9px] font-bold text-base-content/30">
-                                    <span>1 Perangkat</span>
-                                    <span>20 Perangkat</span>
+                                <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">1. Profil Pengguna</span>
+                                <div class="grid grid-cols-3 gap-2.5">
+                                    <button type="button" onclick="setProfile('personal', this)"
+                                        class="profile-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
+                                        <i data-lucide="user" class="w-5 h-5 shrink-0"></i>
+                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Personal</span>
+                                        <span class="text-[9px] opacity-60">1-3 Perangkat</span>
+                                    </button>
+                                    <button type="button" onclick="setProfile('family', this)"
+                                        class="profile-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
+                                        <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Keluarga</span>
+                                        <span class="text-[9px] opacity-60">4-8 Perangkat</span>
+                                    </button>
+                                    <button type="button" onclick="setProfile('business', this)"
+                                        class="profile-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
+                                        <i data-lucide="building" class="w-5 h-5 shrink-0"></i>
+                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Bisnis</span>
+                                        <span class="text-[9px] opacity-60">9+ Perangkat</span>
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="text-xs text-base-content/60 leading-relaxed border-l-2 border-primary/30 pl-3">
-                                <p>Rekomendasi dihitung berdasarkan estimasi bandwidth yang dibutuhkan setiap perangkat
-                                    untuk aktivitas standar seperti streaming HD, telekonferensi, dan browsing harian.
-                                </p>
+                            <!-- Step 2: Activities Toggles -->
+                            <div class="space-y-3">
+                                <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">2. Aktivitas Utama</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <button type="button" onclick="toggleActivity('browsing', this)"
+                                        class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
+                                        <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                                            <i data-lucide="globe" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-bold block leading-tight">Browsing &amp; Chatting</span>
+                                            <span class="text-[10px] opacity-60 font-medium leading-none">Sosial Media, Chatting</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" onclick="toggleActivity('streaming', this)"
+                                        class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
+                                        <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                                            <i data-lucide="video" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-bold block leading-tight">Streaming Video</span>
+                                            <span class="text-[10px] opacity-60 font-medium leading-none">YouTube, Netflix HD/4K</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" onclick="toggleActivity('gaming', this)"
+                                        class="activity-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
+                                        <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
+                                            <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-bold block leading-tight">Online Gaming</span>
+                                            <span class="text-[10px] opacity-60 font-medium leading-none">Bermain Game Online</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" onclick="toggleActivity('work', this)"
+                                        class="activity-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
+                                        <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
+                                            <i data-lucide="laptop" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-bold block leading-tight">Kerja &amp; Belajar</span>
+                                            <span class="text-[10px] opacity-60 font-medium leading-none">Zoom Call, Upload File</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Right Side: Result Display Box (Enterprise Invoice Card) -->
-                        <div class="flex flex-col gap-4">
-                            <div class="bg-base-200/50 border border-base-300/20 rounded-2xl p-5 space-y-4">
+                        <div class="flex flex-col gap-4 justify-between">
+                            <div class="bg-base-200/50 border border-base-300/20 rounded-2xl p-5 space-y-4 flex-1 flex flex-col justify-center">
                                 <div class="flex justify-between items-center text-xs border-b border-base-300/10 pb-3">
                                     <span class="font-medium text-base-content/60">Paket Rekomendasi:</span>
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                                        <span class="font-extrabold text-primary" id="calc-rec-name">Paket
-                                            Populer</span>
+                                        <span class="font-extrabold text-primary" id="calc-rec-name">Paket Populer</span>
                                     </div>
                                 </div>
                                 <div class="flex justify-between items-center text-xs border-b border-base-300/10 pb-3">
-                                    <span class="font-medium text-base-content/60">Estimasi Bandwidth:</span>
+                                    <span class="font-medium text-base-content/60">Estimasi Kecepatan:</span>
                                     <span class="font-extrabold text-base-content" id="calc-rec-speed">30 Mbps</span>
                                 </div>
+                                <div class="flex justify-between items-start text-xs border-b border-base-300/10 pb-3">
+                                    <span class="font-medium text-base-content/60 mt-0.5">Aktivitas Ideal:</span>
+                                    <span class="font-bold text-base-content/85 text-right max-w-[200px]" id="calc-rec-activity">Streaming Netflix HD, Kerja Remote, Belajar Online</span>
+                                </div>
                                 <div class="flex justify-between items-center text-xs">
-                                    <span class="font-medium text-base-content/60">Estimasi Biaya Harian:</span>
-                                    <span class="font-extrabold text-base-content" id="calc-rec-cost">Rp 1.666 / hari /
-                                        perangkat</span>
+                                    <span class="font-medium text-base-content/60">Estimasi Biaya:</span>
+                                    <span class="font-extrabold text-base-content" id="calc-rec-cost">Rp 8.333 / hari (Total)</span>
                                 </div>
                             </div>
                             <a href="/daftar"
@@ -664,27 +684,26 @@
 
                 <!-- Card 3: No-FUP Flow Visualizer (8/12 width) -->
                 <div
-                    class="md:col-span-8 glass-card p-8 rounded-3xl border border-base-300/30 flex flex-col md:flex-row gap-8 items-stretch shadow-sm">
+                    class="md:col-span-8 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col md:flex-row gap-8 items-stretch shadow-sm">
                     <div class="flex flex-col justify-between md:w-1/2 space-y-6">
-                        <div class="space-y-1">
-                            <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Visualisasi
-                                Aliran Data</span>
-                            <h3 class="text-lg font-bold text-base-content tracking-tight">Kestabilan vs Batas FUP</h3>
-                            <p class="text-xs text-base-content/60 leading-relaxed">
-                                Jaringan seluler membatasi kecepatan secara drastis setelah kuota habis.
-                                Jalur internet R-NET dirancang tanpa batasan FUP, menjaga data tetap mengalir lancar.
+                        <div class="space-y-2">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Keuntungan Tanpa FUP</span>
+                            <h3 class="text-lg font-bold text-base-content tracking-tight">Koneksi Stabil Tanpa Batasan Kuota</h3>
+                            <p class="text-xs text-base-content/65 leading-relaxed">
+                                Banyak penyedia internet menerapkan <strong>FUP (Batas Pemakaian Wajar)</strong>. Jika kuota FUP Anda habis, kecepatan diturunkan drastis (sangat lambat).
+                            </p>
+                            <p class="text-xs text-base-content/65 leading-relaxed border-l-2 border-primary/40 pl-2">
+                                <strong>R-NET:</strong> Kecepatan stabil penuh 24 jam sehari, 30 hari sebulan, bebas download dan streaming sepuasnya.
                             </p>
                         </div>
                         <div class="space-y-2 text-xs">
                             <div class="flex items-center gap-2.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shrink-0"></span>
-                                <span class="font-semibold text-base-content/80 text-xs">R-NET (Kecepatan
-                                    Konstan)</span>
+                                <span class="font-semibold text-base-content/80 text-xs">R-NET (100% Tanpa Batas FUP)</span>
                             </div>
                             <div class="flex items-center gap-2.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></span>
-                                <span class="font-semibold text-base-content/60 text-xs">Internet Seluler / FUP
-                                    Throttled</span>
+                                <span class="font-semibold text-base-content/60 text-xs">Internet Seluler / FUP Terbatas</span>
                             </div>
                         </div>
                     </div>
@@ -702,9 +721,15 @@
                             </div>
                             <div
                                 class="relative h-4 flex items-center bg-base-200/50 border border-base-300/10 rounded-lg overflow-hidden px-2">
-                                <svg class="w-full h-2" xmlns="http://www.w3.org/2000/svg">
-                                    <line x1="0" y1="4" x2="100%" y2="4" stroke="#06b6d4" stroke-width="3"
-                                        stroke-dasharray="12, 16" class="animate-flow-fast" />
+                                <svg class="w-full h-2 overflow-visible" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feGaussianBlur stdDeviation="2" result="blur" />
+                                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                        </filter>
+                                    </defs>
+                                    <line x1="0" y1="4" x2="100%" y2="4" stroke="#06b6d4" stroke-width="3.5"
+                                        stroke-dasharray="12, 16" class="animate-flow-fast" filter="url(#glow-cyan)" />
                                 </svg>
                             </div>
                         </div>
@@ -729,11 +754,17 @@
 
                 <!-- Card 4: Realtime Server Ping (4/12 width) -->
                 <div
-                    class="md:col-span-4 glass-card p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
-                    <div class="space-y-1">
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Pemantauan</span>
-                        <h3 class="text-lg font-bold text-base-content tracking-tight">Status Latensi</h3>
-                        <p class="text-xs text-base-content/60">Pengukuran ping ke server lokal secara langsung.</p>
+                    class="md:col-span-4 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
+                    <div class="space-y-2">
+                        <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Pemantauan Kestabilan</span>
+                        <h3 class="text-lg font-bold text-base-content tracking-tight">Status Latensi (Ping)</h3>
+                        <p class="text-xs text-base-content/65 leading-relaxed">
+                            <strong>Ping</strong> mengukur seberapa cepat koneksi internet merespons. Semakin kecil angkanya (ms), koneksi semakin lancar bebas hambatan.
+                        </p>
+                        <div class="flex items-center gap-2 bg-success/10 text-success border border-success/20 px-3 py-1 rounded-xl w-fit text-[11px] font-bold mt-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span>
+                            Sangat Kencang - Bebas Lag
+                        </div>
                     </div>
 
                     <!-- Dynamic Live Bar Graph -->
@@ -823,61 +854,97 @@
             <div class="text-center max-w-xl mx-auto">
                 <div
                     class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold border border-primary/20 uppercase tracking-widest">
-                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> FAQ Terminal
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Tanya Jawab
                 </div>
-                <h2 class="text-3xl font-extrabold mt-3">Konsol Tanya Jawab</h2>
-                <p class="text-sm text-base-content/60 mt-2">Gunakan command line interaktif di bawah untuk meninjau
-                    informasi teknis R-NET.</p>
+                <h2 class="text-3xl font-extrabold mt-3">Pertanyaan yang Sering Diajukan</h2>
+                <p class="text-sm text-base-content/60 mt-2">Temukan jawaban cepat untuk pertanyaan seputar layanan internet R-NET.</p>
             </div>
 
             <!-- High-Tech Interactive Terminal FAQ Dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
                 <!-- Left: Interactive Commands List -->
-                <div class="md:col-span-5 flex flex-col justify-start gap-3">
+                <div class="md:col-span-5 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 gap-3 scrollbar-none snap-x snap-mandatory">
                     <button onclick="selectFaq(1, this)"
-                        class="faq-tab tab-active btn btn-outline border-base-300/60 justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-full h-auto text-left gap-3 text-xs font-bold">
-                        <i data-lucide="terminal" class="w-4.5 h-4.5 text-primary shrink-0"></i> rnet --check-fup
+                        class="faq-tab bg-primary/10 text-primary border-primary/40 btn btn-outline justify-start rounded-2xl p-4 w-[280px] md:w-full h-auto text-left gap-3 text-xs font-bold normal-case leading-snug transition-all duration-300 hover:bg-base-200 shrink-0 snap-center">
+                        <i data-lucide="zap" class="w-5 h-5 shrink-0"></i>
+                        <span>Apakah internet R-NET dibatasi kuota bulanan (FUP)?</span>
                     </button>
                     <button onclick="selectFaq(2, this)"
-                        class="faq-tab btn btn-outline border-base-300/60 justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-full h-auto text-left gap-3 text-xs font-bold">
-                        <i data-lucide="terminal" class="w-4.5 h-4.5 text-primary shrink-0"></i> rnet --setup-fee
+                        class="faq-tab border-base-300/60 btn btn-outline justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-[280px] md:w-full h-auto text-left gap-3 text-xs font-bold normal-case leading-snug transition-all duration-300 shrink-0 snap-center">
+                        <i data-lucide="credit-card" class="w-5 h-5 shrink-0"></i>
+                        <span>Berapa biaya pasang baru dan apa saja yang didapat?</span>
                     </button>
                     <button onclick="selectFaq(3, this)"
-                        class="faq-tab btn btn-outline border-base-300/60 justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-full h-auto text-left gap-3 text-xs font-bold">
-                        <i data-lucide="terminal" class="w-4.5 h-4.5 text-primary shrink-0"></i> rnet --deploy-timeline
+                        class="faq-tab border-base-300/60 btn btn-outline justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-[280px] md:w-full h-auto text-left gap-3 text-xs font-bold normal-case leading-snug transition-all duration-300 shrink-0 snap-center">
+                        <i data-lucide="calendar-clock" class="w-5 h-5 shrink-0"></i>
+                        <span>Berapa lama waktu pemasangan setelah mendaftar?</span>
                     </button>
                     <button onclick="selectFaq(4, this)"
-                        class="faq-tab btn btn-outline border-base-300/60 justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-full h-auto text-left gap-3 text-xs font-bold">
-                        <i data-lucide="terminal" class="w-4.5 h-4.5 text-primary shrink-0"></i> rnet --coverage-query
+                        class="faq-tab border-base-300/60 btn btn-outline justify-start rounded-2xl bg-base-100/50 hover:bg-base-200 p-4 w-[280px] md:w-full h-auto text-left gap-3 text-xs font-bold normal-case leading-snug transition-all duration-300 shrink-0 snap-center">
+                        <i data-lucide="map-pin" class="w-5 h-5 shrink-0"></i>
+                        <span>Di mana saja cakupan area jangkauan R-NET saat ini?</span>
                     </button>
                 </div>
 
-                <!-- Right: Simulated Unix Terminal -->
+                <!-- Right: Smart Assistant Q&A Panel -->
                 <div
-                    class="md:col-span-7 bg-[#050811] text-emerald-400 p-5 rounded-3xl border border-base-300/30 shadow-2xl relative overflow-hidden min-h-[200px] flex flex-col justify-between">
-                    <!-- Terminal Top Dots -->
-                    <div class="flex items-center gap-1.5 pb-3 border-b border-emerald-500/20 mb-3 text-emerald-500/40">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-500/60"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
-                        <span
-                            class="text-[9px] font-bold uppercase tracking-wider ml-2 font-mono">rnet-terminal-console</span>
+                    class="md:col-span-7 glass-card p-6 rounded-3xl border border-base-300/30 shadow-xl relative overflow-hidden min-h-[320px] flex flex-col justify-between">
+                    <!-- Assistant Header -->
+                    <div class="flex items-center justify-between pb-4 border-b border-base-300/30 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="relative">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                                    <i data-lucide="smile" class="w-5 h-5"></i>
+                                </div>
+                                <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-success border-2 border-base-100"></span>
+                            </div>
+                            <div>
+                                <h4 class="font-extrabold text-sm text-base-content leading-tight">Asisten R-NET</h4>
+                                <span class="text-[10px] font-semibold text-success flex items-center gap-1">
+                                    Online • Siap membantu Anda
+                                </span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-base-content/40 tracking-wider font-mono">FAQ HELPDESK</span>
                     </div>
 
-                    <!-- Terminal Output content -->
-                    <div class="flex-1 terminal-window font-mono text-xs leading-relaxed whitespace-pre-wrap select-all pr-4 scrollbar-thin"
+                    <!-- Answers content area -->
+                    <div class="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-thin text-base-content"
                         id="faq-terminal-text">
-                        > rnet --check-fup
-                        [STATUS] UNLIMITED MURNI ACTIVE
-                        [INFO] R-NET berkomitmen menyediakan layanan internet tanpa FUP (Fair Usage Policy). Tidak ada
-                        batasan kuota, tidak ada penurunan kecepatan secara tiba-tiba di akhir bulan. Anda bebas
-                        mengunduh dan streaming sepuasnya.
+                        <!-- Initial state: Answer 1 rendered statically by default -->
+                        <div class="space-y-3 animate-fade-in-up">
+                            <div class="flex items-center gap-2">
+                                <span class="badge badge-success text-white font-extrabold text-[10px] tracking-wider py-2 px-3">100% UNLIMITED</span>
+                                <span class="text-xs text-base-content/50 font-bold">Tanpa Batas Kuota</span>
+                            </div>
+                            <p class="text-xs text-base-content/85 leading-relaxed font-medium">
+                                R-NET berkomitmen untuk menyediakan layanan internet murni tanpa kebijakan batas pemakaian wajar (FUP).
+                            </p>
+                            <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2">
+                                <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0 mt-0.5"></i>
+                                    <span><strong>Bebas Download & Streaming:</strong> Tonton video HD dan unduh berkas besar sepuasnya kapan saja.</span>
+                                </div>
+                                <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0 mt-0.5"></i>
+                                    <span><strong>Kecepatan Stabil:</strong> Tidak ada penurunan kecepatan internet secara tiba-tiba di akhir bulan.</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Blinking Cursor -->
-                    <div
-                        class="flex items-center mt-3 pt-2 border-t border-emerald-500/20 text-emerald-500/40 font-mono text-[10px]">
-                        <span>visitor@rnet:~# <span class="animate-pulse">_</span></span>
+                    <!-- Chat Footer / Prompt -->
+                    <div class="flex items-center gap-2 mt-4 pt-3 border-t border-base-300/30">
+                        <p class="text-[11px] text-base-content/50 font-medium">Ada pertanyaan lain?</p>
+                        @if(isset($company) && $company->whatsapp)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp) }}?text=Halo%20R-NET,%20saya%20ingin%20tanya%20tentang..." target="_blank" rel="noopener noreferrer" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+                                Hubungi Admin via WhatsApp <i data-lucide="external-link" class="w-3 h-3"></i>
+                            </a>
+                        @else
+                            <a href="https://wa.me/6281373242673?text=Halo%20R-NET,%20saya%20ingin%20tanya%20tentang..." target="_blank" rel="noopener noreferrer" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+                                Hubungi Admin via WhatsApp <i data-lucide="external-link" class="w-3 h-3"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -1136,94 +1203,265 @@
         }
         startLivePingSimulator();
 
-        // ── Cost Calculator widget ───────────────────────────────
-        function updateCalc() {
-            const devices = parseInt(document.getElementById('calc-devices').value);
-            const deviceVal = document.getElementById('calc-devices-val');
-            const recName = document.getElementById('calc-rec-name');
-            const recCost = document.getElementById('calc-rec-cost');
-            const recSpeed = document.getElementById('calc-rec-speed');
+        // ── Cost Configurator widget ───────────────────────────────
+        let currentProfile = 'personal';
+        const selectedActivities = {
+            browsing: true,
+            streaming: true,
+            gaming: false,
+            work: false
+        };
 
-            deviceVal.textContent = devices;
-
-            let recommended = {};
-            if (devices <= 3) {
-                recommended = { name: 'Paket Hemat', cost: 150000, speed: '10 Mbps' };
-            } else if (devices <= 8) {
-                recommended = { name: 'Paket Populer', cost: 250000, speed: '30 Mbps' };
-            } else {
-                recommended = { name: 'Paket Premium', cost: 400000, speed: '100 Mbps' };
+        window.setProfile = function(profileKey, btn) {
+            currentProfile = profileKey;
+            
+            // Update button styles
+            document.querySelectorAll('.profile-btn').forEach(b => {
+                b.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+                b.classList.add('border-base-300/60', 'bg-base-100/50', 'hover:bg-base-200');
+            });
+            if (btn) {
+                btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+                btn.classList.remove('border-base-300/60', 'bg-base-100/50', 'hover:bg-base-200');
             }
 
-            recName.textContent = recommended.name;
-            recSpeed.textContent = recommended.speed;
+            calculateRecommendation();
+        };
 
-            // Calculate daily cost per device: (Monthly price / 30 days) / number of devices
-            const dailyCostPerDevice = Math.round((recommended.cost / 30) / devices);
-            recCost.textContent = `Rp ${dailyCostPerDevice.toLocaleString('id-ID')} / hari / perangkat`;
+        window.toggleActivity = function(activityKey, btn) {
+            selectedActivities[activityKey] = !selectedActivities[activityKey];
+            
+            if (btn) {
+                const iconWrapper = btn.querySelector('.rounded-lg');
+                if (selectedActivities[activityKey]) {
+                    btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+                    btn.classList.remove('border-base-300/60', 'bg-base-100/50', 'hover:bg-base-200');
+                    if (iconWrapper) {
+                        iconWrapper.classList.add('bg-primary/15');
+                        iconWrapper.classList.remove('bg-base-content/10');
+                    }
+                } else {
+                    btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+                    btn.classList.add('border-base-300/60', 'bg-base-100/50', 'hover:bg-base-200');
+                    if (iconWrapper) {
+                        iconWrapper.classList.remove('bg-primary/15');
+                        iconWrapper.classList.add('bg-base-content/10');
+                    }
+                }
+            }
+
+            calculateRecommendation();
+        };
+
+        function calculateRecommendation() {
+            let baseSpeed = 0;
+            
+            if (currentProfile === 'personal') {
+                baseSpeed = 10;
+            } else if (currentProfile === 'family') {
+                baseSpeed = 25;
+            } else if (currentProfile === 'business') {
+                baseSpeed = 60;
+            }
+
+            let extraSpeed = 0;
+            if (selectedActivities.browsing) extraSpeed += 5;
+            if (selectedActivities.streaming) extraSpeed += 15;
+            if (selectedActivities.gaming) extraSpeed += 10;
+            if (selectedActivities.work) extraSpeed += 10;
+
+            const totalSpeedNeeded = baseSpeed + extraSpeed;
+
+            let recommended = {};
+            if (totalSpeedNeeded <= 20) {
+                recommended = { 
+                    name: 'Paket Hemat', 
+                    cost: 150000, 
+                    speed: '10 Mbps',
+                    activity: 'Browsing ringan, sosial media, dan chat keluarga.'
+                };
+            } else if (totalSpeedNeeded <= 50) {
+                recommended = { 
+                    name: 'Paket Populer', 
+                    cost: 250000, 
+                    speed: '30 Mbps',
+                    activity: 'Streaming video lancar, telekonferensi, dan browsing bersama.'
+                };
+            } else {
+                recommended = { 
+                    name: 'Paket Premium', 
+                    cost: 400000, 
+                    speed: '100 Mbps',
+                    activity: 'Koneksi maksimal untuk game berat, streaming 4K, dan bisnis.'
+                };
+            }
+
+            // Update UI elements
+            const recName = document.getElementById('calc-rec-name');
+            const recSpeed = document.getElementById('calc-rec-speed');
+            const recActivity = document.getElementById('calc-rec-activity');
+            const recCost = document.getElementById('calc-rec-cost');
+
+            if (recName) recName.textContent = recommended.name;
+            if (recSpeed) recSpeed.textContent = recommended.speed;
+            if (recActivity) recActivity.textContent = recommended.activity;
+            
+            // Format daily cost: (Monthly price / 30 days)
+            const dailyCost = Math.round(recommended.cost / 30);
+            if (recCost) recCost.textContent = `Rp ${dailyCost.toLocaleString('id-ID')} / hari (Total)`;
         }
 
         // Initialize calculator values
-        updateCalc();
+        calculateRecommendation();
 
         // ── Interactive FAQ Terminal widget ──────────────────────
         const faqAnswers = {
-            1: "> rnet --check-fup\n\n[STATUS] UNLIMITED MURNI ACTIVE\n[INFO] R-NET berkomitmen menyediakan layanan internet tanpa FUP (Fair Usage Policy). Tidak ada batasan kuota, tidak ada penurunan kecepatan secara tiba-tiba di akhir bulan. Anda bebas mengunduh dan streaming sepuasnya.",
-            2: "> rnet --setup-fee\n\n[INSTALLATION] ACTIVE\n[COST] Rp 350.000 (Sekali bayar)\n[INCLUDES]\n - Kabel FTTH Mandiri\n - Perangkat ONT Dual-Band WiFi Router\n - Setup konfigurasi & aktivasi jaringan siap pakai",
-            3: "> rnet --deploy-timeline\n\n[ESTIMATE] 1-3 Hari Kerja\n[DETAILS] Setelah pengisian form pendaftaran berhasil, tim lapangan kami akan melakukan survey area dan menjadwalkan instalasi perangkat WiFi ke rumah Anda secara cepat.",
-            4: "> rnet --coverage-query\n\n[COVERAGE] KOTA SUNGAI PENUH, KABUPATEN KERINCI, KABUPATEN MERANGIN\n[NOTE] Jika wilayah Anda belum terdaftar, Anda dapat memilih opsi 'Konsultasi dengan Admin' pada form pendaftaran untuk pengajuan ekspansi jaringan."
+            1: `
+                <div class="space-y-3 animate-fade-in-up">
+                    <div class="flex items-center gap-2">
+                        <span class="badge badge-success text-white font-extrabold text-[10px] tracking-wider py-2 px-3">100% UNLIMITED</span>
+                        <span class="text-xs text-base-content/50 font-bold">Tanpa Batas Kuota</span>
+                    </div>
+                    <p class="text-xs text-base-content/85 leading-relaxed font-medium">
+                        R-NET berkomitmen untuk menyediakan layanan internet murni tanpa kebijakan batas pemakaian wajar (FUP).
+                    </p>
+                    <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2">
+                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0 mt-0.5"></i>
+                            <span><strong>Bebas Download & Streaming:</strong> Tonton video HD dan unduh berkas besar sepuasnya kapan saja.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0 mt-0.5"></i>
+                            <span><strong>Kecepatan Stabil:</strong> Tidak ada penurunan kecepatan internet secara tiba-tiba di akhir bulan.</span>
+                        </div>
+                    </div>
+                </div>
+            `,
+            2: `
+                <div class="space-y-3 animate-fade-in-up">
+                    <div class="flex items-center gap-2">
+                        <span class="badge badge-primary text-white font-extrabold text-[10px] tracking-wider py-2 px-3">BIAYA PASANG BARU</span>
+                        <span class="text-xs text-base-content/50 font-bold">Sekali Bayar</span>
+                    </div>
+                    <p class="text-xs text-base-content/85 leading-relaxed font-medium">
+                        Biaya instalasi awal hanya sebesar <strong>Rp 350.000</strong> (sekali bayar saat pemasangan selesai).
+                    </p>
+                    <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2.5">
+                        <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-widest block">Kelengkapan Paket Pasang:</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-base-content/70">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="wifi" class="w-4.5 h-4.5 text-primary shrink-0"></i>
+                                <span>Modem WiFi ONT Dual-Band</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="cable" class="w-4.5 h-4.5 text-primary shrink-0"></i>
+                                <span>Kabel Fiber Optik FTTH</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="user-cog" class="w-4.5 h-4.5 text-primary shrink-0"></i>
+                                <span>Jasa Pasang Teknisi</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="shield-check" class="w-4.5 h-4.5 text-primary shrink-0"></i>
+                                <span>Aktivasi Layanan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            3: `
+                <div class="space-y-3 animate-fade-in-up">
+                    <div class="flex items-center gap-2">
+                        <span class="badge badge-secondary text-white font-extrabold text-[10px] tracking-wider py-2 px-3">ESTIMASI INSTALASI</span>
+                        <span class="text-xs text-base-content/50 font-bold">Proses Cepat & Rapih</span>
+                    </div>
+                    <p class="text-xs text-base-content/85 leading-relaxed font-medium">
+                        Kabel akan ditarik langsung ke rumah Anda dalam jangka waktu <strong>1 hingga 3 hari kerja</strong> setelah pendaftaran disetujui.
+                    </p>
+                    <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2">
+                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                            <div class="w-5 h-5 rounded-full bg-secondary/15 text-secondary flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</div>
+                            <span><strong>Verifikasi & Survei:</strong> Admin memproses berkas pendaftaran dan teknisi mensurvei jalur tiang ke rumah Anda.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                            <div class="w-5 h-5 rounded-full bg-secondary/15 text-secondary flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</div>
+                            <span><strong>Instalasi & Aktivasi:</strong> Teknisi menarik kabel fiber optik, merapikan perangkat modem WiFi, serta mengaktifkan paket internet Anda.</span>
+                        </div>
+                    </div>
+                </div>
+            `,
+            4: `
+                <div class="space-y-3 animate-fade-in-up">
+                    <div class="flex items-center gap-2">
+                        <span class="badge badge-accent text-white font-extrabold text-[10px] tracking-wider py-2 px-3">WILAYAH CAKUPAN</span>
+                        <span class="text-xs text-base-content/50 font-bold">Jambi & Sekitarnya</span>
+                    </div>
+                    <p class="text-xs text-base-content/85 leading-relaxed font-medium">
+                        Jaringan fiber optik R-NET saat ini menjangkau wilayah-wilayah berikut:
+                    </p>
+                    <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2.5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 rounded bg-primary/10 text-primary font-bold text-xs">Kota Sungai Penuh</span>
+                            <span class="px-2.5 py-1 rounded bg-primary/10 text-primary font-bold text-xs">Kabupaten Kerinci</span>
+                            <span class="px-2.5 py-1 rounded bg-primary/10 text-primary font-bold text-xs">Kabupaten Merangin</span>
+                        </div>
+                        <p class="text-[11px] text-base-content/60 leading-normal">
+                            Jika daerah Anda belum masuk radius peta jangkauan, Anda bisa memilih opsi <strong>"Konsultasi dengan Admin"</strong> pada form pendaftaran untuk pengajuan perluasan area jaringan.
+                        </p>
+                    </div>
+                </div>
+            `
         };
 
         function selectFaq(id, btn) {
-            // Remove active classes
-            document.querySelectorAll('.faq-tab').forEach(el => el.classList.remove('bg-primary/10', 'text-primary'));
-            btn.classList.add('bg-primary/10', 'text-primary');
+            // Remove active classes from all tabs and add border/color to the active one
+            document.querySelectorAll('.faq-tab').forEach(el => {
+                el.classList.remove('bg-primary/10', 'text-primary', 'border-primary/40');
+                el.classList.add('border-base-300/60');
+            });
+            btn.classList.add('bg-primary/10', 'text-primary', 'border-primary/40');
+            btn.classList.remove('border-base-300/60');
 
             const term = document.getElementById('faq-terminal-text');
-            term.textContent = '';
+            
+            // Show typing indicator
+            term.innerHTML = `
+                <div class="flex items-center gap-2 text-base-content/40 font-mono text-xs animate-pulse py-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-base-content/40 animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-base-content/40 animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-base-content/40 animate-bounce" style="animation-delay: 300ms"></span>
+                    <span class="ml-1 text-[11px]">Memuat jawaban...</span>
+                </div>
+            `;
 
-            const text = faqAnswers[id];
-            let index = 0;
+            if (window.faqTimeout) clearTimeout(window.faqTimeout);
 
-            if (window.faqTypeInterval) clearInterval(window.faqTypeInterval);
-
-            window.faqTypeInterval = setInterval(() => {
-                if (index < text.length) {
-                    term.textContent += text[index];
-                    index++;
-                } else {
-                    clearInterval(window.faqTypeInterval);
+            window.faqTimeout = setTimeout(() => {
+                term.innerHTML = faqAnswers[id];
+                // Initialize Lucide icons for the dynamic content
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons({
+                        attrs: {
+                            class: 'lucide'
+                        },
+                        nameAttr: 'data-lucide'
+                    });
                 }
-            }, 8);
+            }, 300);
         }
 
         // ── Peta Jangkauan Interaktif (Leaflet) ───────────────────
         let map = null;
         let mapTileLayer = null;
-        const markers = {};
-
-        function getCoords(name) {
-            const cleanName = name.toLowerCase();
-            if (cleanName.includes('sungai penuh')) {
-                return { lat: -2.0620, lng: 101.3780, radius: 8000, desc: 'Pusat operasional utama R-NET dengan infrastruktur kabel mandiri.' };
-            } else if (cleanName.includes('kerinci')) {
-                return { lat: -1.9740, lng: 101.4050, radius: 25000, desc: 'Jaringan meluas ke area perumahan agrowisata dan pedesaan.' };
-            } else if (cleanName.includes('merangin') || cleanName.includes('bangko')) {
-                return { lat: -2.1550, lng: 102.1280, radius: 20000, desc: 'Ekspansi jaringan berkecepatan tinggi untuk mendukung operasional UMKM lokal setempat.' };
-            }
-            // Fallback default coordinate around Jambi
-            return { lat: -1.6130, lng: 103.6130, radius: 10000, desc: 'Wilayah layanan baru aktif.' };
-        }
-
         const boundaries = {};
 
         function initMap() {
             const defaultTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-            // Jambi center coordinates
+            // Default coordinates center
             map = L.map('map', {
-                center: [-2.0620, 101.3780],
-                zoom: 8,
+                center: [-2.0337714, 101.3963373],
+                zoom: 11,
                 zoomControl: true
             });
 
@@ -1240,41 +1478,36 @@
 
             // Fetch and render areas from database
             const activeAreas = @json($areaLayanan);
+            const validAreas = activeAreas.filter(area => area.latitude && area.longitude);
 
-            activeAreas.forEach(area => {
-                const coords = getCoords(area.nama_area);
+            if (validAreas.length > 0) {
+                map.setView([validAreas[0].latitude, validAreas[0].longitude], 11);
+            }
 
-                // Add actual geographic boundary circle
-                const boundary = L.circle([coords.lat, coords.lng], {
-                    color: '#1977BF',
-                    fillColor: '#06b6d4',
-                    fillOpacity: 0.18,
+            validAreas.forEach(area => {
+                const lat = parseFloat(area.latitude);
+                const lng = parseFloat(area.longitude);
+                const radius = parseInt(area.radius) || 1000;
+
+                // Add actual geographic boundary circle (no pin markers)
+                const boundary = L.circle([lat, lng], {
+                    color: '#2563eb',
+                    fillColor: '#3b82f6',
+                    fillOpacity: 0.2,
                     weight: 2,
                     dashArray: '6, 6',
-                    radius: coords.radius
-                }).addTo(map);
-
-                // Add center pin marker
-                const marker = L.circleMarker([coords.lat, coords.lng], {
-                    color: '#1977BF',
-                    fillColor: '#ffffff',
-                    fillOpacity: 1,
-                    weight: 3,
-                    radius: 7
+                    radius: radius
                 }).addTo(map);
 
                 const popupContent = `
                     <div class="p-1 space-y-1">
                         <h4 class="font-bold text-xs text-primary">${area.nama_area}</h4>
-                        <p class="text-[10px] text-base-content/70 leading-normal">${coords.desc}</p>
+                        <p class="text-[10px] text-base-content/70 leading-normal">Radius Layanan: ${radius} meter</p>
                         <span class="inline-block bg-success/15 text-success text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mt-1">Aktif</span>
                     </div>
                 `;
 
                 boundary.bindPopup(popupContent);
-                marker.bindPopup(popupContent);
-
-                markers[area.nama_area] = marker;
                 boundaries[area.nama_area] = boundary;
             });
         }
@@ -1289,15 +1522,13 @@
 
         function focusArea(name) {
             if (map && boundaries[name]) {
-                // Smoothly zoom/fit to the boundary circle's geographic bounds
-                map.fitBounds(boundaries[name].getBounds(), { padding: [50, 50], maxZoom: 11, animate: true, duration: 1.5 });
+                map.fitBounds(boundaries[name].getBounds(), { padding: [50, 50], maxZoom: 13, animate: true, duration: 1.5 });
                 setTimeout(() => {
                     boundaries[name].openPopup();
                 }, 1000);
             }
         }
 
-        // Initialize Map + Lucide Icons after DOM ready (scripts are deferred)
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof L !== 'undefined') initMap();
             if (typeof lucide !== 'undefined') lucide.createIcons();

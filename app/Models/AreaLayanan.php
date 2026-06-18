@@ -11,9 +11,15 @@ class AreaLayanan extends Model
     protected $fillable = [
         'nama_area',
         'is_active',
+        'latitude',
+        'longitude',
+        'radius',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'latitude' => 'float',
+        'longitude' => 'float',
+        'radius' => 'integer',
     ];
 }

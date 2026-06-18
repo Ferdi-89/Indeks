@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
 // ─── Landing Page ───────────────────────────────────────────────────────
 Route::get('/', function () {
     $pengumuman = pengumuman::pluck('text_pengumuman')->toArray();
-    $pakets = paket::with('promosi')->where('is_hidden', false)->get();
+    $pakets = paket::with('promosi')->where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
     $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
     $company = App\Models\CompanySetting::getInstance();
 
@@ -36,7 +36,7 @@ Route::get('/', function () {
 
 // ─── Halaman Pendaftaran (GET) ──────────────────────────────────────────
 Route::get('/daftar', function () {
-    $pakets = paket::where('is_hidden', false)->get();
+    $pakets = paket::where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
     $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
     $company = App\Models\CompanySetting::getInstance();
     return view('pendaftaran', compact('pakets', 'areaLayanan', 'company'));
@@ -784,7 +784,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // --- Area Layanan ---
     Route::post('/area', function(Illuminate\Http\Request $request) use ($jsonOrRedirect) {
-        $data = $request->validate(['nama_area' => 'required|string|max:100']);
+        $data = $request->validate([
+            'nama_area' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|integer|min:1',
+        ]);
         $area = App\Models\AreaLayanan::create(array_merge($data, ['is_active' => true]));
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Area layanan ditambahkan.', 'area' => $area]);
@@ -793,7 +798,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     })->name('area.store');
 
     Route::put('/area/{id}', function(Illuminate\Http\Request $request, $id) use ($jsonOrRedirect) {
-        $data = $request->validate(['nama_area' => 'required|string', 'is_active' => 'boolean']);
+        $data = $request->validate([
+            'nama_area' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|integer|min:1',
+            'is_active' => 'boolean'
+        ]);
         App\Models\AreaLayanan::findOrFail($id)->update($data);
         return $jsonOrRedirect($request, 'Area layanan diperbarui.');
     })->name('area.update');
@@ -897,8 +908,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         
         // Pengaturan Perusahaan + Area Layanan
         $company = App\Models\CompanySetting::getInstance();
-        $areaLayanan = App\Models\AreaLayanan::where('is_active', true)->get();
-        
+        $areaLayanan = App\Models\AreaLayanan::all();
+
         return view('admin.index', compact(
             'pendaftaran', 'totalPendaftaran', 
             'paket', 'totalPaket', 

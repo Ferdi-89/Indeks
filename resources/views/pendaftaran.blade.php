@@ -649,6 +649,21 @@
         var btnConfirm = document.getElementById('btn-confirm-address');
         var alamatInput = document.getElementById('alamat-input');
 
+        // Draw active area circles on the map
+        const activeAreasData = @json($areaLayanan);
+        activeAreasData.forEach(area => {
+            if (area.latitude && area.longitude) {
+                L.circle([area.latitude, area.longitude], {
+                    radius: parseInt(area.radius) || 1000,
+                    color: '#2563eb',
+                    fillColor: '#3b82f6',
+                    fillOpacity: 0.15,
+                    weight: 2,
+                    dashArray: '4, 4'
+                }).addTo(map);
+            }
+        });
+
         // Global auto-switch wilayah function
         window.autoSwitchWilayah = function (newRegion) {
             var selectWilayah = document.getElementById('select-wilayah');
@@ -665,51 +680,37 @@
 
             if (!selectWilayah || !validationEl) return;
 
-            if (!tempAddr || tempAddr.includes("Geser peta") || tempAddr.includes("Mencari")) {
-                validationEl.classList.add('hidden');
-                return;
-            }
+            // Logika baru: Cek jarak geografis (radius) ke wilayah layanan terdaftar
+            const pinLatLng = L.latLng(tempCenter.lat, tempCenter.lng);
+            let detectedRegion = null;
+            let minDistance = Infinity;
 
-            // Dapatkan seluruh wilayah terdaftar dari opsi dropdown
-            var registeredRegions = Array.from(selectWilayah.options)
-                .map(o => o.value)
-                .filter(val => val && val !== 'konsultasi');
+            activeAreasData.forEach(area => {
+                if (!area.latitude || !area.longitude) return;
+                const areaLatLng = L.latLng(area.latitude, area.longitude);
+                const distance = pinLatLng.distanceTo(areaLatLng);
+                const radius = parseInt(area.radius) || 1000;
 
-            // Normalisasi alamat untuk pencocokan
-            var normalizedAddr = tempAddr.toLowerCase();
-
-            // Deteksi apakah alamat masuk ke salah satu wilayah terdaftar
-            var detectedRegion = null;
-            for (var i = 0; i < registeredRegions.length; i++) {
-                var r = registeredRegions[i];
-                var rKeyword = r.toLowerCase()
-                    .replace('kota', '')
-                    .replace('kabupaten', '')
-                    .replace('kab.', '')
-                    .replace('kecamatan', '')
-                    .replace('kec.', '')
-                    .trim();
-
-                if (normalizedAddr.includes(rKeyword)) {
-                    detectedRegion = r;
-                    break;
+                if (distance <= radius) {
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        detectedRegion = area.nama_area;
+                    }
                 }
-            }
+            });
 
             validationEl.classList.remove('hidden');
 
             // Hapus kelas warna tombol konfirmasi agar bisa diset dinamis
             btnConfirm.className = "w-full btn font-bold rounded-xl shadow";
 
-            // Kasus 1: Wilayah Tidak Terdaftar
+            // Kasus 1: Wilayah Tidak Terdaftar (di luar radius semua area)
             if (!detectedRegion) {
-                // Kunci tombol konfirmasi alamat
                 btnConfirm.disabled = true;
                 btnConfirm.classList.add('btn-disabled');
                 btnConfirm.textContent = "Wilayah Tidak Terjangkau";
                 delete btnConfirm.dataset.pendingRegion;
 
-                // Kunci select wilayah layanan dan reset nilainya
                 selectWilayah.disabled = true;
                 selectWilayah.value = "";
 
@@ -779,22 +780,15 @@
             lucide.createIcons();
         }
 
-        // Mapping koordinat pusat untuk masing-masing wilayah layanan
-        var REGION_CENTERS = {
-            'Kota Sungai Penuh': [-2.0594, 101.3789],
-            'Kabupaten Kerinci': [-2.1158, 101.4485],
-            'Kabupaten Merangin': [-2.1661, 102.2612]
-        };
-
         // Listener untuk select wilayah
         document.getElementById('select-wilayah').addEventListener('change', function () {
             if (this.value === 'konsultasi') {
                 window.open('https://wa.me/6281373242873?text=Halo%20Admin%20R-NET,%20saya%20ingin%20berkonsultasi%20mengenai%20wilayah%20layanan%20internet%20di%20lokasi%20saya.', '_blank');
                 this.value = ""; // Reset kembali pilihan
             } else {
-                var center = REGION_CENTERS[this.value];
-                if (center) {
-                    map.flyTo(center, 14); // Geser peta secara dinamis
+                const area = activeAreasData.find(a => a.nama_area === this.value);
+                if (area && area.latitude && area.longitude) {
+                    map.flyTo([area.latitude, area.longitude], 14); // Geser peta secara dinamis
                 }
             }
             validateWilayahLocation();

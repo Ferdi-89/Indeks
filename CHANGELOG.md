@@ -2,6 +2,33 @@
 
 ---
 
+## [2026-06-14] Minggu, 14 Juni 2026 — 23:42 WIB
+
+### 🗺️ Desain Ulang Fitur Wilayah Layanan (Berbasis Koordinat & Radius)
+
+- **Migrasi Database Koordinat & Radius** — Menambahkan kolom `latitude`, `longitude`, dan `radius` pada tabel `area_layanans` via berkas migrasi database. Memperbarui model `AreaLayanan.php` dengan fillable dan cast data yang sesuai.
+- **Validasi Spasial Form Pendaftaran** — Mengubah validasi peta pendaftaran di `pendaftaran.blade.php` dari pencocokan teks alamat (reverse geocoding) menjadi kalkulasi jarak matematis geografis (`distanceTo() <= radius`) terhadap radius area aktif. Jika di luar jangkauan area mana pun, tombol pendaftaran dikunci dan diarahkan ke hubungi admin.
+- **Peta Jangkauan Landing Page (Full-Width & Range Only)** — Memperbarui peta di `welcome.blade.php` untuk merender area jangkauan berupa lingkaran transparan (`L.circle`) secara langsung dari database tanpa penanda/pin marker tunggal. Menghapus bilah daftar wilayah samping agar peta tampil lebar penuh.
+- **Peta Modals Admin** — Mengintegrasikan Leaflet map ke dalam modal Tambah dan Edit wilayah layanan di `admin/partials/wilayah.blade.php` yang memungkinkan admin mengeklik/menggeser marker pusat layanan dan menentukan jangkauan radius dengan pratinjau lingkaran real-time.
+
+### 📦 Perbaikan Konsistensi Urutan Paket Internet
+
+- **Konsistensi Urutan Paket** — Menambahkan klausa pengurutan `orderBy('id_paket', 'asc')` pada query pengambilan data paket di landing page dan halaman pendaftaran (`routes/web.php`) untuk memastikan urutan paket selalu konsisten dan tidak berubah-ubah akibat perilaku bawaan PostgreSQL.
+
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `database/migrations/*_add_coords_and_radius_to_area_layanans.php` | Menambahkan kolom `latitude`, `longitude`, dan `radius` |
+| `app/Models/AreaLayanan.php` | Cast data dan fillable kolom baru |
+| `routes/web.php` | Validasi input area koordinat & radius, pengurutan paket |
+| `resources/views/admin/partials/wilayah.blade.php` | Integrasi Leaflet map ke modal area, input radius & koordinat |
+| `resources/views/welcome.blade.php` | Render jangkauan lingkaran, hapus sidebar wilayah & marker |
+| `resources/views/pendaftaran.blade.php` | Mengubah validasi cover area pendaftaran menjadi berbasis koordinat |
+| `tests/Feature/PendaftaranExtendedAdminTest.php` | Penyesuaian variabel data dummy uji coba |
+
+---
+
 ## [2026-06-14] Minggu, 14 Juni 2026 — 21:20 WIB
 
 ### 🔧 Perbaikan Bug
