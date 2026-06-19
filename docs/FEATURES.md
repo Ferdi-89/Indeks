@@ -1,10 +1,10 @@
-# 🎯 Dokumentasi Fitur & Spesifikasi Use Case R-NET
+# Dokumentasi Fitur & Spesifikasi Use Case R-NET
 
 Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas sistem **R-NET (Sistem Pendaftaran Internet Provider)**. Penjelasan dibagi berdasarkan modul fungsional mahasiswa pengembang (Orang 1 hingga Orang 4), mencakup **24 Use Cases (UC01 - UC25)** yang didesain untuk sistem ini, beserta alur kerja (workflow) terintegrasi antar-modul.
 
 ---
 
-## 📌 Daftar Isi
+## Daftar Isi
 1. [Peta Fungsionalitas & Use Cases](#peta-fungsionalitas--use-cases)
 2. [Modul 1: Portal Pelanggan & Front-End (Orang 1)](#modul-1-portal-pelanggan--front-end-orang-1)
 3. [Modul 2: Manajemen Pendaftaran & Auth (Orang 2)](#modul-2-manajemen-pendaftaran--auth-orang-2)
@@ -14,7 +14,7 @@ Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas siste
 
 ---
 
-## 📊 Peta Fungsionalitas & Use Cases
+## Peta Fungsionalitas & Use Cases
 
 Sistem R-NET dirancang memiliki dua aktor utama:
 1.  **Calon Pelanggan**: Mengakses portal publik untuk melihat penawaran dan mendaftar layanan.
@@ -70,7 +70,7 @@ graph TD
 
 ---
 
-## 🖥️ Modul 1: Portal Pelanggan & Front-End (Orang 1)
+## Modul 1: Portal Pelanggan & Front-End (Orang 1)
 
 Modul ini bertanggung jawab menyediakan portal pelanggan interaktif berbasis web yang memuat promosi, pengumuman, dan menangani pendaftaran calon pelanggan baru secara online.
 
@@ -145,7 +145,7 @@ Modul ini bertanggung jawab menyediakan portal pelanggan interaktif berbasis web
 
 ---
 
-## 🔐 Modul 2: Manajemen Pendaftaran & Auth (Orang 2)
+## Modul 2: Manajemen Pendaftaran & Auth (Orang 2)
 
 Modul ini memfasilitasi admin untuk login secara aman, meninjau pendaftar baru, melihat data fisik foto rumah/KTP dari cloud, mengubah status pendaftar, dan menghapus pendaftaran tidak valid.
 
@@ -222,7 +222,7 @@ Modul ini memfasilitasi admin untuk login secara aman, meninjau pendaftar baru, 
 
 ---
 
-## 📦 Modul 3: Konten Produk & Promosi (Orang 3)
+## Modul 3: Konten Produk & Promosi (Orang 3)
 
 Modul ini bertanggung jawab mengelola data paket internet (kecepatan, harga) dan promosi aktif yang nantinya disajikan secara dinamis kepada calon pelanggan di landing page.
 
@@ -298,7 +298,7 @@ Modul ini bertanggung jawab mengelola data paket internet (kecepatan, harga) dan
 
 ---
 
-## 📊 Modul 4: Monitoring Sistem & Pengumuman (Orang 4)
+## Modul 4: Monitoring Sistem & Pengumuman (Orang 4)
 
 Modul ini bertanggung jawab memantau kesehatan operasional server, database PostgreSQL, kapasitas S3, menyajikan grafik dasbor Chart.js, serta memanajemen papan pengumuman dinamis.
 
@@ -379,7 +379,7 @@ Modul ini bertanggung jawab memantau kesehatan operasional server, database Post
 
 Untuk mempermudah pemahaman bagaimana keempat modul mahasiswa bekerja sama, berikut disajikan skenario interaksi sistem (End-to-End Workflow) dari proses pendaftaran hingga penanganan pendaftaran oleh administrator.
 
-### 🌐 Skenario: Proses Berlangganan Internet Baru Pelanggan
+### Skenario: Proses Berlangganan Internet Baru Pelanggan
 
 ```mermaid
 sequenceDiagram

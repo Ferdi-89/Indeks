@@ -1,10 +1,10 @@
-# 🛠️ Panduan Instalasi & Setup Lokal R-NET
+# Panduan Instalasi & Setup Lokal R-NET
 
 Dokumen ini memandu Anda langkah-demi-langkah untuk menyiapkan lingkungan pengembangan lokal dan menjalankan aplikasi **R-NET (Sistem Pendaftaran Internet Provider)** di komputer Anda.
 
 ---
 
-## 📋 Prasyarat Sistem (System Requirements)
+## Prasyarat Sistem (System Requirements)
 
 Sebelum memulai instalasi, pastikan sistem Anda telah memiliki perangkat lunak berikut:
 
@@ -16,7 +16,7 @@ Sebelum memulai instalasi, pastikan sistem Anda telah memiliki perangkat lunak b
 
 ---
 
-## 🚀 Langkah-Langkah Instalasi (Installation Steps)
+## Langkah-Langkah Instalasi (Installation Steps)
 
 Ikuti langkah-langkah di bawah ini untuk menginstal proyek R-NET:
 
@@ -51,7 +51,7 @@ php artisan key:generate
 
 ---
 
-## ⚙️ Konfigurasi File `.env` (Environment Configuration)
+## Konfigurasi File `.env` (Environment Configuration)
 
 Buka file `.env` di text editor Anda dan sesuaikan konfigurasi penting berikut:
 
@@ -90,7 +90,7 @@ AWS_ENDPOINT=https://your-supabase-project-id.supabase.co/storage/v1/s3
 
 ---
 
-## 🗄️ Inisialisasi Database (Database Migrations & Seeders)
+## Inisialisasi Database (Database Migrations & Seeders)
 
 Setelah mengonfigurasi `.env` dan memastikan server database PostgreSQL Anda aktif, jalankan migrasi database untuk membuat tabel-tabel sistem dan data dummy awal:
 
@@ -107,7 +107,7 @@ Perintah di atas akan menjalankan:
 
 ---
 
-## 💻 Menjalankan Aplikasi di Server Lokal
+## Menjalankan Aplikasi di Server Lokal
 
 Untuk menjalankan aplikasi R-NET di komputer Anda, Anda perlu menjalankan server backend Laravel dan server kompilasi frontend Vite secara bersamaan.
 
@@ -127,7 +127,7 @@ Ini akan mengaktifkan Vite dev server untuk hot-reloading asset styling CSS (Tai
 
 ---
 
-## 🔍 Pengujian & Verifikasi Awal
+## Pengujian & Verifikasi Awal
 
 Setelah kedua server berjalan, silakan verifikasi instalasi Anda:
 
@@ -137,7 +137,7 @@ Setelah kedua server berjalan, silakan verifikasi instalasi Anda:
 
 ---
 
-## 🛠️ Pemecahan Masalah (Troubleshooting)
+## Pemecahan Masalah (Troubleshooting)
 
 ### 1. Koneksi Database Gagal (`Database connection refused`)
 *   **Penyebab**: Server PostgreSQL lokal belum aktif, port salah, atau kredensial `.env` tidak cocok.

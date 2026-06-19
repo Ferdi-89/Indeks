@@ -1,4 +1,4 @@
-# 🚀 Dokumentasi Integrasi CI/CD & GitHub Actions R-NET
+# Dokumentasi Integrasi CI/CD & GitHub Actions R-NET
 
 Dokumen ini menjelaskan rancangan, konsep, dan panduan konfigurasi **Continuous Integration & Continuous Deployment (CI/CD)** menggunakan **GitHub Actions** untuk proyek **R-NET (Sistem Pendaftaran Internet Provider)**.
 
@@ -6,7 +6,7 @@ Penerapan otomasi ini bertujuan untuk menjamin stabilitas kode, memeriksa kepatu
 
 ---
 
-## 📌 Mengapa CI/CD Penting untuk R-NET?
+## Mengapa CI/CD Penting untuk R-NET?
 
 Dalam pengembangan kolaboratif PBL (4 Orang), potensi konflik kode (*merge conflict*) atau *bug regression* (bug lama muncul kembali akibat kode baru) sangat tinggi. GitHub Actions membantu mengatasi masalah ini secara otomatis dengan menjalankan skenario pengujian pada server cloud setiap kali ada pembaruan kode.
 
@@ -143,7 +143,7 @@ jobs:
 
 ---
 
-## 🔐 Mengamankan Kredensial via GitHub Secrets
+## Mengamankan Kredensial via GitHub Secrets
 
 Untuk menguji fitur unggah berkas fisik ke Supabase S3 bucket secara cloud selama fase testing CI, kita memerlukan kredensial S3. Sangat dilarang untuk menuliskan kredensial asli di dalam file `.github/workflows/laravel.yml`.
 
@@ -162,15 +162,15 @@ Pustaka GitHub Actions secara aman akan menyembunyikan (masking) nilai rahasia i
 
 ---
 
-## 👥 Panduan Kolaborasi Tim PBL menggunakan CI
+## Panduan Kolaborasi Tim PBL menggunakan CI
 
 Setelah sistem CI ini aktif ("Saat Final"), ikuti alur kerja berikut agar pengembangan berjalan tertib:
 
 1.  **Buat Cabang Fitur (Feature Branch)**: Jangan pernah mendorong perubahan langsung ke cabang `main`. Buatlah branch baru, misalnya `feature/login-admin` atau `feature/export-excel`.
 2.  **Lakukan Push & Buat Pull Request (PR)**: Setelah menyelesaikan fitur, dorong cabang Anda ke GitHub dan buat Pull Request ke branch `develop` / `main`.
 3.  **Pantau Hasil CI**: GitHub akan secara otomatis memicu workflow `Laravel CI (R-NET)` pada PR tersebut.
-    *   🔴 **Status Merah (Fail)**: Berarti ada kesalahan (sintaks kotor, kompilasi CSS rusak, database error, atau test gagal). Klik detail log untuk membaca pesan error, perbaiki secara lokal, lalu lakukan push ulang.
-    *   🟢 **Status Hijau (Pass)**: Menunjukkan semua verifikasi lolos dengan sukses. Kode Anda aman dan siap disetujui untuk di-merge oleh anggota tim lainnya.
+    *   **Status Merah (Fail)**: Berarti ada kesalahan (sintaks kotor, kompilasi CSS rusak, database error, atau test gagal). Klik detail log untuk membaca pesan error, perbaiki secara lokal, lalu lakukan push ulang.
+    *   **Status Hijau (Pass)**: Menunjukkan semua verifikasi lolos dengan sukses. Kode Anda aman dan siap disetujui untuk di-merge oleh anggota tim lainnya.
 
 ---
 *Dokumentasi PBL R-NET — 2026*

@@ -1,4 +1,4 @@
-# 📦 Dokumentasi Dependensi & Package R-NET
+# Dokumentasi Dependensi & Package R-NET
 
 Dokumen ini berisi daftar identifikasi, analisis mendalam, dan pemetaan seluruh *dependency/package* (baik pustaka backend PHP maupun pustaka frontend JS/CSS) yang digunakan atau direncanakan untuk proyek **R-NET (Sistem Pendaftaran Internet Provider)**.
 
@@ -6,20 +6,20 @@ Analisis setiap dependensi disajikan menggunakan pendekatan terstruktur **5W+1H*
 
 ---
 
-## 📌 Ringkasan Pustaka (Package Summary Table)
+## Ringkasan Pustaka (Package Summary Table)
 
 | Pustaka (Package) | Lingkup | Status | Fungsi Utama |
 | :--- | :--- | :--- | :--- |
-| **`league/flysystem-aws-s3-v3`** | Backend PHP | ✅ Terimplementasi | Menghubungkan penyimpanan Laravel ke Cloud Storage Supabase S3 untuk berkas pendaftaran. |
-| **`maatwebsite/excel`** | Backend PHP | ⏳ Rencana (Minggu 4) | Memfasilitasi ekspor database data pendaftar R-NET ke format file Excel (.xlsx). |
-| **`barryvdh/laravel-dompdf`** | Backend PHP | ⏳ Rencana (Minggu 4) | Merender view template Blade laporan/bukti daftar menjadi file PDF siap cetak. |
-| **DaisyUI 4.10.2 + Tailwind** | Frontend CSS | ✅ Terimplementasi | Framework styling utama untuk antarmuka responsif dan visual premium. |
-| **Chart.js** | Frontend JS | ✅ Terimplementasi | Visualisasi grafik garis statistik mingguan data pendaftaran di dasbor admin. |
-| **Leaflet.js** | Frontend JS | ✅ Terimplementasi | Peta geografis interaktif untuk menampilkan titik lokasi rumah pelanggan. |
+| **`league/flysystem-aws-s3-v3`** | Backend PHP | Terimplementasi | Menghubungkan penyimpanan Laravel ke Cloud Storage Supabase S3 untuk berkas pendaftaran. |
+| **`maatwebsite/excel`** | Backend PHP | Rencana (Minggu 4) | Memfasilitasi ekspor database data pendaftar R-NET ke format file Excel (.xlsx). |
+| **`barryvdh/laravel-dompdf`** | Backend PHP | Rencana (Minggu 4) | Merender view template Blade laporan/bukti daftar menjadi file PDF siap cetak. |
+| **DaisyUI 4.10.2 + Tailwind** | Frontend CSS | Terimplementasi | Framework styling utama untuk antarmuka responsif dan visual premium. |
+| **Chart.js** | Frontend JS | Terimplementasi | Visualisasi grafik garis statistik mingguan data pendaftaran di dasbor admin. |
+| **Leaflet.js** | Frontend JS | Terimplementasi | Peta geografis interaktif untuk menampilkan titik lokasi rumah pelanggan. |
 
 ---
 
-## 🛠️ Analisis Dependensi Backend (PHP Packages)
+## Analisis Dependensi Backend (PHP Packages)
 
 ### 1. League Flysystem AWS S3 V3 (`league/flysystem-aws-s3-v3`)
 
@@ -80,7 +80,7 @@ Analisis setiap dependensi disajikan menggunakan pendekatan terstruktur **5W+1H*
 
 ---
 
-## 🎨 Analisis Dependensi Frontend (Asset Libraries)
+## Analisis Dependensi Frontend (Asset Libraries)
 
 ### 4. Tailwind CSS & DaisyUI 4.10.2
 

@@ -1,20 +1,20 @@
 # Change Request #1 - Fitur Status Instalasi
 
-## ## Latar Belakang
+## Latar Belakang
 
 Pelanggan R-NET saat ini tidak memiliki cara mandiri untuk memantau status pendaftaran dan proses pemasangan (instalasi) layanan internet mereka setelah mengisi formulir pendaftaran. Hal ini menyebabkan tingginya volume pertanyaan ke admin via WhatsApp hanya untuk menanyakan status pemasangan.
 
-## ## Deskripsi Perubahan
+## Deskripsi Perubahan
 
 Menambahkan modul pencarian status instalasi mandiri bagi pelanggan pada landing page R-NET. Pelanggan cukup memasukkan 5-karakter ID Pendaftaran unik mereka (misalnya: `ABCDE`) untuk melihat status instalasi saat ini secara real-time yang direpresentasikan dengan komponen visual stepper/timeline interaktif.
 
-## ## Tujuan
+## Tujuan
 
 1. Meningkatkan pengalaman pengguna (user experience) pelanggan baru R-NET melalui transparansi informasi.
 2. Mengurangi beban kerja tim Customer Service/Admin dalam menjawab pertanyaan status pemasangan secara manual.
 3. Memberikan status pelacakan visual yang jelas untuk setiap tahapan (Pending -> Validated -> Setup -> Active).
 
-## ## Dampak Perubahan
+## Dampak Perubahan
 
 - **Database**: Tidak ada (menggunakan kolom `status` yang sudah ada pada tabel `pendaftarans`).
 - **Model**: Tidak ada (menggunakan model `pendaftaran` dan relasi `paket` yang sudah ada).
@@ -23,12 +23,12 @@ Menambahkan modul pencarian status instalasi mandiri bagi pelanggan pada landing
   - Menambahkan tautan "Cek Status" di navbar `welcome.blade.php` & `pendaftaran.blade.php`.
   - Menambahkan section "Cek Status Instalasi" baru dengan form pencarian dan visual stepper timeline di `welcome.blade.php`.
 
-## ## Risiko
+## Risiko
 
 - **Potensi input spam**: Diatasi dengan pembatasan panjang karakter input (maksimal 5 karakter) dan sanitasi input pada client-side & backend.
 - **Kebocoran data pelanggan**: Desain endpoint `/cek-status/{id}` hanya mengembalikan data publik minimal (ID, Nama Depan/Lengkap, Wilayah, Paket, Status, Tanggal Daftar) dan TIDAK mengekspos data sensitif seperti nomor telepon lengkap, foto rumah, alamat koordinat peta, dll.
 
-## ## Rencana Implementasi
+## Rencana Implementasi
 
 - [x] Membuat branch baru `feature/status-instalasi`.
 - [x] Membuat dokumentasi Change Request & Impact Analysis.
@@ -40,7 +40,7 @@ Menambahkan modul pencarian status instalasi mandiri bagi pelanggan pada landing
 
 ---
 
-# # Impact Analysis (Langkah 3)
+## Impact Analysis (Langkah 3)
 
 | Komponen | Ya/Tidak | Keterangan |
 | :--- | :---: | :--- |
