@@ -11,11 +11,12 @@ Analisis setiap dependensi disajikan menggunakan pendekatan terstruktur **5W+1H*
 | Pustaka (Package) | Lingkup | Status | Fungsi Utama |
 | :--- | :--- | :--- | :--- |
 | **`league/flysystem-aws-s3-v3`** | Backend PHP | Terimplementasi | Menghubungkan penyimpanan Laravel ke Cloud Storage Supabase S3 untuk berkas pendaftaran. |
-| **`maatwebsite/excel`** | Backend PHP | Rencana (Minggu 4) | Memfasilitasi ekspor database data pendaftar R-NET ke format file Excel (.xlsx). |
-| **`barryvdh/laravel-dompdf`** | Backend PHP | Rencana (Minggu 4) | Merender view template Blade laporan/bukti daftar menjadi file PDF siap cetak. |
-| **DaisyUI 4.10.2 + Tailwind** | Frontend CSS | Terimplementasi | Framework styling utama untuk antarmuka responsif dan visual premium. |
+| **`browser-image-compression`** | Frontend JS | Terimplementasi | Kompresi file gambar/KTP secara instan di browser klien sebelum diunggah ke S3 untuk menghemat bandwidth. |
+| **Tailwind CSS v4 & DaisyUI v5** | Frontend CSS | Terimplementasi | Framework styling utama untuk antarmuka responsif, modern, dan visual premium. |
 | **Chart.js** | Frontend JS | Terimplementasi | Visualisasi grafik garis statistik mingguan data pendaftaran di dasbor admin. |
-| **Leaflet.js** | Frontend JS | Terimplementasi | Peta geografis interaktif untuk menampilkan titik lokasi rumah pelanggan. |
+| **Leaflet.js** | Frontend JS | Terimplementasi | Peta geografis interaktif untuk menampilkan titik lokasi rumah pelanggan & radius area. |
+| **`maatwebsite/excel`** | Backend PHP | *Batal / Diganti* | Digantikan oleh generator ekspor CSV bawaan PHP (`fputcsv` stream) untuk performa yang lebih ringan tanpa overhead package eksternal. |
+| **`barryvdh/laravel-dompdf`** | Backend PHP | *Batal / Diganti* | Digantikan oleh template cetak berbasis CSS (@media print) yang jauh lebih ringan dan cepat. |
 
 ---
 
@@ -29,10 +30,10 @@ Analisis setiap dependensi disajikan menggunakan pendekatan terstruktur **5W+1H*
 *   **Why**: R-NET menggunakan Supabase S3 Storage untuk menyimpan berkas fisik (foto KTP dan foto rumah pelanggan) secara cloud. Hal ini penting untuk menghemat memori server lokal, meningkatkan keandalan akses media, dan mencegah overload kapasitas server web.
 *   **Who**: 
     *   *Calon Pelanggan*: Mengunggah gambar rumah saat mendaftar.
-    *   *Administrator*: Mengakses berkas visual tersebut secara langsung dari dasbor detail.
+    *   *Administrator / Teknisi*: Mengakses berkas visual tersebut secara langsung dari dasbor detail.
     *   *Developer*: Menulis baris kode upload/delete asinkron.
 *   **When**: Dieksekusi otomatis ketika calon pelanggan mengklik "Kirim Pendaftaran" pada form (proses `store`) dan ketika Admin menghapus data pendaftaran bermasalah (proses `delete` memicu pembersihan file di S3).
-*   **Where**: Diimplementasikan pada rute penanganan file di file route `routes/web.php` (atau controller pendaftaran) menggunakan disk konfigurasi `Storage::disk('s3')`.
+*   **Where**: Diimplementasikan pada rute penanganan file di file route `routes/web.php` menggunakan disk konfigurasi `Storage::disk('s3')`.
 *   **How**: Diinstal via Composer. Implementasinya dilakukan dengan mengatur konfigurasi API Key, Endpoint S3, Default Region, dan Nama Bucket Supabase di dalam file lingkungan `.env`, lalu memanggil helper bawaan Laravel:
     ```php
     Storage::disk('s3')->putFileAs('house-photos', $file, $filename);
@@ -40,64 +41,38 @@ Analisis setiap dependensi disajikan menggunakan pendekatan terstruktur **5W+1H*
 
 ---
 
-### 2. Laravel Excel (`maatwebsite/excel`)
+## Analisis Dependensi Frontend (Asset & Javascript Libraries)
 
-*Package* ini direkomendasikan untuk memenuhi kebutuhan pelaporan rekapitulasi data pendaftar dalam bentuk lembar kerja digital (Spreadsheet) secara instan.
+### 2. Browser Image Compression (`browser-image-compression`)
 
-*   **What**: `maatwebsite/excel` (Laravel Excel)
-*   **Why**: Memudahkan admin mengunduh rekap ratusan data pelanggan ke dalam file Excel (.xlsx) dengan struktur tabel rapi, formula, serta desain custom tanpa perlu menulis kode generator berkas biner dari nol.
+Pustaka JavaScript minimalis di sisi klien untuk mengompresi gambar tanpa menurunkan kualitas secara signifikan sebelum diunggah ke server.
+
+*   **What**: `browser-image-compression` (v2.0.2)
+*   **Why**: Foto berkas dari kamera smartphone modern rata-rata berukuran 3MB - 8MB. Jika diunggah langsung ke server, akan memakan waktu lama dan menghabiskan kuota Supabase S3. Pustaka ini mengompresi berkas gambar di sisi klien hingga di bawah 500KB sebelum dikirim.
 *   **Who**:
-    *   *Administrator*: Mengunduh laporan pendaftar mingguan/bulanan untuk evaluasi internal atau pencetakan fisik.
-*   **When**: Dipicu saat admin menekan tombol "Export Excel" pada modul tabel Pendaftaran di halaman admin.
-*   **Where**: Akan diintegrasikan pada modul pendaftaran `/admin#pendaftaran` dan dieksekusi di backend melalui class Export khusus.
-*   **How**: Diinstal via Composer (`composer require maatwebsite/excel`). Implementasinya dengan membuat class Export menggunakan Artisan:
-    ```bash
-    php artisan make:export PendaftaranExport --model=pendaftaran
-    ```
-    Kemudian memanggil method download di controller:
-    ```php
-    return Excel::download(new PendaftaranExport, 'rekap-pendaftaran.xlsx');
-    ```
+    *   *Calon Pelanggan / Teknisi*: Mengunggah bukti fisik dengan cepat dan irit bandwidth.
+*   **When**: Dipicu secara otomatis setelah pengguna memilih file gambar pada form pendaftaran (proses `onChange` input file).
+*   **Where**: Digunakan pada view pendaftaran (`pendaftaran.blade.php`).
+*   **How**: Diinstal via npm (`npm install browser-image-compression`), di-import pada skrip form, dan dipanggil menggunakan opsi batasan ukuran (misalnya `maxSizeMB: 0.5` dan `maxWidthOrHeight: 1280`).
 
 ---
 
-### 3. Laravel DOMPDF (`barryvdh/laravel-dompdf`)
-
-*Package* ini direkomendasikan untuk kebutuhan pembuatan dokumen fisik resmi/bukti cetak berformat PDF (Portable Document Format) yang memiliki layout tidak berubah-ubah.
-
-*   **What**: `barryvdh/laravel-dompdf`
-*   **Why**: Konversi halaman laporan Blade HTML menjadi dokumen PDF. Sangat berguna untuk menerbitkan "Kwitansi Bukti Pendaftaran" bagi pelanggan atau mencetak dokumen rekapitulasi formal.
-*   **Who**:
-    *   *Administrator*: Mencetak berkas PDF pendaftaran.
-    *   *Calon Pelanggan*: Menyimpan bukti pendaftaran digital mereka.
-*   **When**: Dieksekusi saat admin mengklik tombol "Cetak PDF" pada detail pelanggan atau saat pendaftaran dikirimkan untuk auto-generate PDF.
-*   **Where**: Diimplementasikan pada rute backend pencetakan PDF khusus.
-*   **How**: Diinstal via Composer (`composer require barryvdh/laravel-dompdf`). Cara kerjanya adalah dengan mendesain blade view khusus kwitansi, lalu merendernya ke file PDF di controller:
-    ```php
-    $pdf = Pdf::loadView('pdf.pendaftaran_detail', compact('pendaftar'));
-    return $pdf->download('bukti-pendaftaran-' . $pendaftar->id . '.pdf');
-    ```
-
----
-
-## Analisis Dependensi Frontend (Asset Libraries)
-
-### 4. Tailwind CSS & DaisyUI 4.10.2
+### 3. Tailwind CSS v4 & DaisyUI v5
 
 Dua pustaka CSS ini merupakan tulang punggung presentasi visual antarmuka sistem R-NET.
 
-*   **What**: Tailwind CSS + DaisyUI version 4.10.2
-*   **Why**: Menyediakan framework styling berbasis utilitas (utility-first) dan component library siap pakai yang responsif, modern, dan sangat estetis. DaisyUI v4 dipilih karena keandalan markupnya yang stabil dan kompatibel dengan tata letak SPA asinkron yang telah dibuat tanpa risiko bug layout.
+*   **What**: Tailwind CSS (v4.2.2) + DaisyUI (v5.5.19)
+*   **Why**: Menyediakan framework styling berbasis utilitas (utility-first) dan component library siap pakai yang responsif, modern, dan sangat estetis. Versi terbaru (Tailwind v4 dan DaisyUI v5) memberikan performa kompilasi yang jauh lebih cepat via Vite integration dan fleksibilitas CSS variabel yang kuat untuk mendukung fitur kustomisasi warna tema dinamis.
 *   **Who**:
     *   *Developer*: Mempercepat pengerjaan UI tanpa menulis file CSS kustom yang berukuran besar.
-    *   *Seluruh Pengguna (Pelanggan & Admin)*: Menikmati tampilan premium, bersih, responsif, dan konsisten di perangkat mobile maupun desktop.
-*   **When**: Dimuat setiap kali browser mengakses halaman utama R-NET (`/`) dan panel admin (`/admin`).
-*   **Where**: Di-include melalui CDN pada file layout master utama `resources/views/admin/layouts/main.blade.php` dan landing page.
-*   **How**: Disisipkan sebagai stylesheet link CDN pada header HTML halaman.
+    *   *Seluruh Pengguna (Pelanggan, Teknisi & Admin)*: Menikmati tampilan premium, bersih, responsif, dan konsisten di perangkat mobile maupun desktop.
+*   **When**: Dimuat setiap kali browser mengakses halaman utama R-NET (`/`), dasbor teknisi, dan panel admin (`/admin`).
+*   **Where**: Di-compile melalui Vite menggunakan `@tailwindcss/vite` plugin dan di-include pada file layout utama.
+*   **How**: Ditambahkan ke file package dependency, di-configure di `vite.config.js` and di-import di file CSS utama (`app.css`).
 
 ---
 
-### 5. Chart.js
+### 4. Chart.js
 
 Pustaka JavaScript open-source untuk merender grafik statistik dinamis berbasis kanvas HTML5.
 
@@ -115,14 +90,14 @@ Pustaka JavaScript open-source untuk merender grafik statistik dinamis berbasis 
 
 ---
 
-### 6. Leaflet.js
+### 5. Leaflet.js
 
 Pustaka JavaScript open-source untuk merender peta interaktif yang ringan dan ramah performa mobile.
 
 *   **What**: Leaflet.js
 *   **Why**: Membantu admin meninjau posisi geografis yang tepat dari lokasi rumah calon pelanggan baru berdasarkan koordinat GPS yang dikirimkan saat pendaftaran, terintegrasi langsung dengan open-source maps.
 *   **Who**:
-    *   *Administrator*: Memvalidasi kelayakan wilayah jangkauan jaringan kabel internet provider R-NET di lokasi rumah pelanggan sebelum menyetujui pendaftaran.
+    *   *Administrator*: Membaca jangkauan jaringan kabel internet provider R-NET di lokasi rumah pelanggan sebelum menyetujui pendaftaran.
 *   **When**: Diinisialisasi secara dinamis di dalam browser saat admin mengklik tombol ikon "Detail" (UC14) dan jendela modal detail pelanggan terbuka di layar.
 *   **Where**: Diberdayakan pada modal detail di partial `resources/views/admin/partials/pendaftaran.blade.php`.
 *   **How**: Link stylesheet dan script Leaflet dimuat via header CDN. Saat modal dibuka, peta diinisialisasi ke elemen `id="detail-map"` menggunakan koordinat pelanggan:

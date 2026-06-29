@@ -78,12 +78,12 @@ Proyek PBL R-NET dibagi menjadi 4 modul utama yang saling terintegrasi:
 
 Untuk memahami sistem R-NET secara lebih mendalam, silakan baca dokumentasi khusus berikut:
 
-1.  📖 **[Panduan Instalasi & Setup Lokal (docs/INSTALLATION.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/INSTALLATION.md)**: Langkah-langkah detail untuk memasang, mengonfigurasi `.env`, dan menjalankan proyek ini di komputer Anda.
-2.  🎯 **[Spesifikasi Fitur & Use Case (docs/FEATURES.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/FEATURES.md)**: Penjelasan lengkap 25 Use Cases (UC01-UC25) sistem dan alur kerja integrasi antar-modul.
-3.  📦 **[Dokumentasi Dependency & Package (docs/DEPENDENCIES.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/DEPENDENCIES.md)**: Analisis mendalam 5W+1H untuk paket-paket pihak ketiga yang digunakan dalam sistem R-NET.
-4.  🔄 **[Catatan Refactoring SPA Admin (docs/ADMIN_PANEL_REFACTORING.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/ADMIN_PANEL_REFACTORING.md)**: Dokumentasi proses pemindahan halaman admin dari multi-route konvensional ke Single-View SPA Vanilla JS beserta metrik performanya.
-5.  🚀 **[Integrasi CI/CD & GitHub Actions (docs/GITHUB_ACTIONS.md)](file:///e:/SEMESTER4/PBL/Indeks/docs/GITHUB_ACTIONS.md)**: Panduan otomatisasi build, linting, dan pengujian ("Saat Final").
-6.  📝 **[CHANGELOG.md](file:///e:/SEMESTER4/PBL/Indeks/CHANGELOG.md)**: Catatan riwayat versi rilis, bug fixes, dan rencana implementasi mingguan.
+1.  📖 **[Panduan Instalasi & Setup Lokal (docs/INSTALLATION.md)](docs/INSTALLATION.md)**: Langkah-langkah detail untuk memasang, mengonfigurasi `.env`, dan menjalankan proyek ini di komputer Anda.
+2.  🎯 **[Spesifikasi Fitur & Use Case (docs/FEATURES.md)](docs/FEATURES.md)**: Penjelasan lengkap 33 Use Cases (UC01-UC33) sistem dan alur kerja integrasi antar-modul.
+3.  📦 **[Dokumentasi Dependency & Package (docs/DEPENDENCIES.md)](docs/DEPENDENCIES.md)**: Analisis mendalam 5W+1H untuk paket-paket pihak ketiga yang digunakan dalam sistem R-NET.
+4.  🔄 **[Catatan Refactoring SPA Admin (docs/ADMIN_PANEL_REFACTORING.md)](docs/ADMIN_PANEL_REFACTORING.md)**: Dokumentasi proses pemindahan halaman admin dari multi-route konvensional ke Single-View SPA Vanilla JS beserta metrik performanya.
+5.  🚀 **[Integrasi CI/CD & GitHub Actions (docs/GITHUB_ACTIONS.md)](docs/GITHUB_ACTIONS.md)**: Panduan otomatisasi build, linting, dan pengujian ("Saat Final").
+6.  📝 **[CHANGELOG.md](docs/CHANGELOG.md)**: Catatan riwayat versi rilis, bug fixes, dan rencana implementasi mingguan.
 
 ---
 

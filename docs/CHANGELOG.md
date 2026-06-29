@@ -2,6 +2,30 @@
 
 ---
 
+## [Planned] - Fitur Baru PBL R-NET & Status Instalasi
+
+### Added
+- **Multi-Role & Autentikasi** — Penambahan role akun `teknisi` dan `pengguna` selain `admin` untuk pembatasan hak akses yang sesuai.
+- **Portal & Dashboard Teknisi** — Modul dashboard baru khusus untuk teknisi lapangan untuk mengelola penugasan instalasi fisik.
+- **Dokumentasi Pemasangan Fisik** — Form di dashboard teknisi untuk merekam nomor PON S/N (dapat diinput manual atau dipindai dengan kamera menggunakan barcode/QR scanner), nama Wi-Fi (SSID), dan password Wi-Fi.
+- **Konektivitas WhatsApp Direct** — Integrasi link langsung WhatsApp pada nomor telepon pelanggan di dashboard admin untuk mempermudah komunikasi tim CS/admin.
+- **Kustomisasi Tema Landing Page** — Modul pengaturan di admin panel untuk mengubah warna tema utama landing page secara fleksibel.
+- **Fitur Status Instalasi Mandiri** — Pencarian status pelacakan pendaftaran oleh pelanggan via stepper visual interaktif dengan memasukkan ID Pendaftaran.
+- **Kustomisasi Tombol CTA Paket** — Penambahan input label kustom untuk tombol pembelian/CTA per paket internet.
+
+### Changed
+- **Pemasangan Perangkat Lebih Detail** — Bagian informasi panduan instalasi perangkat di landing page dibuat lebih rinci dan dapat diedit oleh admin via dashboard.
+- **Relokasi Tombol Feedback Admin** — Pemindahan tombol WhatsApp feedback ke lokasi melayang (floating) bawah kanan atau bagian footer agar lebih mudah dijangkau pelanggan.
+- **Tautan Navigasi "Cek Status"** — Penambahan link pelacakan status pada navbar `welcome.blade.php` dan `pendaftaran.blade.php`.
+
+### Impacted Modules
+- Customer Portal / Front-End Modul (Landing Page & Pendaftaran)
+- Administrator SPA Panel Dashboard
+- Route / Controller & Middleware Modul (Multi-role Auth)
+- Database Schema (penambahan kolom role, detail pemasangan, PON S/N, Wi-Fi info)
+
+---
+
 ## [2026-06-14] Minggu, 14 Juni 2026 — 23:42 WIB
 
 ### 🗺️ Desain Ulang Fitur Wilayah Layanan (Berbasis Koordinat & Radius)
