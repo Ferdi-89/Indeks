@@ -1,6 +1,6 @@
 # Dokumentasi Fitur & Spesifikasi Use Case R-NET
 
-Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas sistem **R-NET (Sistem Pendaftaran Internet Provider)**. Penjelasan dibagi berdasarkan modul fungsional pengembang, mencakup **32 Use Cases (UC01 - UC33)** (dikurangi beberapa cadangan) yang didesain untuk sistem ini, beserta alur kerja (workflow) terintegrasi antar-modul.
+Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas sistem **R-NET (Sistem Pendaftaran Internet Provider)**. Penjelasan dibagi berdasarkan modul fungsional pengembang, mencakup **32 Use Cases (UC01 - UC33)** yang didesain untuk sistem ini, beserta alur kerja (workflow) terintegrasi antar-modul.
 
 ---
 
@@ -85,87 +85,120 @@ graph TD
 
 ## Modul 1: Portal Pelanggan & Front-End (Orang 1)
 
-Modul ini menyediakan portal pelanggan interaktif berbasis web untuk memuat promosi, pengumuman, dan pendaftaran online.
+Modul ini bertanggung jawab menyediakan portal pelanggan interaktif berbasis web yang memuat promosi, pengumuman, dan menangani pendaftaran calon pelanggan baru secara online.
 
 ### UC01: Melihat Halaman Utama
-*   **Tujuan Fitur**: Mengakses dan memuat landing page sistem R-NET.
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User memasukkan URL R-NET -> Sistem memvalidasi -> Menampilkan Landing Page`
-*   **Route / Controller Terkait**:
-    `GET /` (Route Closure di `routes/web.php` rendering view `welcome`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC01](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengakses dan memuat landing page sistem R-NET.
+*   **Kondisi Awal**: Server R-NET aktif dan browser pelanggan terhubung ke internet.
+*   **Kondisi Akhir**: Halaman utama sistem berhasil dimuat dengan sempurna menampilkan navigasi, hero section, banner pengumuman, paket layanan, promosi, dan footer.
+*   **Alur Utama**:
+    1.  Calon pelanggan memasukkan alamat web (URL) R-NET di browser.
+    2.  Sistem menerima permintaan dan memuat file view utama (landing page).
+    3.  Sistem menyajikan konten landing page ke layar browser pelanggan.
+*   **Alur Alternatif**:
+    *   *Skenario Server down*: Browser mendeteksi server tidak merespon dan memunculkan *Request Timeout*.
+*   **Alur Fitur**: `Buka URL R-NET -> Render Landing Page`
+*   **Route / Controller terkait**: `GET /` (Route Closure di `routes/web.php` rendering `welcome`)
+*   **Screenshot fitur**: ![Landing Page](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC02: Melihat Informasi Paket
-*   **Tujuan Fitur**: Membaca kecepatan, harga, dan diskon paket internet yang ditawarkan.
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User scroll ke bagian Paket -> Sistem memuat paket dari DB -> Merender kartu paket`
-*   **Route / Controller Terkait**:
-    `GET /` (Route Closure di `routes/web.php` dengan query eager loading `paket::with('promosi')`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC02](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membaca deskripsi, kecepatan, dan harga paket internet yang ditawarkan.
+*   **Kondisi Awal**: Calon pelanggan berada di Halaman Utama (UC01).
+*   **Kondisi Akhir**: Daftar paket internet aktif tampil dengan data harga dan kecepatan terbaru.
+*   **Alur Utama**:
+    1.  Calon pelanggan menggeser layar (scroll) ke bagian "Paket Layanan".
+    2.  Sistem mengambil data paket aktif secara langsung dari database PostgreSQL.
+    3.  Sistem merender dan menampilkan kartu-kartu (cards) paket internet yang siap dipesan.
+*   **Alur Fitur**: `Scroll ke bagian paket -> Render kartu paket dinamis dari database`
+*   **Route / Controller terkait**: `GET /` (Route Closure memuat model `paket::with('promosi')`)
+*   **Screenshot fitur**: ![Package Section](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC03: Melihat Pengumuman Aktif
-*   **Tujuan Fitur**: Mengetahui pengumuman penting/berita maintenance di bagian atas portal.
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User membuka landing page -> Sistem memuat pengumuman aktif hari ini -> Menampilkan banner melayang`
-*   **Route / Controller Terkait**:
-    `GET /` (Route Closure di `routes/web.php` memfilter model `pengumuman`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC03](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengetahui informasi penting, promosi singkat, atau pemberitahuan maintenance.
+*   **Kondisi Awal**: Calon pelanggan membuka Halaman Utama (UC01).
+*   **Kondisi Akhir**: Banner teks pengumuman penting tampil di posisi atas halaman utama.
+*   **Alur Utama**:
+    1.  Sistem melakukan kueri pencarian pengumuman yang aktif hari ini berdasarkan filter tanggal (`valid_start` <= hari ini <= `valid_end`).
+    2.  Sistem memuat teks pengumuman yang relevan.
+    3.  Sistem menampilkan banner pengumuman di bagian paling atas/mencolok pada Halaman Utama.
+*   **Alur Fitur**: `Buka Halaman -> Query pengumuman aktif -> Render banner pengumuman melayang`
+*   **Route / Controller terkait**: `GET /` (Route Closure memfilter model `pengumuman`)
+*   **Screenshot fitur**: ![Announcement Banner](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC04: Mengisi Formulir Pendaftaran
-*   **Tujuan Fitur**: Mendaftarkan identitas diri dan melampirkan berkas fisik untuk berlangganan.
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User klik Daftar -> Mengisi Form & Peta Koordinat -> Klik Kirim -> Menyimpan ke DB`
-*   **Route / Controller Terkait**:
-    `GET /daftar` (Menampilkan form pendaftaran) dan `POST /daftar` (Menyimpan data pendaftar baru)
-*   **Screenshot Fitur**:
-    ![Screenshot UC04](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengirimkan data identitas diri dan peta lokasi rumah untuk berlangganan internet R-NET.
+*   **Kondisi Awal**: Calon pelanggan mengklik tombol "Daftar Sekarang" pada salah satu paket layanan.
+*   **Kondisi Akhir**: Formulir tervalidasi dan data tersimpan di database sebagai entri pendaftar baru berkategori `Pending`.
+*   **Alur Utama**:
+    1.  Calon pelanggan menekan tombol "Daftar" pada kartu paket yang dipilih.
+    2.  Sistem memunculkan formulir pendaftaran interaktif (berisi kolom Nama, Nomor KTP, Email, No. HP, Alamat Lengkap, Koordinat GPS, dan Berkas Pendukung).
+    3.  Calon pelanggan mengisi seluruh kolom isian.
+    4.  Sistem memanggil fungsionalitas unggah berkas identitas (**UC05**).
+    5.  Calon pelanggan menekan tombol "Kirim Pendaftaran".
+    6.  Sistem memvalidasi kelengkapan data, lalu menyimpannya ke database PostgreSQL.
+*   **Alur Alternatif**:
+    *   *Data Tidak Valid*: Jika isian kosong atau tidak sesuai format (misal email salah), sistem menampilkan pesan error warna merah dan meminta pengguna melengkapi data tanpa me-refresh isian lainnya.
+*   **Alur Fitur**: `Isi Form & Pilih Koordinat Map -> Validasi Spasial -> Klik Kirim -> Simpan Database`
+*   **Route / Controller terkait**: `GET /daftar` (Form) dan `POST /daftar` (Penyimpanan database)
+*   **Screenshot fitur**: ![Pendaftaran Form](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
-### UC05: Mengunggah Berkas Identitas
-*   **Tujuan Fitur**: Melampirkan foto bukti fisik pendaftaran secara cloud ke Supabase S3.
+### UC05: Mengunggah Berkas Identitas (Include UC04)
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User upload berkas -> Browser kompresi gambar -> Sistem mengunggah berkas ke Supabase S3 -> Menyimpan URL di DB`
-*   **Route / Controller Terkait**:
-    `POST /daftar` (Logic penyimpanan file `Storage::disk('s3')->storeAs('pendaftaran', $fileName, 's3')`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC05](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Melampirkan foto kartu identitas (KTP) / berkas pendukung sebagai berkas fisik verifikasi.
+*   **Kondisi Awal**: Calon pelanggan sedang mengisi formulir pendaftaran (UC04).
+*   **Kondisi Akhir**: File gambar berhasil diunggah ke Supabase S3 cloud storage dan tautan URL disimpan di database.
+*   **Alur Utama**:
+    1.  Calon pelanggan menekan tombol "Pilih Foto Berkas/KTP".
+    2.  Calon pelanggan memilih file gambar dari galeri/perangkatnya.
+    3.  Sistem melakukan kompresi ukuran gambar di sisi browser klien (untuk mengurangi bandwidth).
+    4.  Sistem mengunggah file tersebut ke Supabase S3 Storage.
+    5.  Sistem mengambil URL publik dari S3 dan mengaitkannya dengan data form pendaftaran.
+*   **Alur Fitur**: `Pilih Gambar -> Kompresi JS Client -> Upload ke Supabase S3 -> Simpan URL`
+*   **Route / Controller terkait**: `POST /daftar` (Handled via Laravel S3 Disk driver)
+*   **Screenshot fitur**: ![Upload Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
-### UC06: Melihat Status Pendaftaran
-*   **Tujuan Fitur**: Melacak status verifikasi pendaftaran menggunakan ID unik secara mandiri.
+### UC06: Melihat Status Pendaftaran (Extend UC04)
 *   **Aktor**: Calon Pelanggan
-*   **Alur Fitur**:
-    `User memasukkan ID Pendaftaran -> Sistem mencocokkan -> Merender visual stepper status`
-*   **Route / Controller Terkait**:
-    `GET /cek-status` (Render tracker page) dan `GET /cek-status/{id}` (JSON API untuk detail status)
-*   **Screenshot Fitur**:
-    ![Screenshot UC06](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menerima informasi pop-up visual apakah pendaftaran berhasil disimpan ke sistem atau gagal.
+*   **Kondisi Awal**: Calon pelanggan menekan tombol "Kirim Pendaftaran" (UC04).
+*   **Kondisi Akhir**: Muncul umpan balik (feedback) grafis berupa modal status pendaftaran.
+*   **Alur Utama**:
+    1.  Sistem selesai memproses penyimpanan database pada UC04.
+    2.  Sistem mengembalikan respons ke client.
+    3.  Sistem menampilkan pop-up DaisyUI modal berwarna hijau: **"Pendaftaran Berhasil! Admin kami akan segera menghubungi Anda."**
+*   **Alur Fitur**: `Kirim Form -> Terima respons sukses -> Render modal info hijau`
+*   **Route / Controller terkait**: `GET /cek-status` (Render search) dan `GET /cek-status/{id}` (JSON API query status)
+*   **Screenshot fitur**: ![Success Popup](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
-### UC26: Melihat Detail Panduan Pemasangan
-*   **Tujuan Fitur**: Membaca panduan langkah-langkah pemasangan modem dan kabel.
+### UC26: Melihat Detail Panduan Pemasangan Perangkat
 *   **Aktor**: Calon Pelanggan / Pengguna Umum
-*   **Alur Fitur**:
-    `User membuka petunjuk panduan -> Sistem memuat teks dan instruksi visual dari DB -> Menampilkan di layout`
-*   **Route / Controller Terkait**:
-    `GET /` (Route Closure memuat `CompanySetting` untuk teks panduan)
-*   **Screenshot Fitur**:
-    ![Screenshot UC26](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membaca panduan pemasangan perangkat (ONT/Modem/Kabel) secara detail sebelum/setelah mendaftar.
+*   **Kondisi Awal**: Pelanggan berada di Landing Page R-NET.
+*   **Kondisi Akhir**: Tampil bagian panduan langkah-demi-langkah pemasangan secara visual, interaktif, dan detail.
+*   **Alur Utama**:
+    1.  Pelanggan menggulir ke bagian "Panduan Pemasangan Perangkat".
+    2.  Sistem memuat konten panduan (teks detail, langkah instalasi, gambar bantuan) yang datanya dinamis dari database.
+    3.  Pelanggan membaca panduan tersebut.
+*   **Alur Fitur**: `Scroll ke area Panduan -> Sistem memuat teks petunjuk -> Membaca panduan`
+*   **Route / Controller terkait**: `GET /` (Memuat setelan perusahaan berisi teks panduan)
+*   **Screenshot fitur**: ![Panduan Pemasangan](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
-### UC27: Mengirim Umpan Balik via WA
-*   **Tujuan Fitur**: Menghubungi customer service/admin R-NET langsung via tautan WhatsApp.
+### UC27: Mengirim Umpan Balik via Tombol WhatsApp Feedback
 *   **Aktor**: Calon Pelanggan / Pengguna Umum
-*   **Alur Fitur**:
-    `User klik tombol WA mengambang -> Membuka tab baru wa.me dengan pesan template kustom`
-*   **Route / Controller Terkait**:
-    Client-side redirection ke external link `https://wa.me/{nomor_admin}`
-*   **Screenshot Fitur**:
-    ![Screenshot UC27](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menghubungi admin/layanan pelanggan secara langsung via WhatsApp jika ada keluhan atau pertanyaan.
+*   **Kondisi Awal**: Pelanggan berada di Landing Page R-NET.
+*   **Kondisi Akhir**: Dialihkan ke aplikasi WhatsApp dengan ruang chat admin R-NET.
+*   **Alur Utama**:
+    1.  Pelanggan melihat tombol feedback WhatsApp melayang di bagian kanan bawah halaman atau di area footer yang jelas.
+    2.  Pelanggan mengklik tombol tersebut.
+    3.  Sistem membuka tautan `https://wa.me/` (nomor admin yang terkonfigurasi dinamis) di tab baru.
+*   **Alur Fitur**: `Klik tombol floating WA -> Buka wa.me dengan pesan template`
+*   **Route / Controller terkait**: Client-side redirection ke external link `https://wa.me/{nomor_admin}`
+*   **Screenshot fitur**: ![Floating WA Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ---
 
@@ -174,236 +207,338 @@ Modul ini menyediakan portal pelanggan interaktif berbasis web untuk memuat prom
 Modul ini memfasilitasi admin untuk login secara aman, meninjau pendaftar baru, melihat data fisik foto rumah/KTP dari cloud, mengubah status pendaftar, dan menghapus pendaftaran tidak valid.
 
 ### UC07: Melakukan Login
-*   **Tujuan Fitur**: Memverifikasi kredensial admin agar dapat mengelola dasbor sistem.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin memasukkan Email & Password -> Sistem mencocokkan hash -> Membuat session -> Dialihkan ke /admin`
-*   **Route / Controller Terkait**:
-    `GET /login` (Render form login) dan `POST /login` (Proses login menggunakan `Auth::attempt()`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC07](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memverifikasi kredensial admin agar dapat mengelola dasbor sistem.
+*   **Kondisi Awal**: Admin membuka halaman `/admin` (atau `/login`).
+*   **Kondisi Akhir**: Sesi autentikasi aman (Session) dibuat, admin dialihkan ke Dashboard.
+*   **Alur Utama**:
+    1.  Admin memasukkan alamat Email dan Password terdaftar.
+    2.  Admin menekan tombol "Login".
+    3.  Sistem memverifikasi kredensial terhadap tabel `admins`.
+    4.  Sistem membuat session login aktif dan mengarahkan Admin ke panel SPA `/admin`.
+*   **Alur Alternatif**:
+    *   *Kredensial salah*: Sistem menolak masuk, menampilkan toast error merah "Email atau password salah!", dan meminta isi ulang.
+*   **Alur Fitur**: `Input Email & Password -> Klik Login -> Validasi backend -> Dialihkan ke /admin`
+*   **Route / Controller terkait**: `GET /login` (Form login) dan `POST /login` (Proses `Auth::attempt()`)
+*   **Screenshot fitur**: ![Login Page](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC08: Melakukan Logout
-*   **Tujuan Fitur**: Menghancurkan session login untuk mencegah akses ilegal.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Logout -> Sistem menghancurkan session aktif -> Dialihkan kembali ke /login`
-*   **Route / Controller Terkait**:
-    `POST /logout` (Menggunakan `Auth::logout()` dan `session()->invalidate()`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC08](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menghancurkan session login untuk mencegah akses ilegal.
+*   **Kondisi Awal**: Admin sedang masuk ke sistem dan berada di Dashboard `/admin`.
+*   **Kondisi Akhir**: Sesi dihancurkan, admin dialihkan kembali ke halaman utama / Login.
+*   **Alur Utama**:
+    1.  Admin mengklik menu dropdown profil di navbar atas, lalu menekan tombol "Logout".
+    2.  Sistem menghancurkan session aktif admin di server.
+    3.  Sistem mengalihkan browser admin ke halaman Login.
+*   **Alur Fitur**: `Klik Logout di profil dropdown -> Hancurkan session -> Dialihkan ke /login`
+*   **Route / Controller terkait**: `POST /logout` (Menggunakan `Auth::logout()`)
+*   **Screenshot fitur**: ![Logout Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC13: Melihat Daftar Pendaftar
-*   **Tujuan Fitur**: Melihat data tabel kolektif dari seluruh calon pelanggan yang sudah mendaftar.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik menu Pendaftaran -> JS toggle display panel -> Merender tabel data pendaftaran`
-*   **Route / Controller Terkait**:
-    `GET /admin` (Route Closure memuat view `admin.index` dengan data `$pendaftaran` eager-loaded)
-*   **Screenshot Fitur**:
-    ![Screenshot UC13](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Melihat data tabel kolektif dari seluruh calon pelanggan yang sudah mendaftar.
+*   **Kondisi Awal**: Admin berhasil login dan berada di panel admin.
+*   **Kondisi Akhir**: Tabel daftar pendaftar ditampilkan di layar secara rapi.
+*   **Alur Utama**:
+    1.  Admin mengklik menu "Pendaftaran" di sidebar kiri.
+    2.  Sistem menyajikan daftar pendaftaran (yang telah dimuat di request pertama / di-fetch via AJAX) secara instan tanpa reload halaman.
+    3.  Sistem merender tabel HTML berisi nama, email, paket, status, tanggal daftar, dan aksi.
+*   **Alur Fitur**: `Klik menu Pendaftaran -> Toggle panel visibilitas via JS -> Tampilkan tabel`
+*   **Route / Controller terkait**: `GET /admin` (Route Closure memuat view `admin.index` dengan `$pendaftaran`)
+*   **Screenshot fitur**: ![Pendaftar List](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC14: Melihat Detail Pendaftar
-*   **Tujuan Fitur**: Memeriksa detail alamat, nomor HP, foto rumah dari cloud storage, dan peta geografis Leaflet.js.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Detail -> Membuka modal popup -> Mengambil URL berkas dari S3 -> Memulai Leaflet peta koordinat`
-*   **Route / Controller Terkait**:
-    Dipicu oleh frontend JS event handler pada tab Pendaftaran di view `admin.index`
-*   **Screenshot Fitur**:
-    ![Screenshot UC14](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memeriksa detail alamat, nomor HP, foto rumah dari cloud storage, dan peta geografis Leaflet.js.
+*   **Kondisi Awal**: Admin berada di halaman daftar pendaftar (UC13).
+*   **Kondisi Akhir**: Modal detail pelanggan terbuka, menyajikan data terperinci, gambar dari S3, dan peta interaktif.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol ikon "Detail" (Mata) pada baris pendaftar tertentu.
+    2.  Sistem mengambil data lengkap pendaftar tersebut berdasarkan ID.
+    3.  Sistem membuka modal popup berisi profil lengkap pelanggan dan memuat file gambar secara asinkron dari URL Supabase S3.
+    4.  Sistem menginisialisasi Leaflet.js map untuk menandai lokasi koordinat rumah pendaftar di peta.
+    5.  Admin menekan tombol "Close" untuk menutup modal.
+*   **Alur Fitur**: `Klik ikon Detail -> Tampilkan modal modal -> Load gambar S3 & Load Leaflet Map`
+*   **Route / Controller terkait**: Client-side JS handler pada tab Pendaftaran view `/admin`
+*   **Screenshot fitur**: ![Detail Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC15: Mengubah Status Pendaftaran
-*   **Tujuan Fitur**: Memvalidasi status berlangganan pendaftar (Pending, Validated, Rejected, Setup, Active).
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin ubah status dropdown -> JavaScript mengirim PATCH request -> Database diupdate -> Badge berubah`
-*   **Route / Controller Terkait**:
-    `PATCH /admin/pendaftaran/{id}/status` (Route Closure mengupdate status kolom `status`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC15](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memproses status berlangganan pendaftar (misal: memproses pendaftaran menjadi Validated, Active, atau ditolak).
+*   **Kondisi Awal**: Admin berada di halaman daftar pendaftar (UC13).
+*   **Kondisi Akhir**: Status pendaftar berubah di database, warna lencana status di tabel terbarui otomatis via AJAX.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol dropdown Status pada baris data pendaftar.
+    2.  Admin memilih status baru (contoh: dari `Pending` ke `Validated` atau `Active`).
+    3.  Sistem mengirimkan permintaan pembaruan status (HTTP PATCH/PUT) ke backend secara asinkron menggunakan Vanilla JS fetch API.
+    4.  Backend mengupdate record di database PostgreSQL dan mengirim respons sukses.
+    5.  Sistem memperbarui tampilan lencana status di tabel dan detail modal secara real-time tanpa me-refresh halaman.
+*   **Alur Fitur**: `Ubah dropdown status -> AJAX PATCH request -> Database diupdate -> Update badge visual`
+*   **Route / Controller terkait**: `PATCH /admin/pendaftaran/{id}/status` (Mengubah status kolom pendaftar)
+*   **Screenshot fitur**: ![Status Dropdown](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC16: Menghapus Data Pendaftar
-*   **Tujuan Fitur**: Membersihkan data sampah atau pendaftar fiktif dari database.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Hapus -> Konfirmasi dialog -> Server menghapus berkas di Supabase S3 -> Server menghapus record di DB -> Baris tabel di-remove`
-*   **Route / Controller Terkait**:
-    `DELETE /admin/pendaftaran/{id}` (Route Closure menghapus berkas S3 dan record di database)
-*   **Screenshot Fitur**:
-    ![Screenshot UC16](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membersihkan data sampah, pendaftar fiktif, atau spam.
+*   **Kondisi Awal**: Admin berada di halaman daftar pendaftar (UC13).
+*   **Kondisi Akhir**: Record pendaftar terhapus di database PostgreSQL, berkas gambar terhapus dari Supabase S3, dan tabel terbarui secara instan.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol ikon "Hapus" (Trash) di baris data target.
+    2.  Sistem memunculkan modal dialog konfirmasi: **"Apakah Anda yakin ingin menghapus data ini beserta berkas fisiknya?"**.
+    3.  Admin menekan tombol "Ya, Hapus".
+    4.  Sistem mengirim permintaan penghapusan (DELETE) ke server.
+    5.  Server menghapus berkas gambar pendaftar di cloud Supabase S3 menggunakan library S3 client.
+    6.  Server menghapus baris data pendaftar terkait dari database PostgreSQL.
+    7.  Sistem secara asinkron menghapus baris dari tabel HTML.
+*   **Alur Fitur**: `Klik Hapus -> Konfirmasi modal -> Server hapus file S3 -> Server hapus DB record -> Refresh DOM`
+*   **Route / Controller terkait**: `DELETE /admin/pendaftaran/{id}` (Menghapus pendaftar dan berkas S3)
+*   **Screenshot fitur**: ![Delete Confirmation](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC28: Manajemen Akun & Peran (Role Management)
-*   **Tujuan Fitur**: Mengelola profil admin dan mengedit preferensi akun serta kredensial masuk.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin membuka modul profil -> Mengisi username/email baru -> Klik simpan -> Data profil diperbarui`
-*   **Route / Controller Terkait**:
-    `PUT /admin/profil` (Pembaruan data profil admin) dan `POST /admin/profil/avatar` (Pembaruan foto avatar)
-*   **Screenshot Fitur**:
-    ![Screenshot UC28](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membuat, memperbarui, dan mengelola hak akses akun pengguna (Role: Admin, Teknisi, Pengguna biasa).
+*   **Kondisi Awal**: Admin telah login dan membuka menu pengaturan akun.
+*   **Kondisi Akhir**: Akun terdaftar memiliki tipe role yang tersimpan di database dan hak aksesnya dibatasi sesuai perannya.
+*   **Alur Utama**:
+    1.  Admin membuka menu "Manajemen Akun" di sidebar admin panel.
+    2.  Sistem menampilkan daftar akun terdaftar beserta kolom role.
+    3.  Admin dapat menambahkan akun baru dengan mengisi username, email, password, dan memilih role (`admin`, `teknisi`, `pengguna`).
+    4.  Admin mengklik "Simpan", sistem memproses input dan memperbarui database.
+*   **Alur Fitur**: `Buka Profil -> Edit Username/Password/Avatar -> Simpan -> Database terupdate`
+*   **Route / Controller terkait**: `PUT /admin/profil` (Update text) dan `POST /admin/profil/avatar` (Upload avatar)
+*   **Screenshot fitur**: ![Admin Profile Panel](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC29: Menghubungi Pelanggan via WhatsApp Direct Link
-*   **Tujuan Fitur**: Menghubungi pelanggan secara cepat menggunakan interaksi tautan WA langsung.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin mengklik ikon WA di baris pendaftaran -> Membuka chat WhatsApp langsung menuju nomor tujuan`
-*   **Route / Controller Terkait**:
-    Tautan eksternal dynamic helper `https://wa.me/{nomor_tlpn}` pada view partial `admin/partials/pendaftaran.blade.php`
-*   **Screenshot Fitur**:
-    ![Screenshot UC29](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menghubungi pelanggan secara cepat tanpa perlu menyalin nomor hp secara manual.
+*   **Kondisi Awal**: Admin sedang membuka daftar pendaftar (UC13) atau detail pendaftar (UC14).
+*   **Kondisi Akhir**: Admin dialihkan ke aplikasi WhatsApp web/mobile menuju nomor telepon pelanggan yang bersangkutan.
+*   **Alur Utama**:
+    1.  Admin melihat nomor telepon pelanggan pada baris tabel atau detail modal.
+    2.  Nomor tersebut berupa tautan aktif (ikon WhatsApp).
+    3.  Admin mengklik nomor/ikon tersebut.
+    4.  Sistem membuka tab baru mengarah ke `https://wa.me/{nomor_pelanggan}` yang terformat otomatis.
+*   **Alur Fitur**: `Klik ikon WA di baris pendaftaran -> Buka tab WA web dengan nomor tujuan`
+*   **Route / Controller terkait**: Tautan eksternal `https://wa.me/{nomor}` pada partial view `pendaftaran`
+*   **Screenshot fitur**: ![WhatsApp Action Link](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ---
 
 ## Modul 3: Konten Produk & Promosi (Orang 3)
 
-Modul ini mengelola data paket internet dan promosi aktif untuk disajikan secara dinamis kepada calon pelanggan.
+Modul ini bertanggung jawab mengelola data paket internet (kecepatan, harga) dan promosi aktif yang nantinya disajikan secara dinamis kepada calon pelanggan di landing page.
 
 ### UC17: Menambahkan Paket Baru
-*   **Tujuan Fitur**: Memasukkan produk paket internet baru ke dalam sistem.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Tambah Paket -> Mengisi Data Form -> Simpan -> Masuk ke database`
-*   **Route / Controller Terkait**:
-    `POST /admin/paket` (Route Closure menyimpan record baru ke tabel `pakets`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC17](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memasukkan produk paket internet baru ke dalam sistem.
+*   **Kondisi Awal**: Admin berada di tab "Paket Internet" di admin panel.
+*   **Kondisi Akhir**: Paket baru tersimpan di database dan otomatis muncul di daftar admin serta Landing Page.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "+ Tambah Paket".
+    2.  Sistem membuka modal form isian paket (ID Paket, Nama Paket, Kecepatan, Deskripsi, Harga Bulanan).
+    3.  Admin mengisi form secara lengkap, lalu mengklik "Simpan".
+    4.  Sistem mengirimkan form data ke backend.
+    5.  Sistem memvalidasi ID Paket harus unik dan tipe data numerik sesuai.
+    6.  Sistem menyimpan data ke tabel `pakets` dan memunculkan toast notifikasi sukses.
+*   **Alur Fitur**: `Klik Tambah Paket -> Isi form kustomisasi -> Simpan -> Tambah record ke DB`
+*   **Route / Controller terkait**: `POST /admin/paket` (Menyimpan paket baru ke database)
+*   **Screenshot fitur**: ![Add Package Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC18: Mengubah Data Paket
-*   **Tujuan Fitur**: Memperbarui harga, kecepatan, deskripsi, atau template tema kartu paket internet.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Edit Paket -> Form termuat dengan data lama -> Mengedit data -> Simpan`
-*   **Route / Controller Terkait**:
-    `PUT /admin/paket/{id}` (Route Closure memperbarui data paket berdasarkan ID)
-*   **Screenshot Fitur**:
-    ![Screenshot UC18](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memperbarui rincian harga, kecepatan, atau deskripsi paket yang sudah ada.
+*   **Kondisi Awal**: Admin berada di tab "Paket Internet".
+*   **Kondisi Akhir**: Data paket diperbarui di database dan tampilan ter-update.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "Edit" pada salah satu baris paket.
+    2.  Sistem menampilkan modal berisi form yang otomatis terisi dengan data paket saat ini.
+    3.  Admin mengedit nilai harga atau deskripsi paket, lalu mengklik "Simpan Perubahan".
+    4.  Sistem melakukan proses UPDATE pada database PostgreSQL.
+    5.  Sistem memperbarui tampilan data paket secara asinkron di admin panel.
+*   **Alur Fitur**: `Klik Edit -> Update isian harga/kecepatan -> Simpan -> Database diupdate`
+*   **Route / Controller terkait**: `PUT /admin/paket/{id}` (Update data paket)
+*   **Screenshot fitur**: ![Edit Package Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC19: Menghapus Data Paket
-*   **Tujuan Fitur**: Menghapus paket layanan yang sudah tidak ditawarkan dari database.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Hapus -> Konfirmasi dialog -> Record dihapus dari DB -> Kartu ditarik dari landing page`
-*   **Route / Controller Terkait**:
-    `DELETE /admin/paket/{id}` (Route Closure menghapus record paket di database)
-*   **Screenshot Fitur**:
-    ![Screenshot UC19](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menghentikan penawaran paket layanan internet tertentu.
+*   **Kondisi Awal**: Admin berada di tab "Paket Internet".
+*   **Kondisi Akhir**: Paket terhapus secara permanen dari sistem database dan ditarik dari landing page.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "Hapus" pada paket target.
+    2.  Sistem memunculkan dialog konfirmasi.
+    3.  Admin mengonfirmasi penghapusan.
+    4.  Sistem mengirimkan request DELETE ke database, menghapus record dari tabel `pakets`, dan memperbarui list visual di panel admin.
+*   **Alur Fitur**: `Klik Hapus -> Konfirmasi modal -> Server menghapus record di DB -> Refresh grid`
+*   **Route / Controller terkait**: `DELETE /admin/paket/{id}` (Menghapus record paket)
+*   **Screenshot fitur**: ![Delete Package Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC23: Menambahkan Promosi
-*   **Tujuan Fitur**: Menambahkan program promosi/diskon baru pada paket internet.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Tambah Promosi -> Mengisi data promo -> Simpan -> Record promo dibuat`
-*   **Route / Controller Terkait**:
-    `POST /admin/promosi` (Route Closure menyimpan promosi baru ke tabel `promosis`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC23](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menambahkan program promosi/diskon baru untuk memikat pelanggan.
+*   **Kondisi Awal**: Admin berada di tab "Promosi".
+*   **Kondisi Akhir**: Record promosi baru tercatat di database dan dapat dimuat di landing page.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "+ Tambah Promosi".
+    2.  Sistem menampilkan form (ID Promo, Nilai Diskon, Deskripsi Teks, Kode Promo, Tanggal Kadaluwarsa).
+    3.  Admin mengisi form dan menekan "Simpan".
+    4.  Sistem memvalidasi input (nilai diskon berupa angka), lalu menyimpannya ke tabel `promosis`.
+*   **Alur Fitur**: `Klik Tambah Promosi -> Isi data diskon & masa berlaku -> Simpan -> Tambah DB`
+*   **Route / Controller terkait**: `POST /admin/promosi` (Menyimpan promosi baru)
+*   **Screenshot fitur**: ![Add Promotion Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC24: Mengubah Promosi
-*   **Tujuan Fitur**: Mengubah nominal diskon, kode promo, deskripsi, atau masa aktif promosi.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Edit -> Memperbarui tanggal kadaluwarsa/nilai diskon -> Simpan -> Database diupdate`
-*   **Route / Controller Terkait**:
-    `PUT /admin/promosi/{id}` (Route Closure mengupdate data promosi di database)
-*   **Screenshot Fitur**:
-    ![Screenshot UC24](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memperbarui deskripsi atau memperpanjang masa berlaku promosi.
+*   **Kondisi Awal**: Admin berada di tab "Promosi".
+*   **Kondisi Akhir**: Data promosi ter-update di database.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "Edit" pada promosi terpilih.
+    2.  Sistem memunculkan modal form isian berisi data promosi lama.
+    3.  Admin mengedit tanggal berakhir promo atau teks deskripsi.
+    4.  Admin mengklik "Simpan".
+    5.  Sistem melakukan kueri UPDATE ke database.
+*   **Alur Fitur**: `Klik Edit -> Modifikasi data promosi -> Simpan -> Database diupdate`
+*   **Route / Controller terkait**: `PUT /admin/promosi/{id}` (Update data promosi)
+*   **Screenshot fitur**: ![Edit Promotion Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC25: Menghapus Promosi
-*   **Tujuan Fitur**: Menghapus program diskon/promosi dari database.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Hapus -> Konfirmasi dialog -> Record dihapus -> Relasi paket terkait di-set ke null`
-*   **Route / Controller Terkait**:
-    `DELETE /admin/promosi/{id}` (Route Closure menghapus record promosi)
-*   **Screenshot Fitur**:
-    ![Screenshot UC25](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menarik promosi yang sudah kadaluwarsa atau dihentikan secara permanen.
+*   **Kondisi Awal**: Admin berada di tab "Promosi".
+*   **Kondisi Akhir**: Record promosi terhapus dari database PostgreSQL.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "Hapus" pada promosi target.
+    2.  Sistem memunculkan popup konfirmasi.
+    3.  Admin mengklik konfirmasi hapus.
+    4.  Sistem memproses perintah DELETE pada database dan memperbarui tampilan kartu promo.
+*   **Alur Fitur**: `Klik Hapus -> Konfirmasi modal -> Server hapus DB -> Hapus promo dari view`
+*   **Route / Controller terkait**: `DELETE /admin/promosi/{id}` (Menghapus record promosi)
+*   **Screenshot fitur**: ![Delete Promotion Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC30: Mengatur Label Tombol Beli Paket
-*   **Tujuan Fitur**: Mengatur teks tombol CTA (Call to Action) kustom per paket internet.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin mengisi field label CTA di form kustomisasi paket -> Simpan -> Dirender dinamis di Landing Page`
-*   **Route / Controller Terkait**:
-    `POST /admin/paket` dan `PUT /admin/paket/{id}` (Menyimpan field `badge_text` / CTA label ke database)
-*   **Screenshot Fitur**:
-    ![Screenshot UC30](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengubah teks tombol panggilan tindakan (CTA) pada paket internet (misal dari "Daftar Paket" menjadi "Beli Paket", "Pesan Sekarang", dll) secara kustom per paket.
+*   **Kondisi Awal**: Admin sedang menambah (UC17) atau mengedit (UC18) paket internet.
+*   **Kondisi Akhir**: Teks tombol CTA berubah di database dan dirender dinamis di Landing Page.
+*   **Alur Utama**:
+    1.  Admin membuka form kustomisasi paket.
+    2.  Admin mengisi field kustom "Teks Tombol CTA" (misal: "Beli Paket").
+    3.  Admin mengklik "Simpan", data tombol tersimpan di tabel `pakets`.
+*   **Alur Fitur**: `Isi field Teks Tombol CTA pada panel tema -> Simpan -> Tampil kustom di Landing Page`
+*   **Route / Controller terkait**: `POST /admin/paket` dan `PUT /admin/paket/{id}` (Mengisi `badge_text`)
+*   **Screenshot fitur**: ![CTA Config](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ---
 
 ## Modul 4: Monitoring Sistem & Pengumuman (Orang 4)
 
-Modul ini bertanggung jawab memantau kesehatan server, database PostgreSQL, kapasitas S3, visualisasi Chart.js, dan pengelolaan pengumuman.
+Modul ini bertanggung jawab memantau kesehatan operasional server, database PostgreSQL, kapasitas S3, menyajikan grafik dasbor Chart.js, serta memanajemen papan pengumuman dinamis.
 
 ### UC09: Melihat Dashboard Utama
-*   **Tujuan Fitur**: Membaca agregasi data dan grafik tren pendaftaran pendaftar 7 hari terakhir.
 *   **Aktor**: Admin / Developer
-*   **Alur Fitur**:
-    `Admin membuka /admin -> Sistem mengkueri total statistik -> Merender halaman -> Chart.js menggambar grafik`
-*   **Route / Controller Terkait**:
-    `GET /admin` (Route Closure memproses aggregate counts dan parsing data ke dashboard view)
-*   **Screenshot Fitur**:
-    ![Screenshot UC09](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membaca ringkasan agregasi data sistem secara instan dalam satu layar visual.
+*   **Kondisi Awal**: Admin telah login dan berada di panel admin `/admin#dashboard`.
+*   **Kondisi Akhir**: Dasbor memuat lengkap kartu total pendaftaran, total paket, total pengumuman, daftar pendaftaran terbaru, dan grafik tren pendaftaran.
+*   **Alur Utama**:
+    1.  Admin membuka dasbor utama.
+    2.  Sistem menghitung agregasi total record tabel (`pendaftarans`, `pakets`, `pengumumans`).
+    3.  Sistem mengambil data statistik pendaftaran 7 hari terakhir.
+    4.  Sistem merender dasbor lengkap dengan panel ringkasan data.
+    5.  Sistem memanggil Chart.js untuk menggambar grafik garis tren pendaftaran.
+*   **Alur Fitur**: `Buka dashboard -> Query aggregate statistik -> Inisialisasi Chart.js`
+*   **Route / Controller terkait**: `GET /admin` (Compact data statistik & view `admin.index`)
+*   **Screenshot fitur**: ![Dashboard Stats](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC11: Melihat Monitoring Server
-*   **Tujuan Fitur**: Memantau performa resource server (penggunaan memori, load time, PHP version).
 *   **Aktor**: Admin / Developer
-*   **Alur Fitur**:
-    `Admin membuka Dashboard -> Sistem kalkulasi status memory & load time -> Menampilkan data`
-*   **Route / Controller Terkait**:
-    `GET /admin` (Mengakses endpoint internal untuk membaca resources server)
-*   **Screenshot Fitur**:
-    ![Screenshot UC11](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengecek performa dan pemakaian resource server web lokal/cloud.
+*   **Kondisi Awal**: Admin berada di halaman Dasbor Utama (UC09).
+*   **Kondisi Akhir**: Informasi penggunaan memori, durasi load time halaman, versi PHP, dan spesifikasi OS tampil di kartu pemantauan.
+*   **Alur Utama**:
+    1.  Admin menggulir (scroll) dasbor ke bagian bawah ke area "Monitoring Sistem".
+    2.  Sistem memanggil fungsi PHP `memory_get_usage()` dan mengukur latency render via `microtime()`.
+    3.  Sistem mengambil informasi konfigurasi sistem dari PHP Info secara aman.
+    4.  Sistem menyajikan metrik performa tersebut pada tabel pemantauan server.
+*   **Alur Alternatif**:
+    *   *Fungsi dinonaktifkan*: Jika server mematikan fungsi pemantauan, tabel akan menampilkan tulisan anggun "N/A" (Tidak Tersedia) tanpa memicu crash 500.
+*   **Alur Fitur**: `Scroll ke Monitoring -> Kalkulasi memory_get_usage() -> Tampilkan metrik RAM/PHP`
+*   **Route / Controller terkait**: `GET /admin` (Dimuat di partial `monitoring` via `admin.index`)
+*   **Screenshot fitur**: ![Server Monitor](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
-### UC12: Melihat Monitoring DB & S3
-*   **Tujuan Fitur**: Mengecek status ketersediaan koneksi database PostgreSQL dan Cloud Storage Supabase S3.
+### UC12: Melihat Monitoring Database & S3
 *   **Aktor**: Admin / Developer
-*   **Alur Fitur**:
-    `Admin membuka Dashboard -> Sistem mengirim ping ke Supabase DB & S3 bucket -> Menampilkan indikator koneksi`
-*   **Route / Controller Terkait**:
-    `GET /admin` (Melakukan query DB dan pengecekan driver disk S3)
-*   **Screenshot Fitur**:
-    ![Screenshot UC12](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengecek status ketersediaan koneksi database PostgreSQL dan Cloud Storage Supabase S3 secara langsung.
+*   **Kondisi Awal**: Admin berada di halaman Dasbor Utama (UC09).
+*   **Kondisi Akhir**: Informasi ukuran database PostgreSQL, jumlah koneksi aktif, dan konektivitas bucket storage S3 tampil di panel monitoring.
+*   **Alur Utama**:
+    1.  Sistem secara background menjalankan kueri statistik PostgreSQL (`pg_database_size()`, `pg_stat_activity`).
+    2.  Sistem mencoba mengirim ping/cek koneksi ke AWS S3 Client terkonfigurasi.
+    3.  Sistem menampilkan status "Connected" berwarna hijau beserta statistik kapasitas jika koneksi berhasil.
+*   **Alur Alternatif**:
+    *   *Koneksi Terputus*: Jika database / S3 terputus, blok `try-catch` menangkap error tersebut dan merender status berwarna merah: **"Error / Disconnected"** tanpa merusak sisa visual dasbor utama.
+*   **Alur Fitur**: `Query db size -> Ping AWS S3 Storage driver -> Tampilkan status koneksi`
+*   **Route / Controller terkait**: `GET /admin` (Mengeksekusi database ping & S3 connection checks)
+*   **Screenshot fitur**: ![DB S3 Monitor](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC20: Menambahkan Pengumuman
-*   **Tujuan Fitur**: Membuat papan pengumuman/informasi gangguan untuk disajikan di landing page pelanggan.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Buat Pengumuman -> Mengisi teks pengumuman & masa berlaku -> Simpan`
-*   **Route / Controller Terkait**:
-    `POST /admin/pengumuman` (Route Closure menyimpan pengumuman baru ke tabel `pengumumans`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC20](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membuat papan pengumuman/informasi gangguan untuk disajikan di landing page pelanggan.
+*   **Kondisi Awal**: Admin berada di tab "Pengumuman" di panel admin.
+*   **Kondisi Akhir**: Pengumuman baru tersimpan di database dan dijadwalkan terbit.
+*   **Alur Utama**:
+    1.  Admin mengklik "+ Buat Pengumuman".
+    2.  Sistem menampilkan form input (Teks Pengumuman, Tanggal Mulai Berlaku, Tanggal Berakhir).
+    3.  Admin mengisi data secara valid, lalu menekan "Simpan".
+    4.  Sistem memproses penyimpanan ke database PostgreSQL.
+    5.  Sistem memperbarui tabel daftar pengumuman secara asinkron.
+*   **Alur Fitur**: `Klik Buat Pengumuman -> Isi teks & tanggal berlaku -> Simpan -> Database insert`
+*   **Route / Controller terkait**: `POST /admin/pengumuman` (Menyimpan pengumuman baru)
+*   **Screenshot fitur**: ![Add Announcement Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC21: Mengubah Pengumuman
-*   **Tujuan Fitur**: Memperbaiki teks atau masa berlaku pengumuman yang aktif.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Edit -> Mengupdate teks/tanggal -> Simpan -> Data ter-update`
-*   **Route / Controller Terkait**:
-    `PUT /admin/pengumuman/{id}` (Route Closure memperbarui data pengumuman)
-*   **Screenshot Fitur**:
-    ![Screenshot UC21](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Memperbaiki isi pengumuman atau memperpanjang/memperpendek masa tayang pengumuman.
+*   **Kondisi Awal**: Admin berada di tab "Pengumuman".
+*   **Kondisi Akhir**: Data pengumuman ter-update di database.
+*   **Alur Utama**:
+    1.  Admin mengklik tombol "Edit" pada pengumuman target.
+    2.  Sistem membuka modal edit berisi form dengan data pengumuman lama.
+    3.  Admin memperbarui teks atau durasi tanggal, lalu mengklik "Simpan".
+    4.  Sistem mengeksekusi kueri UPDATE ke database PostgreSQL dan memperbarui tampilan daftar.
+*   **Alur Fitur**: `Klik Edit -> Update teks / masa aktif -> Simpan -> Database diupdate`
+*   **Route / Controller terkait**: `PUT /admin/pengumuman/{id}` (Update data pengumuman)
+*   **Screenshot fitur**: ![Edit Announcement Modal](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC22: Menghapus Pengumuman
-*   **Tujuan Fitur**: Mencabut pengumuman yang sudah selesai dari database.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin klik Hapus -> Konfirmasi -> Record didelete dari DB -> Banner di landing page hilang`
-*   **Route / Controller Terkait**:
-    `DELETE /admin/pengumuman/{id}` (Route Closure menghapus data pengumuman)
-*   **Screenshot Fitur**:
-    ![Screenshot UC22](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Menghapus pengumuman agar tidak lagi tampil di landing page pelanggan.
+*   **Kondisi Awal**: Admin berada di tab "Pengumuman".
+*   **Kondisi Akhir**: Pengumuman terhapus dari database dan dicabut dari landing page.
+*   **Alur Utama**:
+    1.  Admin mengklik "Hapus" di baris pengumuman target.
+    2.  Sistem memunculkan pop-up konfirmasi.
+    3.  Admin mengklik konfirmasi hapus.
+    4.  Sistem mengeksekusi perintah DELETE di database dan menghapus list pengumuman terkait secara asinkron.
+*   **Alur Fitur**: `Klik Hapus -> Konfirmasi modal -> Server hapus DB -> Cabut dari Landing Page`
+*   **Route / Controller terkait**: `DELETE /admin/pengumuman/{id}` (Menghapus record pengumuman)
+*   **Screenshot fitur**: ![Delete Announcement Button](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC31: Mengubah Tema Warna Landing Page & Panduan Pasang
-*   **Tujuan Fitur**: Mengubah tema warna (warna latar, tombol, border) kartu paket di landing page.
 *   **Aktor**: Admin
-*   **Alur Fitur**:
-    `Admin ubah color picker -> JS merender preview langsung -> Simpan -> Tema warna diterapkan di landing page`
-*   **Route / Controller Terkait**:
-    `PUT /admin/paket/{id}` (Mengupdate kolom tema kustom pada tabel `pakets`)
-*   **Screenshot Fitur**:
-    ![Screenshot UC31](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengatur warna primer, warna sekunder, warna latar belakang landing page, serta memodifikasi teks panduan pemasangan perangkat.
+*   **Kondisi Awal**: Admin berada di tab "Pengaturan Perusahaan" atau "Pengaturan Landing Page".
+*   **Kondisi Akhir**: Kustomisasi warna dan panduan terupdate di database (tabel `company_settings` / `landing_settings`) dan langsung diterapkan ke portal pelanggan.
+*   **Alur Utama**:
+    1.  Admin membuka menu "Pengaturan Tampilan" di admin panel.
+    2.  Admin memilih palet warna landing page secara keseluruhan via color picker atau memilih preset tema warna.
+    3.  Admin mengubah rincian teks petunjuk pemasangan perangkat pada editor teks yang disediakan.
+    4.  Admin mengklik "Simpan Perubahan".
+    5.  Sistem menyimpan data baru ke database dan memperbarui styling/konten landing page secara real-time.
+*   **Alur Fitur**: `Ganti color picker / edit panduan -> Simpan -> Render visual CSS variabel di landing`
+*   **Route / Controller terkait**: `PUT /admin/paket/{id}` (Update kolom visual kustomisasi tema)
+*   **Screenshot fitur**: ![Visual Customizer](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ---
 
@@ -412,24 +547,32 @@ Modul ini bertanggung jawab memantau kesehatan server, database PostgreSQL, kapa
 Modul ini menyediakan akses portal mandiri bagi kru lapangan/teknisi R-NET untuk melihat jadwal pekerjaan instalasi yang ditugaskan kepada mereka dan mendokumentasikan hasil pemasangan fisik di lokasi pelanggan.
 
 ### UC32: Mengakses Dashboard Teknisi
-*   **Tujuan Fitur**: Membuka dashboard tugas instalasi.
 *   **Aktor**: Teknisi
-*   **Alur Fitur**:
-    `Teknisi login -> Sistem validasi role = teknisi -> Menampilkan daftar tugas status Setup`
-*   **Route / Controller Terkait**:
-    `GET /technician/dashboard` (Fitur Terencana - diakses via middleware multi-role auth)
-*   **Screenshot Fitur**:
-    ![Screenshot UC32](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Membuka dashboard tugas instalasi.
+*   **Kondisi Awal**: Akun teknisi terdaftar, dan teknisi membuka halaman `/technician/login`.
+*   **Kondisi Akhir**: Berhasil login dan dialihkan ke dashboard teknisi yang memuat daftar instalasi berstatus `Setup` (Siap Pasang).
+*   **Alur Utama**:
+    1.  Teknisi memasukkan email/username dan password di form login teknisi.
+    2.  Sistem mencocokkan kredensial di database (memastikan kolom `role` bernilai `teknisi`).
+    3.  Sistem menyajikan dashboard ringkas berisi daftar tugas instalasi: Nama Pelanggan, Alamat, Paket, Status, dan Tombol Dokumentasi.
+*   **Alur Fitur**: `Input credentials -> Validasi role == teknisi -> Render dashboard tugas`
+*   **Route / Controller terkait**: `GET /technician/dashboard` (Fitur Terencana)
+*   **Screenshot fitur**: ![Technician Dashboard](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ### UC33: Mengisi Formulir Dokumentasi Penginstalan
-*   **Tujuan Fitur**: Mengunggah PON S/N, nama Wi-Fi, dan password Wi-Fi dari modem pelanggan.
 *   **Aktor**: Teknisi
-*   **Alur Fitur**:
-    `Teknisi input data fisik (manual / scan camera) -> Simpan -> Status pendaftaran ter-update ke Active`
-*   **Route / Controller Terkait**:
-    `POST /technician/installation` (Fitur Terencana - diakses via teknisi role)
-*   **Screenshot Fitur**:
-    ![Screenshot UC33](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
+*   **Tujuan**: Mengunggah data teknis modem/ONT yang terpasang di rumah pelanggan sebagai tanda bukti selesai pemasangan.
+*   **Kondisi Awal**: Teknisi memilih salah satu tugas instalasi aktif pada dasbornya.
+*   **Kondisi Akhir**: Data PON S/N, nama Wi-Fi, dan password Wi-Fi tersimpan di database, dan status pendaftaran ter-update otomatis ke `Active` (Aktif).
+*   **Alur Utama**:
+    1.  Teknisi menekan tombol "Dokumentasi Instalasi" pada tugas pendaftaran tertentu.
+    2.  Sistem menampilkan form dokumentasi berisi input: **Nomor PON S/N**, **Nama Wi-Fi (SSID)**, dan **Password Wi-Fi**.
+    3.  Pada input PON S/N, teknisi dapat memilih untuk mengisi manual atau mengklik ikon "Scan Barcode/QR" untuk mengaktifkan kamera perangkat memindai stiker kode batang perangkat modem.
+    4.  Teknisi melengkapi data dan menekan tombol "Kirim Dokumentasi".
+    5.  Sistem memvalidasi, menyimpan data pemasangan ke database, dan mengubah status pendaftaran menjadi `Active` / `Aktif`.
+*   **Alur Fitur**: `Buka form instalasi -> Input PON S/N & SSID -> Klik Kirim -> DB updated`
+*   **Route / Controller terkait**: `POST /technician/installation` (Fitur Terencana)
+*   **Screenshot fitur**: ![Documentation Form](file:///e:/SEMESTER4/PBL/Indeks/screenshot_hasil_pengujian.png)
 
 ---
 

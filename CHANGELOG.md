@@ -1,50 +1,178 @@
-# Changelog
-
-Semua catatan perubahan penting untuk proyek **R-NET (Sistem Pendaftaran Internet Provider)** akan didokumentasikan di berkas ini. Format changelog mengacu pada standardisasi log rilis per tanggal dan kategori perubahan.
+# CHANGELOG — R-NET Indeks
 
 ---
 
-## [Planned] - Rencana Pengembangan Fitur PBL R-NET
+## [Planned] - Fitur Baru PBL R-NET & Status Instalasi
 
 ### Added
-- **Multi-Role & Autentikasi** — Pembagian hak akses terproteksi untuk peran `admin`, `teknisi`, dan `pengguna` biasa.
-- **Portal & Dashboard Teknisi** — Panel dasbor khusus kru lapangan untuk memantau tugas penarikan kabel/modem.
-- **Form Pemasangan Fisik** — Input nomor seri PON S/N (manual/scan barcode kamera), nama SSID Wi-Fi, dan password Wi-Fi saat instalasi hardware.
-- **Pencarian Status Mandiri** — Visual stepper pelacakan status pendaftaran pelanggan menggunakan input ID unik.
+- **Multi-Role & Autentikasi** — Penambahan role akun `teknisi` dan `pengguna` selain `admin` untuk pembatasan hak akses yang sesuai.
+- **Portal & Dashboard Teknisi** — Modul dashboard baru khusus untuk teknisi lapangan untuk mengelola penugasan instalasi fisik.
+- **Dokumentasi Pemasangan Fisik** — Form di dashboard teknisi untuk merekam nomor PON S/N (dapat diinput manual atau dipindai dengan kamera menggunakan barcode/QR scanner), nama Wi-Fi (SSID), dan password Wi-Fi.
+- **Konektivitas WhatsApp Direct** — Integrasi link langsung WhatsApp pada nomor telepon pelanggan di dashboard admin untuk mempermudah komunikasi tim CS/admin.
+- **Kustomisasi Tema Landing Page** — Modul pengaturan di admin panel untuk mengubah warna tema utama landing page secara fleksibel.
+- **Fitur Status Instalasi Mandiri** — Pencarian status pelacakan pendaftaran oleh pelanggan via stepper visual interaktif dengan memasukkan ID Pendaftaran.
+- **Kustomisasi Tombol CTA Paket** — Penambahan input label kustom untuk tombol pembelian/CTA per paket internet.
 
 ### Changed
-- **Peta Jangkauan Interaktif** — Peta wilayah jangkauan pada landing page diatur agar lebar penuh (full-width) tanpa sidebar list alamat.
+- **Pemasangan Perangkat Lebih Detail** — Bagian informasi panduan instalasi perangkat di landing page dibuat lebih rinci dan dapat diedit oleh admin via dashboard.
+- **Relokasi Tombol Feedback Admin** — Pemindahan tombol WhatsApp feedback ke lokasi melayang (floating) bawah kanan atau bagian footer agar lebih mudah dijangkau pelanggan.
+- **Tautan Navigasi "Cek Status"** — Penambahan link pelacakan status pada navbar `welcome.blade.php` dan `pendaftaran.blade.php`.
+
+### Impacted Modules
+- Customer Portal / Front-End Modul (Landing Page & Pendaftaran)
+- Administrator SPA Panel Dashboard
+- Route / Controller & Middleware Modul (Multi-role Auth)
+- Database Schema (penambahan kolom role, detail pemasangan, PON S/N, Wi-Fi info)
 
 ---
 
-## [v1.0.0] - 2026-06-14
+## [2026-06-14] Minggu, 14 Juni 2026 — 23:42 WIB
 
-### Added
-- **Peta Wilayah Radius Spasial** — Implementasi Leaflet.js untuk menggambar lingkaran jangkauan layanan (`L.circle`) di peta secara dinamis dari koordinat DB.
-- **Validasi Cover Area Spasial** — Validasi pendaftaran client-side berbasis perhitungan jarak koordinat GPS terhadap pusat layanan (`distanceTo() <= radius`).
-- **Kustomisasi Tema Kartu Paket** — Fitur modifikasi warna latar, border, font, tombol, dan preset (Default, Dark, Ocean, Sunset) per paket dari dasbor admin.
-- **Mockup Card Live Preview** — Mockup visual kartu paket di admin panel yang diperbarui secara real-time saat data form/warna diedit.
-- **Auto-Generate Pengumuman** — Checkbox untuk membuat pengumuman promo secara otomatis saat admin menambahkan paket baru.
-- **WhatsApp Direct Link** — Tautan cepat pada nomor hp pelanggan di dasbor untuk menghubungi pelanggan via WA secara instan.
+### 🗺️ Desain Ulang Fitur Wilayah Layanan (Berbasis Koordinat & Radius)
 
-### Changed
-- **Dasbor Admin 3-Kolom** — Layout modal edit paket diubah menjadi 3-kolom: Detail data, Panel tema, dan Mockup live preview.
-- **Font Poin Keunggulan** — Memperbesar ukuran teks keunggulan paket internet di landing page menjadi `text-[13px]` agar nyaman dibaca.
+- **Migrasi Database Koordinat & Radius** — Menambahkan kolom `latitude`, `longitude`, dan `radius` pada tabel `area_layanans` via berkas migrasi database. Memperbarui model `AreaLayanan.php` dengan fillable dan cast data yang sesuai.
+- **Validasi Spasial Form Pendaftaran** — Mengubah validasi peta pendaftaran di `pendaftaran.blade.php` dari pencocokan teks alamat (reverse geocoding) menjadi kalkulasi jarak matematis geografis (`distanceTo() <= radius`) terhadap radius area aktif. Jika di luar jangkauan area mana pun, tombol pendaftaran dikunci dan diarahkan ke hubungi admin.
+- **Peta Jangkauan Landing Page (Full-Width & Range Only)** — Memperbarui peta di `welcome.blade.php` untuk merender area jangkauan berupa lingkaran transparan (`L.circle`) secara langsung dari database tanpa penanda/pin marker tunggal. Menghapus bilah daftar wilayah samping agar peta tampil lebar penuh.
+- **Peta Modals Admin** — Mengintegrasikan Leaflet map ke dalam modal Tambah dan Edit wilayah layanan di `admin/partials/wilayah.blade.php` yang memungkinkan admin mengeklik/menggeser marker pusat layanan dan menentukan jangkauan radius dengan pratinjau lingkaran real-time.
 
-### Fixed
-- **Bugs Tab Admin Blank** — Menambahkan tag `</div>` penutup yang sempat terhapus saat membersihkan pagination di `pendaftaran.blade.php`.
-- **Truncate Kolom Tema** — Memperlebar kolom `tema` di tabel `pengumumans` menjadi 50 karakter untuk mencegah SQLSTATE[22001] data truncation.
-- **Foto Profil Navbar** — Memperbaiki rendering URL gambar avatar profil admin di navbar dashboard.
-- **Route MethodNotAllowed (GET promosi/{id})** — Menambahkan route fallback untuk GET `/admin/promosi/{id}` agar tidak terjadi error 405.
+### 📦 Perbaikan Konsistensi Urutan Paket Internet
 
-### Dependency
-- Menambahkan driver `league/flysystem-aws-s3-v3` untuk integrasi Supabase Storage.
-- Menambahkan `browser-image-compression` untuk optimasi upload KTP pendaftar.
-- Menambahkan framework Tailwind CSS v4 dan library UI DaisyUI v5.
+- **Konsistensi Urutan Paket** — Menambahkan klausa pengurutan `orderBy('id_paket', 'asc')` pada query pengambilan data paket di landing page dan halaman pendaftaran (`routes/web.php`) untuk memastikan urutan paket selalu konsisten dan tidak berubah-ubah akibat perilaku bawaan PostgreSQL.
 
-### Refactor
-- **Refactoring Admin SPA** — Migrasi halaman admin dari arsitektur multi-route modular ke Single-View SPA berbasis Vanilla JavaScript (tab-based switching) untuk mengeliminasi latency database remote (Supabase).
-- **Tema LocalStorage** — Menyimpan pengaturan tema admin (dark/light) di client-side localStorage untuk mencegah flash putih saat reload halaman.
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `database/migrations/*_add_coords_and_radius_to_area_layanans.php` | Menambahkan kolom `latitude`, `longitude`, dan `radius` |
+| `app/Models/AreaLayanan.php` | Cast data dan fillable kolom baru |
+| `routes/web.php` | Validasi input area koordinat & radius, pengurutan paket |
+| `resources/views/admin/partials/wilayah.blade.php` | Integrasi Leaflet map ke modal area, input radius & koordinat |
+| `resources/views/welcome.blade.php` | Render jangkauan lingkaran, hapus sidebar wilayah & marker |
+| `resources/views/pendaftaran.blade.php` | Mengubah validasi cover area pendaftaran menjadi berbasis koordinat |
+| `tests/Feature/PendaftaranExtendedAdminTest.php` | Penyesuaian variabel data dummy uji coba |
 
 ---
-*Dokumentasi Changelog R-NET — 2026*
+
+## [2026-06-14] Minggu, 14 Juni 2026 — 21:20 WIB
+
+### 🔧 Perbaikan Bug
+
+- **Error Truncate Kolom Tema Pengumuman** — Mengubah ukuran kolom `tema` di tabel `pengumumans` dari `10` menjadi `50` karakter lewat database migration. Memperbarui aturan validasi request di file `routes/web.php` untuk membatasi `announcement_tema` dan `tema` maksimal `50` karakter agar tidak memicu error data terpotong (SQLSTATE[22001]).
+
+### 🎨 Landing Page & UI Fixes
+
+- **Border Kartu Tengah Dinamis** — Memperbaiki logika border kartu paket bagian tengah di landing page agar menggunakan warna border tema kustom dari database (bukan hardcoded biru terang).
+- **Logika Badge "Terpopuler"** — Memperbaiki badge "Terpopuler" di landing page agar hanya muncul jika diatur secara eksplisit oleh admin melalui field `badge_text`, menghilangkan badge otomatis/hardcoded.
+- **Ukuran Font Poin Keunggulan** — Memperbesar ukuran teks poin informasi/keunggulan dari `text-[11px]` (landing) dan `text-[9px]` (admin preview) menjadi `text-[13px]` agar lebih mudah dibaca.
+- **Pengumuman Melayang (Sticky Marquee)** — Memindahkan baris marquee pengumuman ke dalam tag `<header>` agar ikut melayang secara persisten bersama dengan navbar saat halaman di-scroll.
+
+### 💼 Desain Ulang Halaman Admin & Jendela Kustomisasi Paket
+
+- **Admin Package Card Grid** — Mengganti list paket lama dengan grid kartu modern yang dilengkapi panel status (aktif/sembunyi), visualisasi warna tema (swatches), info promosi terintegrasi, dan tombol aksi bergaya outline premium.
+- **Modul 3-Kolom Unified** — Menyusun ulang modal Tambah dan Edit paket menjadi layout 3-kolom yang rapi:
+  1. *Detail Informasi* (Form data utama)
+  2. *Kustomisasi Desain* (Konfigurasi tema, bisa disembunyikan/ditampilkan)
+  3. *Pratinjau Tampilan* (Real-time live preview mockup kartu, bisa disembunyikan/ditampilkan)
+- **Desain Panel Kustomisasi** — Merapikan input color picker dengan preview warna di dalam text box monospaced, tombol preset minimalis, dan pill selector untuk badge rekomendasi.
+- **Sinkronisasi Live Preview** — Memperbaiki bugs di JavaScript (`updateLivePreview`) sehingga input warna, font, harga, nama, dan detail deskripsi langsung ter-render secara real-time pada mockup kartu di kolom kanan modal.
+
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `resources/views/admin/partials/paket.blade.php` | Redesign list paket admin, layout modal 3-kolom, refaktor JS & live preview |
+| `resources/views/welcome.blade.php` | Border dinamis kartu tengah, logika badge terpopuler, perbaikan ukuran font |
+
+---
+
+## [2026-06-13] Jumat, 13 Juni 2026 — 16:06 WIB
+
+### 🔧 Perbaikan Bug
+
+- **Foto Navbar Admin** — Memperbaiki foto profil admin yang tidak muncul di navbar halaman admin.
+- **Route MethodNotAllowed (GET promosi/{id})** — Menambahkan route fallback `GET /admin/promosi/{id}` agar tidak error 405 saat browser mengakses URL promosi secara langsung.
+- **DNS Database Error** — Menangani error koneksi Supabase (`could not translate host name`) dengan fallback dan penanganan exception yang lebih baik.
+
+### 🖼️ Upload Format Baru
+
+- **Format File Upload** — Memperbolehkan format `.ico`, `.svg`, `.webp` untuk upload logo perusahaan dan foto profil admin (selain `.jpg`, `.jpeg`, `.png` yang sudah ada).
+  - File terdampak: `web.php` route `profil.avatar` dan `pengaturan.logo`.
+
+### 🎨 Tema Admin — LocalStorage Only
+
+- **Migrasi Tema ke LocalStorage** — Tema halaman admin (dark/light mode) tidak lagi disinkronkan ke database. Disimpan sepenuhnya di `localStorage('admin-theme')`.
+- **Anti-Flash Script** — Menambahkan inline script di `<head>` untuk menerapkan tema sebelum DOM selesai dimuat, menghilangkan efek flash putih saat tema gelap aktif.
+
+### 📦 Fitur Paket — Relasi Promosi & Tema Kustom
+
+#### Database & Backend
+- **Kolom `id_promosi`** — Menambahkan foreign key `id_promosi` (nullable) di tabel `pakets` → relasi ke `promosis(id_promosi)` dengan `onDelete('set null')`.
+- **Kolom Tema** — Menambahkan kolom `nama_tema`, `warna_bg`, `warna_font`, `warna_border`, `warna_button`, `font_family`, `badge_text`, `point_keunggulan` ke migrasi tabel `pakets`.
+- **Eloquent Relations** — `paket belongsTo promosi`, `promosi hasMany paket`.
+- **Casting** — `point_keunggulan` di-cast ke `array` pada model `paket.php`.
+- **Eager Loading** — Route landing page dan admin dashboard menggunakan `paket::with('promosi')`.
+
+#### Landing Page (`welcome.blade.php`)
+- **Harga Promo Dinamis** — Jika paket terhubung promosi aktif, tampilkan harga asli (coret) + harga diskon + deskripsi promo.
+- **Tema Kartu Dinamis** — Inline CSS kustom (warna latar, font, border/glow, tombol, font family) diterapkan per kartu paket dari database.
+- **Poin Keunggulan Dinamis** — Daftar keunggulan dari array `point_keunggulan`, fallback ke 3 poin standar.
+- **Badge/Pill Informasi** — Label seperti "Terpopuler", "Promo", "Terbatas" muncul dari kolom `badge_text`.
+
+#### Admin Panel — Jendela Kustomisasi Tema (`paket.blade.php`)
+- **Panel Tema Side-by-Side** — Panel kustomisasi tema muncul di samping (desktop) atau di bawah (mobile) form paket, dalam satu wrapper Flexbox.
+- **Input Warna** — Color picker + text input untuk: Warna Latar, Warna Font, Warna Border/Glow, Warna Tombol.
+- **Font Family Selector** — Dropdown: Inter, Poppins, Roboto, Montserrat, Outfit.
+- **Pill Badge Selector** — Quick-select badge: Terpopuler, Promo, Terbatas, Unlimited, Weekend.
+- **Poin Keunggulan** — Input dinamis dengan tombol tambah/hapus.
+- **HTML5 `form` attribute** — Input di panel tema terhubung ke form induk (Tambah/Edit) via `form="..."`.
+
+### 📢 Toggle Pengumuman Otomatis
+
+- **Checkbox Toggle** — Saat menambah paket, admin bisa centang "Buat Pengumuman Otomatis untuk Paket Ini".
+- **Auto-Fill** — Isi pengumuman otomatis terisi berdasarkan nama dan harga paket yang diketik secara real-time.
+- **Backend** — Validasi dinamis dan pembuatan entri pengumuman dalam satu transaksi pada route `paket.store`.
+
+### 🖥️ Posisi & Layout Modal
+
+- **Breakpoint Diperbesar** — Side-by-side layout berubah dari `md` (768px) ke `lg` (1024px) agar tablet tetap stack vertikal.
+- **Container Diperlebar** — `max-w-4xl` → `max-w-5xl` untuk ruang lebih lega.
+- **Centering Fix** — `w-full` diganti `mx-auto` agar dialog grid `place-items:center` bisa memusatkan modal di tengah layar.
+- **Mobile Scroll Fix** — Panel tema pada mobile menggunakan `overflow-visible h-auto` (tanpa double-scroll trap), scroll hanya di desktop via `lg:max-h-[450px] lg:overflow-y-auto`.
+- **Touch-Friendly** — Color picker diperbesar (`w-10 h-10`), input dari `input-xs` ke `input-sm`, button dari `btn-xs` ke `btn-sm`, badge mendapat padding dan hover efek warna.
+
+### 🎭 Preset Tema & Algoritma Pembalik Warna
+
+#### Admin — Preset Tema (`paket.blade.php`)
+- **4 Tombol Preset** ditambahkan di panel kustomisasi tema (Tambah & Edit):
+  - **Default** — Reset ke warna standar (#ffffff bg, #1f2937 font, #2563eb button, Inter font).
+  - **🌙 Dark** — Tema gelap (#1a1a2e bg, #e0e0e0 font, #6366f1 button).
+  - **🌊 Ocean** — Biru laut (#0f172a bg, #e2e8f0 font, #3b82f6 button, Poppins).
+  - **🌅 Sunset** — Hangat (#fef3c7 bg, #78350f font, #d97706 button, Outfit).
+- Klik preset otomatis sinkron ke semua color picker, text input, nama tema, dan font family.
+
+#### Landing Page — Algoritma Pembalik Warna (`welcome.blade.php`)
+- **HSL Lightness Inversion** — Algoritma `L → 100 - L` untuk membalik warna saat toggle dark/light mode.
+- **Deteksi Otomatis** — Mengecek apakah warna asli "light" (lightness > 50%) or "dark".
+- **Invert Hanya Jika Mismatch** — Kartu warna terang di dark mode → diinvert. Kartu warna gelap di light mode → diinvert. Kartu tanpa custom theme → tidak terpengaruh.
+- **Saturation Boost** — Dark mode mendapat +15% saturasi untuk menjaga vibrancy warna.
+- **Data Attributes** — `data-theme-card`, `data-theme-bg`, `data-theme-font`, `data-theme-border`, `data-theme-button` disimpan di setiap kartu paket untuk referensi warna asli.
+- Diterapkan saat **page load** dan setiap **toggle tema**.
+
+---
+
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `resources/views/admin/partials/paket.blade.php` | Modal layout, tema panel, preset, tombol |
+| `resources/views/welcome.blade.php` | Data attributes kartu, algoritma pembalik warna |
+| `resources/views/admin/layouts/main.blade.php` | Navbar foto, anti-flash tema |
+| `routes/web.php` | Route fallback, upload format, validasi tema |
+| `database/migrations/*_create_paket_table.php` | Kolom tema & id_promosi |
+| `app/Models/paket.php` | Relasi promosi, cast point_keunggulan |
+| `app/Models/promosi.php` | Relasi hasMany paket |
+
+### Hasil Pengujian
+
+- ✅ **PHPUnit**: 66/66 tests passed (186 assertions)
+- ✅ **Visual**: Modal terpusat, responsive, tema kartu dinamis
