@@ -1,0 +1,85 @@
+
+   PASS  Tests\Unit\ExampleTest
+  Γ£ô that true is true
+
+   PASS  Tests\Feature\CekStatusTest
+  Γ£ô can check status of existing pendaftaran                                                                     0.62s  
+  Γ£ô checking status is case insensitive                                                                          0.03s  
+  Γ£ô checking status returns 404 if not found                                                                     0.03s  
+  Γ£ô can access cek status view page                                                                              0.05s  
+
+   PASS  Tests\Feature\ExampleTest
+  Γ£ô the application returns a successful response                                                                0.04s  
+
+   PASS  Tests\Feature\PendaftaranAdminTest
+  Γ£ô admin can view pendaftaran list with search                                                                  0.14s  
+  Γ£ô admin can export pendaftaran with custom columns                                                             0.04s  
+  Γ£ô admin can filter and sort pendaftaran                                                                        0.13s  
+
+   PASS  Tests\Feature\PendaftaranBusinessRuleTest
+  Γ£ô registration generates unique five char id                                                                   0.05s  
+  Γ£ô registration creates admin notification                                                                      0.04s  
+  Γ£ô registration saves proper values to database                                                                 0.08s  
+
+   PASS  Tests\Feature\PendaftaranExtendedAdminTest
+  Γ£ô visitor can view welcome page with packages and announcements                                                0.06s  
+  Γ£ô visitor can view welcome page without announcements fallback                                                 0.04s  
+  Γ£ô visitor can view daftar page                                                                                 0.04s  
+  Γ£ô visitor can submit registration success                                                                      0.04s  
+  Γ£ô visitor can submit registration with image                                                                   0.04s  
+  Γ£ô visitor registration fails validation missing fields                                                         0.05s  
+  Γ£ô visitor registration fails validation invalid id paket                                                       0.04s  
+  Γ£ô visitor can view login page as guest                                                                         0.04s  
+  Γ£ô authenticated user cannot view login page                                                                    0.03s  
+  Γ£ô admin login success                                                                                          0.04s  
+  Γ£ô admin login failure invalid credentials                                                                      0.25s  
+  Γ£ô admin login validation errors                                                                                0.04s  
+  Γ£ô admin logout success                                                                                         0.04s  
+  Γ£ô admin can add new pendaftaran from dashboard                                                                 0.04s  
+  Γ£ô admin add new pendaftaran fails validation                                                                   0.04s  
+  Γ£ô admin can update pendaftaran status redirect                                                                 0.04s  
+  Γ£ô admin can update pendaftaran status ajax                                                                     0.04s  
+  Γ£ô admin update pendaftaran status fails validation                                                             0.04s  
+  Γ£ô admin can delete pendaftaran and s3 file                                                                     0.04s  
+  Γ£ô admin can update pendaftaran info                                                                            0.05s  
+  Γ£ô admin update pendaftaran info validation errors                                                              0.05s  
+  Γ£ô admin export pendaftaran filtered option                                                                     0.04s  
+  Γ£ô admin can create new paket                                                                                   0.04s  
+  Γ£ô admin create new paket validation errors                                                                     0.04s  
+  Γ£ô admin can update paket                                                                                       0.04s  
+  Γ£ô admin update paket validation errors                                                                         0.04s  
+  Γ£ô admin can delete paket success                                                                               0.05s  
+  Γ£ô admin can toggle hide paket                                                                                  0.05s  
+  Γ£ô admin can create new paket with theme and promotion                                                          0.05s  
+  Γ£ô admin can create new paket with automatic announcement                                                       0.06s  
+  Γ£ô admin can update paket with theme                                                                            0.04s  
+  Γ£ô admin can create new pengumuman                                                                              0.04s  
+  Γ£ô admin create new pengumuman validation errors                                                                0.06s  
+  Γ£ô admin can update pengumuman                                                                                  0.05s  
+  Γ£ô admin can delete pengumuman                                                                                  0.04s  
+  Γ£ô admin can create new promosi                                                                                 0.04s  
+  Γ£ô admin create new promosi validation errors                                                                   0.04s  
+  Γ£ô admin can update promosi                                                                                     0.05s  
+  Γ£ô admin can delete promosi                                                                                     0.04s  
+  Γ£ô admin can set maintenance mode                                                                               0.05s  
+  Γ£ô admin can set server up                                                                                      0.05s  
+  Γ£ô admin can shutdown server testing bypass                                                                     0.04s  
+  Γ£ô admin can update profile create new                                                                          0.04s  
+  Γ£ô admin can update profile existing                                                                            0.05s  
+  Γ£ô admin can change password success                                                                            0.05s  
+  Γ£ô admin change password fail current incorrect                                                                 0.04s  
+  Γ£ô admin can update preferences                                                                                 0.04s  
+  Γ£ô admin can upload avatar success                                                                              0.05s  
+  Γ£ô admin can update company setting                                                                             0.05s  
+  Γ£ô admin can update company socials                                                                             0.04s  
+  Γ£ô admin can update company hours                                                                               0.04s  
+  Γ£ô admin can upload and delete logo                                                                             0.09s  
+  Γ£ô admin can create area layanan                                                                                0.10s  
+  Γ£ô admin can update area layanan                                                                                0.05s  
+  Γ£ô admin can toggle hide area layanan                                                                           0.04s  
+  Γ£ô admin can delete area layanan                                                                                0.04s  
+  Γ£ô admin can fetch api monitoring                                                                               8.03s  
+
+  Tests:    69 passed (201 assertions)
+  Duration: 12.86s
+

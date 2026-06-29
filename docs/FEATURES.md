@@ -1,6 +1,6 @@
 # Dokumentasi Fitur & Spesifikasi Use Case R-NET
 
-Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas sistem **R-NET (Sistem Pendaftaran Internet Provider)**. Penjelasan dibagi berdasarkan modul fungsional mahasiswa pengembang (Orang 1 hingga Orang 4), mencakup **24 Use Cases (UC01 - UC25)** yang didesain untuk sistem ini, beserta alur kerja (workflow) terintegrasi antar-modul.
+Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas sistem **R-NET (Sistem Pendaftaran Internet Provider)**. Penjelasan dibagi berdasarkan modul fungsional pengembang, mencakup **33 Use Cases (UC01 - UC33)** yang didesain untuk sistem ini (termasuk fitur baru), beserta alur kerja (workflow) terintegrasi antar-modul.
 
 ---
 
@@ -10,15 +10,17 @@ Dokumen ini menjelaskan secara menyeluruh seluruh fitur dan fungsionalitas siste
 3. [Modul 2: Manajemen Pendaftaran & Auth (Orang 2)](#modul-2-manajemen-pendaftaran--auth-orang-2)
 4. [Modul 3: Konten Produk & Promosi (Orang 3)](#modul-3-konten-produk--promosi-orang-3)
 5. [Modul 4: Monitoring Sistem & Pengumuman (Orang 4)](#modul-4-monitoring-sistem--pengumuman-orang-4)
-6. [Alur Kerja Terintegrasi (Integration Workflows)](#alur-kerja-terintegrasi-integration-workflows)
+6. [Modul 5: Portal & Dashboard Teknisi (Kolaboratif)](#modul-5-portal--dashboard-teknisi-kolaboratif)
+7. [Alur Kerja Terintegrasi (Integration Workflows)](#alur-kerja-terintegrasi-integration-workflows)
 
 ---
 
 ## Peta Fungsionalitas & Use Cases
 
-Sistem R-NET dirancang memiliki dua aktor utama:
-1.  **Calon Pelanggan**: Mengakses portal publik untuk melihat penawaran dan mendaftar layanan.
-2.  **Admin (Administrator / Developer)**: Mengakses area administrasi (/admin) yang dilindungi keamanan untuk memantau sistem, memvalidasi pendaftar, dan mengelola konten.
+Sistem R-NET dirancang memiliki tiga aktor utama:
+1.  **Calon Pelanggan / Pengguna Umum**: Mengakses portal publik untuk melihat penawaran, panduan pemasangan, mengirim umpan balik, dan mendaftar layanan.
+2.  **Admin (Administrator / Developer)**: Mengakses area administrasi yang dilindungi keamanan untuk memantau sistem, memvalidasi pendaftar, mengelola peran (role), kustomisasi tema, dan mengelola konten produk/pengumuman.
+3.  **Teknisi (Technician)**: Mengakses portal khusus teknisi untuk melihat tugas instalasi dan mengunggah dokumentasi fisik pemasangan perangkat.
 
 ```mermaid
 graph TD
@@ -29,6 +31,8 @@ graph TD
         UC04[UC04: Mengisi Formulir Pendaftaran]
         UC05[UC05: Mengunggah Berkas Identitas]
         UC06[UC06: Melihat Status Pendaftaran]
+        UC26[UC26: Melihat Detail Panduan Pemasangan]
+        UC27[UC27: Mengirim Umpan Balik via WA]
         
         UC04 -->|Include| UC05
         UC04 -->|Extend| UC06
@@ -38,11 +42,13 @@ graph TD
         UC07[UC07: Melakukan Login]
         UC08[UC08: Melakukan Logout]
         
-        subgraph Modul Pendaftaran
+        subgraph Modul Pendaftaran & Peran
             UC13[UC13: Melihat Daftar Pendaftar]
             UC14[UC14: Melihat Detail Pendaftar]
             UC15[UC15: Mengubah Status Pendaftaran]
             UC16[UC16: Menghapus Data Pendaftar]
+            UC28[UC28: Manajemen Akun & Peran]
+            UC29[UC29: Menghubungi Pelanggan via WA Direct]
         end
 
         subgraph Modul Paket & Promosi
@@ -52,22 +58,29 @@ graph TD
             UC23[UC23: Menambahkan Promosi]
             UC24[UC24: Mengubah Promosi]
             UC25[UC25: Menghapus Promosi]
+            UC30[UC30: Mengatur Label Tombol Beli Paket]
         end
 
-        subgraph Modul Monitoring & Pengumuman
+        subgraph Modul Monitoring, Pengumuman & Tema
             UC09[UC09: Melihat Dashboard Utama]
             UC11[UC11: Melihat Monitoring Server]
             UC12[UC12: Melihat Monitoring DB & S3]
             UC20[UC20: Menambahkan Pengumuman]
             UC21[UC21: Mengubah Pengumuman]
             UC22[UC22: Menghapus Pengumuman]
+            UC31[UC31: Mengubah Tema Landing Page & Panduan Pasang]
         end
+    end
+
+    subgraph Portal Teknisi
+        UC32[UC32: Mengakses Dashboard Teknisi]
+        UC33[UC33: Mengisi Dokumentasi Penginstalan]
     end
 
     CalonPelanggan((Calon Pelanggan)) --> PortalPelanggan
     Admin((Administrator)) --> AdminPanelSPA
+    Teknisi((Teknisi)) --> PortalTeknisi
 ```
-
 ---
 
 ## Modul 1: Portal Pelanggan & Front-End (Orang 1)
@@ -142,6 +155,26 @@ Modul ini bertanggung jawab menyediakan portal pelanggan interaktif berbasis web
     1.  Sistem selesai memproses penyimpanan database pada UC04.
     2.  Sistem mengembalikan respons ke client.
     3.  Sistem menampilkan pop-up DaisyUI modal berwarna hijau: **"Pendaftaran Berhasil! Admin kami akan segera menghubungi Anda."**
+
+### UC26: Melihat Detail Panduan Pemasangan Perangkat
+*   **Aktor**: Calon Pelanggan / Pengguna Umum
+*   **Tujuan**: Membaca panduan pemasangan perangkat (ONT/Modem/Kabel) secara detail sebelum/setelah mendaftar.
+*   **Kondisi Awal**: Pelanggan berada di Landing Page R-NET.
+*   **Kondisi Akhir**: Tampil bagian panduan langkah-demi-langkah pemasangan secara visual, interaktif, dan detail.
+*   **Alur Utama**:
+    1.  Pelanggan menggulir ke bagian "Panduan Pemasangan Perangkat".
+    2.  Sistem memuat konten panduan (teks detail, langkah instalasi, gambar bantuan) yang datanya dinamis dari database.
+    3.  Pelanggan membaca panduan tersebut.
+
+### UC27: Mengirim Umpan Balik via Tombol WhatsApp Feedback
+*   **Aktor**: Calon Pelanggan / Pengguna Umum
+*   **Tujuan**: Menghubungi admin/layanan pelanggan secara langsung via WhatsApp jika ada keluhan atau pertanyaan.
+*   **Kondisi Awal**: Pelanggan berada di Landing Page R-NET.
+*   **Kondisi Akhir**: Dialihkan ke aplikasi WhatsApp dengan ruang chat admin R-NET.
+*   **Alur Utama**:
+    1.  Pelanggan melihat tombol feedback WhatsApp melayang di bagian kanan bawah halaman atau di area footer yang jelas.
+    2.  Pelanggan mengklik tombol tersebut.
+    3.  Sistem membuka tautan `https://wa.me/` (nomor admin yang terkonfigurasi dinamis) di tab baru.
 
 ---
 
@@ -220,6 +253,28 @@ Modul ini memfasilitasi admin untuk login secara aman, meninjau pendaftar baru, 
     6.  Server menghapus baris data pendaftar terkait dari database PostgreSQL.
     7.  Sistem secara asinkron menghapus baris dari tabel HTML.
 
+### UC28: Manajemen Akun & Peran (Role Management)
+*   **Aktor**: Admin
+*   **Tujuan**: Membuat, memperbarui, dan mengelola hak akses akun pengguna (Role: Admin, Teknisi, Pengguna biasa).
+*   **Kondisi Awal**: Admin telah login dan membuka menu pengaturan akun.
+*   **Kondisi Akhir**: Akun terdaftar memiliki tipe role yang tersimpan di database dan hak aksesnya dibatasi sesuai perannya.
+*   **Alur Utama**:
+    1.  Admin membuka menu "Manajemen Akun" di sidebar admin panel.
+    2.  Sistem menampilkan daftar akun terdaftar beserta kolom role.
+    3.  Admin dapat menambahkan akun baru dengan mengisi username, email, password, dan memilih role (`admin`, `teknisi`, `pengguna`).
+    4.  Admin mengklik "Simpan", sistem memproses input dan memperbarui database.
+
+### UC29: Menghubungi Pelanggan via WhatsApp Direct Link
+*   **Aktor**: Admin
+*   **Tujuan**: Menghubungi pelanggan secara cepat tanpa perlu menyalin nomor hp secara manual.
+*   **Kondisi Awal**: Admin sedang membuka daftar pendaftar (UC13) atau detail pendaftar (UC14).
+*   **Kondisi Akhir**: Admin dialihkan ke aplikasi WhatsApp web/mobile menuju nomor telepon pelanggan yang bersangkutan.
+*   **Alur Utama**:
+    1.  Admin melihat nomor telepon pelanggan pada baris tabel atau detail modal.
+    2.  Nomor tersebut berupa tautan aktif (ikon WhatsApp).
+    3.  Admin mengklik nomor/ikon tersebut.
+    4.  Sistem membuka tab baru mengarah ke `https://wa.me/{nomor_pelanggan}` yang terformat otomatis.
+
 ---
 
 ## Modul 3: Konten Produk & Promosi (Orang 3)
@@ -295,6 +350,16 @@ Modul ini bertanggung jawab mengelola data paket internet (kecepatan, harga) dan
     2.  Sistem memunculkan popup konfirmasi.
     3.  Admin mengklik konfirmasi hapus.
     4.  Sistem memproses perintah DELETE pada database dan memperbarui tampilan kartu promo.
+
+### UC30: Mengatur Label Tombol Beli Paket
+*   **Aktor**: Admin
+*   **Tujuan**: Mengubah teks tombol panggilan tindakan (CTA) pada paket internet (misal dari "Daftar Paket" menjadi "Beli Paket", "Pesan Sekarang", dll) secara kustom per paket.
+*   **Kondisi Awal**: Admin sedang menambah (UC17) atau mengedit (UC18) paket internet.
+*   **Kondisi Akhir**: Teks tombol CTA berubah di database dan dirender dinamis di Landing Page.
+*   **Alur Utama**:
+    1.  Admin membuka form kustomisasi paket.
+    2.  Admin mengisi field kustom "Teks Tombol CTA" (misal: "Beli Paket").
+    3.  Admin mengklik "Simpan", data tombol tersimpan di tabel `pakets`.
 
 ---
 
@@ -373,13 +438,53 @@ Modul ini bertanggung jawab memantau kesehatan operasional server, database Post
     3.  Admin mengklik konfirmasi hapus.
     4.  Sistem mengeksekusi perintah DELETE di database dan menghapus list pengumuman terkait secara asinkron.
 
+### UC31: Mengubah Tema Warna Landing Page & Panduan Pasang
+*   **Aktor**: Admin
+*   **Tujuan**: Mengatur warna primer, warna sekunder, warna latar belakang landing page, serta memodifikasi teks panduan pemasangan perangkat.
+*   **Kondisi Awal**: Admin berada di tab "Pengaturan Perusahaan" atau "Pengaturan Landing Page".
+*   **Kondisi Akhir**: Kustomisasi warna dan panduan terupdate di database (tabel `company_settings` / `landing_settings`) dan langsung diterapkan ke portal pelanggan.
+*   **Alur Utama**:
+    1.  Admin membuka menu "Pengaturan Tampilan" di admin panel.
+    2.  Admin memilih palet warna landing page secara keseluruhan via color picker atau memilih preset tema warna.
+    3.  Admin mengubah rincian teks petunjuk pemasangan perangkat pada editor teks yang disediakan.
+    4.  Admin mengklik "Simpan Perubahan".
+    5.  Sistem menyimpan data baru ke database dan memperbarui styling/konten landing page secara real-time.
+
+---
+
+## Modul 5: Portal & Dashboard Teknisi (Kolaboratif)
+
+Modul ini menyediakan akses portal mandiri bagi kru lapangan/teknisi R-NET untuk melihat jadwal pekerjaan instalasi yang ditugaskan kepada mereka dan mendokumentasikan hasil pemasangan fisik di lokasi pelanggan.
+
+### UC32: Mengakses Dashboard Teknisi
+*   **Aktor**: Teknisi
+*   **Tujuan**: Membuka dashboard tugas instalasi.
+*   **Kondisi Awal**: Akun teknisi terdaftar, dan teknisi membuka halaman `/technician/login`.
+*   **Kondisi Akhir**: Berhasil login dan dialihkan ke dashboard teknisi yang memuat daftar instalasi berstatus `Setup` (Siap Pasang).
+*   **Alur Utama**:
+    1.  Teknisi memasukkan email/username dan password di form login teknisi.
+    2.  Sistem mencocokkan kredensial di database (memastikan kolom `role` bernilai `teknisi`).
+    3.  Sistem menyajikan dashboard ringkas berisi daftar tugas instalasi: Nama Pelanggan, Alamat, Paket, Status, dan Tombol Dokumentasi.
+
+### UC33: Mengisi Formulir Dokumentasi Penginstalan
+*   **Aktor**: Teknisi
+*   **Tujuan**: Mengunggah data teknis modem/ONT yang terpasang di rumah pelanggan sebagai tanda bukti selesai pemasangan.
+*   **Kondisi Awal**: Teknisi memilih salah satu tugas instalasi aktif pada dasbornya.
+*   **Kondisi Akhir**: Data PON S/N, nama Wi-Fi, dan password Wi-Fi tersimpan di database, dan status pendaftaran ter-update otomatis ke `Active` (Aktif).
+*   **Alur Utama**:
+    1.  Teknisi menekan tombol "Dokumentasi Instalasi" pada tugas pendaftaran tertentu.
+    2.  Sistem menampilkan form dokumentasi berisi input: **Nomor PON S/N**, **Nama Wi-Fi (SSID)**, dan **Password Wi-Fi**.
+    3.  Pada input PON S/N, teknisi dapat memilih untuk mengisi manual atau mengklik ikon "Scan Barcode/QR" untuk mengaktifkan kamera perangkat memindai stiker kode batang perangkat modem.
+    4.  Teknisi melengkapi data dan menekan tombol "Kirim Dokumentasi".
+    5.  Sistem memvalidasi, menyimpan data pemasangan ke database, dan mengubah status pendaftaran menjadi `Active` / `Aktif`.
+
 ---
 
 ## 🔄 Alur Kerja Terintegrasi (Integration Workflows)
 
-Untuk mempermudah pemahaman bagaimana keempat modul mahasiswa bekerja sama, berikut disajikan skenario interaksi sistem (End-to-End Workflow) dari proses pendaftaran hingga penanganan pendaftaran oleh administrator.
+Untuk mempermudah pemahaman bagaimana seluruh modul bekerja sama, berikut disajikan skenario interaksi sistem (End-to-End Workflow) dari proses pendaftaran, penugasan teknisi, hingga pemasangan selesai.
 
-### Skenario: Proses Berlangganan Internet Baru Pelanggan
+### Skenario: Alur Pendaftaran Hingga Pemasangan Selesai oleh Teknisi
 
 ```mermaid
 sequenceDiagram
@@ -390,36 +495,48 @@ sequenceDiagram
     participant DB as PostgreSQL DB (Orang 1/2/3/4)
     actor Admin as Administrator
     participant Dashboard as Admin SPA (Orang 2/4)
+    actor Teknisi as Teknisi Jaringan
+    participant TechDash as Dashboard Teknisi (Modul 5)
 
     Pelanggan->>LP: Mengakses halaman utama (UC01)
-    LP->>DB: Query paket internet aktif & pengumuman (UC02, UC03)
-    DB-->>LP: Mengembalikan data paket & pengumuman
-    LP-->>Pelanggan: Menampilkan paket internet & pengumuman di layar
+    LP->>DB: Query paket & tema warna kustom (UC02, UC31)
+    DB-->>LP: Mengembalikan data paket, pengumuman & tema warna
+    LP-->>Pelanggan: Menampilkan halaman utama dengan visual premium sesuai tema warna kustom
     
-    Pelanggan->>LP: Memilih paket, mengisi form & upload foto KTP/Rumah (UC04)
+    Pelanggan->>LP: Mengisi form & upload foto KTP/Rumah (UC04)
     LP->>LP: Melakukan kompresi ukuran gambar di browser
     LP->>S3: Mengunggah berkas terkompresi (UC05)
-    S3-->>LP: Mengembalikan URL Berkas Publik S3
+    S3-->>LP: Mengembalikan URL Berkas S3
     
-    LP->>DB: Menyimpan data pendaftaran + URL berkas S3 (Status: Pending)
+    LP->>DB: Menyimpan data pendaftaran (Status: Pending)
     DB-->>LP: Konfirmasi penyimpanan berhasil
     LP-->>Pelanggan: Menampilkan popup hijau sukses (UC06)
 
-    Note over Admin, Dashboard: Admin masuk ke sistem untuk memproses data pendaftar baru
+    Note over Admin, Dashboard: Admin memproses pendaftaran baru
     Admin->>Dashboard: Melakukan Login (UC07)
-    Dashboard->>DB: Load data agregasi & 100 pendaftar terbaru sekaligus (UC09, UC13)
-    DB-->>Dashboard: Mengembalikan data batch pendaftar, paket, pengumuman
-    Dashboard-->>Admin: Menampilkan Dasbor Utama & Grafik Chart.js secara instan
+    Dashboard->>DB: Load data pendaftaran terbaru (UC09, UC13)
+    DB-->>Dashboard: Mengembalikan data pendaftar
+    Dashboard-->>Admin: Menampilkan daftar pendaftar
+    Admin->>Dashboard: Mengubah status pendaftaran dari Pending ke "Setup" (UC15)
+    Dashboard->>DB: Simpan status "Setup" (Siap dipasang oleh teknisi)
+    DB-->>Dashboard: Konfirmasi simpan status
     
-    Admin->>Dashboard: Mengklik menu Pendaftaran, lalu detail pendaftar (UC14)
-    Dashboard->>S3: Mengambil gambar berkas fisik pendaftar
-    Dashboard->>Dashboard: Menginisialisasi Peta Geografis Leaflet.js
-    Dashboard-->>Admin: Menampilkan Modal Detail Lengkap, Peta, & Gambar Rumah
-
-    Admin->>Dashboard: Mengubah status pendaftar menjadi "Validated" / "Active" (UC15)
-    Dashboard->>DB: Mengirim request update status via AJAX
-    DB-->>Dashboard: Mengonfirmasi perubahan status database
-    Dashboard-->>Admin: Lencana status berubah menjadi hijau (Active) real-time tanpa reload
+    Note over Teknisi, TechDash: Teknisi lapangan melakukan instalasi fisik ke rumah pelanggan
+    Teknisi->>TechDash: Login & melihat tugas status "Setup" (UC32)
+    TechDash->>DB: Query daftar pendaftar dengan status 'setup'
+    DB-->>TechDash: Mengembalikan daftar tugas instalasi
+    TechDash-->>Teknisi: Menampilkan daftar tugas pemasangan
+    
+    Teknisi->>TechDash: Membuka form dokumentasi & menginput PON S/N (scan camera/manual), Nama Wi-Fi, Password Wi-Fi (UC33)
+    TechDash->>DB: Mengirim data dokumentasi instalasi & update status pendaftaran ke "Active"
+    DB-->>TechDash: Konfirmasi data tersimpan sukses
+    TechDash-->>Teknisi: Menampilkan pesan sukses penginstalan perangkat
+    
+    Note over Pelanggan: Pelanggan memantau status instalasi mereka secara mandiri
+    Pelanggan->>LP: Memasukkan ID di menu "Cek Status" (UC06)
+    LP->>DB: Query status pendaftaran (UC06)
+    DB-->>LP: Mengembalikan data status ("Active")
+    LP-->>Pelanggan: Menampilkan status pelacakan: "Layanan Internet Anda Sudah Aktif!"
 ```
 
 ---
