@@ -104,7 +104,7 @@ class PendaftaranExtendedAdminTest extends TestCase
     public function test_visitor_can_submit_registration_with_image(): void
     {
         Storage::fake('s3');
-        $image = UploadedFile::fake()->image('ktp.jpg');
+        $image = UploadedFile::fake()->create('ktp.jpg', 100, 'image/jpeg');
 
         $response = $this->post('/daftar', [
             'nama' => 'Budi Santoso',
@@ -818,7 +818,7 @@ class PendaftaranExtendedAdminTest extends TestCase
     public function test_admin_can_upload_avatar_success(): void
     {
         Storage::fake('s3');
-        $avatar = UploadedFile::fake()->image('avatar.jpg');
+        $avatar = UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg');
 
         AdminProfile::create([
             'nama_lengkap' => 'Admin Awal',
@@ -884,7 +884,7 @@ class PendaftaranExtendedAdminTest extends TestCase
     public function test_admin_can_upload_and_delete_logo(): void
     {
         Storage::fake('s3');
-        $logo = UploadedFile::fake()->image('logo.png');
+        $logo = UploadedFile::fake()->create('logo.png', 100, 'image/png');
 
         // 1. Upload Logo
         $response = $this->actingAs($this->admin)->post('/admin/pengaturan/logo', [
