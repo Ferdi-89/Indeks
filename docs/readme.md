@@ -40,7 +40,7 @@ Sistem R-NET menggunakan arsitektur hybrid modern:
 
 | Lapisan (Layer) | Teknologi / Library | Deskripsi |
 | :--- | :--- | :--- |
-| **Core Framework** | Laravel 11.x | Backend API, Routing, dan template rendering. |
+| **Core Framework** | Laravel 1.x | Backend API, Routing, dan template rendering. |
 | **Database** | PostgreSQL (Supabase) | Penyimpanan data relasional aman. |
 | **Cloud Storage** | Supabase S3 bucket | Driver S3 via `league/flysystem-aws-s3-v3`. |
 | **UI Framework** | Tailwind CSS & DaisyUI 4.10.2 | Desain antarmuka premium, responsif, dan konsisten. |
