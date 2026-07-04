@@ -161,7 +161,18 @@
                     <td class="font-mono text-sm font-semibold text-primary">{{ $item->id_pendaftaran }}</td>
                     <td class="font-medium">{{ $item->nama }}</td>
                     <td>
-                        <div class="text-sm font-semibold">{{ $item->nomor_tlpn }}</div>
+                        <div class="text-sm font-semibold">
+                            @php
+                                $cleanPhone = preg_replace('/[^0-9]/', '', $item->nomor_tlpn);
+                                if (str_starts_with($cleanPhone, '0')) {
+                                    $cleanPhone = '62' . substr($cleanPhone, 1);
+                                }
+                            @endphp
+                            <a href="https://wa.me/{{ $cleanPhone }}?text=Halo%20{{ urlencode($item->nama) }},%20kami%20dari%20R-NET..." target="_blank" rel="noopener noreferrer" class="link link-primary hover:underline inline-flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                {{ $item->nomor_tlpn }}
+                            </a>
+                        </div>
                         <div class="text-xs text-base-content/70">{{ $item->wilayah }}</div>
                     </td>
                     <td class="max-w-[200px] truncate" title="{{ $item->alamat }}">{{ $item->alamat }}</td>
@@ -252,7 +263,7 @@
         </div>
         <div class="form-control w-full">
             <label class="label"><span class="label-text font-medium">No. Telepon / WhatsApp</span></label>
-            <input type="text" name="nomor_tlpn" class="input input-bordered w-full" placeholder="Contoh: 08123456789" required />
+            <input type="text" name="nomor_tlpn" class="input input-bordered w-full" placeholder="Contoh: 08123456789 atau +628123456789" pattern="^(\+62|08|8)[0-9\s\-]{7,15}$" title="Format nomor HP harus diawali dengan 08, +62, atau langsung 8" required />
         </div>
         <div class="form-control w-full">
             <label class="label"><span class="label-text font-medium">Pilih Paket Layanan</span></label>
@@ -300,7 +311,19 @@
         
         <div><span class="text-base-content/70 text-sm block">Nama</span><span class="font-medium">{{ $item->nama }}</span></div>
         <div><span class="text-base-content/70 text-sm block">Wilayah</span><span class="font-medium">{{ $item->wilayah }}</span></div>
-        <div><span class="text-base-content/70 text-sm block">Telepon</span><span class="font-medium">{{ $item->nomor_tlpn }}</span></div>
+        <div>
+            <span class="text-base-content/70 text-sm block">Telepon</span>
+            @php
+                $cleanPhoneDetail = preg_replace('/[^0-9]/', '', $item->nomor_tlpn);
+                if (str_starts_with($cleanPhoneDetail, '0')) {
+                    $cleanPhoneDetail = '62' . substr($cleanPhoneDetail, 1);
+                }
+            @endphp
+            <a href="https://wa.me/{{ $cleanPhoneDetail }}?text=Halo%20{{ urlencode($item->nama) }},%20kami%20dari%20R-NET..." target="_blank" rel="noopener noreferrer" class="link link-primary hover:underline inline-flex items-center gap-1 font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                {{ $item->nomor_tlpn }}
+            </a>
+        </div>
         <div>
             <span class="text-base-content/70 text-sm block mb-1">Paket Layanan</span>
             <span class="px-2 py-1 bg-primary/10 text-primary font-bold rounded-md border border-primary/20 text-xs">
@@ -311,6 +334,21 @@
         <div><span class="text-base-content/70 text-sm block">Tanggal Daftar</span><span class="font-medium">{{ $item->created_at->format('d M Y H:i') }}</span></div>
         
         <div class="md:col-span-2"><span class="text-base-content/70 text-sm block">Alamat</span><span class="font-medium">{{ $item->alamat }}</span></div>
+
+        @if($item->pon_sn || $item->wifi_name)
+        <div class="md:col-span-2 bg-success/5 border border-success/20 p-4 rounded-xl mt-2">
+            <span class="text-success font-bold text-sm block mb-2 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-success"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Dokumentasi Pemasangan (Teknisi)
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div><span class="text-base-content/60 block">PON S/N:</span> <strong class="font-mono text-sm text-base-content">{{ $item->pon_sn }}</strong></div>
+                <div><span class="text-base-content/60 block">Nama WiFi (SSID):</span> <strong class="text-sm text-base-content">{{ $item->wifi_name }}</strong></div>
+                <div><span class="text-base-content/60 block">Password WiFi:</span> <strong class="text-sm text-base-content">{{ $item->wifi_password }}</strong></div>
+                <div><span class="text-base-content/60 block">Tanggal Pasang:</span> <strong class="text-sm text-base-content">{{ $item->installed_at ? \Carbon\Carbon::parse($item->installed_at)->format('d M Y H:i') : '-' }}</strong></div>
+            </div>
+        </div>
+        @endif
         
         <div class="md:col-span-2 bg-info/10 p-4 rounded-xl mt-2">
             <span class="text-info font-bold text-sm block">Titik Koordinat</span>
@@ -382,7 +420,7 @@
         
         <div class="form-control w-full">
             <label class="label"><span class="label-text">Telepon</span></label>
-            <input type="text" name="nomor_tlpn" value="{{ $item->nomor_tlpn }}" class="input input-bordered w-full" required />
+            <input type="text" name="nomor_tlpn" value="{{ $item->nomor_tlpn }}" class="input input-bordered w-full" pattern="^(\+62|08|8)[0-9\s\-]{7,15}$" title="Format nomor HP harus diawali dengan 08, +62, atau langsung 8" required />
         </div>
         
         <div class="form-control w-full">

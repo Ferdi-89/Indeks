@@ -21,6 +21,11 @@ class pendaftaran extends Model
         'path_gambar',
         'id_paket',
         'status',
+        'pon_sn',
+        'wifi_name',
+        'wifi_password',
+        'installed_by',
+        'installed_at',
         'created_at',
         'updated_at',
     ];
@@ -31,5 +36,13 @@ class pendaftaran extends Model
     public function paket()
     {
         return $this->belongsTo(paket::class, 'id_paket', 'id_paket');
+    }
+
+    /**
+     * Relasi ke teknisi yang menginstal (User)
+     */
+    public function installer()
+    {
+        return $this->belongsTo(User::class, 'installed_by');
     }
 }

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>Enterprise Architect</XMI.exporter>
+			<XMI.exporterVersion>2.5</XMI.exporterVersion>
+		</XMI.documentation>
+	</XMI.header>
+	<XMI.content>
+		<UML:Model name="EA Model" xmi.id="MX_EAID_Model">
+			<UML:Namespace.ownedElement>
+				<UML:Class name="EARootClass" xmi.id="EAID_11111111_5487_4080_A7F4_41526CB0AA00" isRoot="true" isLeaf="false" isAbstract="false"/>
+				<UML:Package name="Use Case Model R-NET Expanded" xmi.id="EAPK_00000000_0000_0000_0000_000000000001" isRoot="false" isLeaf="false" isAbstract="false" visibility="public">
+					<UML:ModelElement.taggedValue>
+						<UML:TaggedValue tag="ea_stype" value="Public"/>
+					</UML:ModelElement.taggedValue>
+					<UML:Namespace.ownedElement>
+
+						<UML:Actor name="Calon Pelanggan" xmi.id="EAID_AC000000_0000_0000_0000_000000000001" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="Actor"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:Actor>
+						<UML:Actor name="Admin" xmi.id="EAID_AC000000_0000_0000_0000_000000000002" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="Actor"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:Actor>
+						<UML:Actor name="Developer" xmi.id="EAID_AC000000_0000_0000_0000_000000000003" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="Actor"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:Actor>
+
+						<UML:Subsystem name="Sistem Layanan Internet R-NET" xmi.id="EAID_SB000000_0000_0000_0000_000000000001" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="Subsystem"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:Subsystem>
+
+						<UML:UseCase name="Melihat Halaman Utama" xmi.id="EAID_UC000000_0000_0000_0000_000000000001" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Informasi Paket" xmi.id="EAID_UC000000_0000_0000_0000_000000000002" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Pengumuman Aktif" xmi.id="EAID_UC000000_0000_0000_0000_000000000003" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengisi Formulir Pendaftaran" xmi.id="EAID_UC000000_0000_0000_0000_000000000004" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengunggah Berkas Identitas" xmi.id="EAID_UC000000_0000_0000_0000_000000000005" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Status Pendaftaran" xmi.id="EAID_UC000000_0000_0000_0000_000000000006" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melakukan Login" xmi.id="EAID_UC000000_0000_0000_0000_000000000007" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melakukan Logout" xmi.id="EAID_UC000000_0000_0000_0000_000000000008" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Dashboard" xmi.id="EAID_UC000000_0000_0000_0000_000000000009" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Grafik Pendaftaran" xmi.id="EAID_UC000000_0000_0000_0000_000000000010" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Monitoring Server" xmi.id="EAID_UC000000_0000_0000_0000_000000000011" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Monitoring Database" xmi.id="EAID_UC000000_0000_0000_0000_000000000012" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Daftar Pendaftar" xmi.id="EAID_UC000000_0000_0000_0000_000000000013" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Melihat Detail Pendaftar" xmi.id="EAID_UC000000_0000_0000_0000_000000000014" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengubah Status Pendaftaran" xmi.id="EAID_UC000000_0000_0000_0000_000000000015" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menghapus Data Pendaftar" xmi.id="EAID_UC000000_0000_0000_0000_000000000016" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menambahkan Paket Baru" xmi.id="EAID_UC000000_0000_0000_0000_000000000017" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengubah Data Paket" xmi.id="EAID_UC000000_0000_0000_0000_000000000018" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menghapus Data Paket" xmi.id="EAID_UC000000_0000_0000_0000_000000000019" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menambahkan Pengumuman" xmi.id="EAID_UC000000_0000_0000_0000_000000000020" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengubah Pengumuman" xmi.id="EAID_UC000000_0000_0000_0000_000000000021" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menghapus Pengumuman" xmi.id="EAID_UC000000_0000_0000_0000_000000000022" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menambahkan Promosi" xmi.id="EAID_UC000000_0000_0000_0000_000000000023" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengubah Promosi" xmi.id="EAID_UC000000_0000_0000_0000_000000000024" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menghapus Promosi" xmi.id="EAID_UC000000_0000_0000_0000_000000000025" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Memperbarui Profil" xmi.id="EAID_UC000000_0000_0000_0000_000000000026" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Memperbarui Perusahaan" xmi.id="EAID_UC000000_0000_0000_0000_000000000027" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menambahkan Area" xmi.id="EAID_UC000000_0000_0000_0000_000000000028" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Mengubah Area" xmi.id="EAID_UC000000_0000_0000_0000_000000000029" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:UseCase name="Menghapus Area" xmi.id="EAID_UC000000_0000_0000_0000_000000000030" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_stype" value="UseCase"/><UML:TaggedValue tag="ea_ntype" value="0"/></UML:ModelElement.taggedValue>
+                        </UML:UseCase>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000004" supplier="EAID_UC000000_0000_0000_0000_000000000005" xmi.id="EAID_DP000000_0000_0000_0000_000000000001" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="include"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000006" supplier="EAID_UC000000_0000_0000_0000_000000000004" xmi.id="EAID_DP000000_0000_0000_0000_000000000002" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000010" supplier="EAID_UC000000_0000_0000_0000_000000000009" xmi.id="EAID_DP000000_0000_0000_0000_000000000003" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000011" supplier="EAID_UC000000_0000_0000_0000_000000000009" xmi.id="EAID_DP000000_0000_0000_0000_000000000004" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000012" supplier="EAID_UC000000_0000_0000_0000_000000000009" xmi.id="EAID_DP000000_0000_0000_0000_000000000005" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000014" supplier="EAID_UC000000_0000_0000_0000_000000000013" xmi.id="EAID_DP000000_0000_0000_0000_000000000006" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000015" supplier="EAID_UC000000_0000_0000_0000_000000000013" xmi.id="EAID_DP000000_0000_0000_0000_000000000007" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Dependency client="EAID_UC000000_0000_0000_0000_000000000016" supplier="EAID_UC000000_0000_0000_0000_000000000013" xmi.id="EAID_DP000000_0000_0000_0000_000000000008" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+							<UML:ModelElement.stereotype><UML:Stereotype name="extend"/></UML:ModelElement.stereotype>
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Dependency"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+						</UML:Dependency>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000001" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000001"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000001"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000002" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000001"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000002"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000003" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000001"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000003"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000004" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000001"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000004"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000005" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000007"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000006" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000008"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000007" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000009"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000008" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000013"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_00000000009" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000017"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000010" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000018"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000011" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000019"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000012" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000020"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000013" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000021"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000014" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000022"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000015" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000023"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000016" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000024"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000017" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000025"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000018" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000026"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000019" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000027"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000020" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000028"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000021" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000029"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000022" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000002"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000030"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000023" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000007"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000024" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000008"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000025" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000009"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000026" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000011"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000027" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000012"/>
+                            </UML:Association.connection>
+						</UML:Association>
+						<UML:Association xmi.id="EAID_AS000000_0000_0000_0000_000000000028" visibility="public" isRoot="false" isLeaf="false" isAbstract="false">
+                            <UML:ModelElement.taggedValue><UML:TaggedValue tag="ea_type" value="Association"/><UML:TaggedValue tag="direction" value="Source -&gt; Destination"/></UML:ModelElement.taggedValue>
+							<UML:Association.connection>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="false" type="EAID_AC000000_0000_0000_0000_000000000003"/>
+                                <UML:AssociationEnd visibility="public" aggregation="none" isOrdered="false" targetScope="instance" changeable="none" isNavigable="true" type="EAID_UC000000_0000_0000_0000_000000000026"/>
+                            </UML:Association.connection>
+						</UML:Association>
+					</UML:Namespace.ownedElement>
+				</UML:Package>
+			</UML:Namespace.ownedElement>
+		</UML:Model>
+	</XMI.content>
+
+	<XMI.extensions xmi.extender="Enterprise Architect 2.5">
+        <diagrams>
+            <diagram xmi.id="EAID_DIAG_0000_0000_0000_000000000001">
+                <model package="EAPK_00000000_0000_0000_0000_000000000001" localID="1" owner="EAPK_00000000_0000_0000_0000_000000000001"/>
+                <properties name="Use Case Diagram R-NET" type="Use Case"/>
+                <project author="System" version="1.0" created="2026-05-09 00:00:00" modified="2026-05-09 00:00:00"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=2;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="SaveTag=0;"/>
+                <elements>
+                <element geometry="Left=250;Top=50;Right=750;Bottom=1500;" subject="EAID_SB000000_0000_0000_0000_000000000001" seqno="1" style="DUID=B01;"/>
+<element geometry="Left=50;Top=100;Right=95;Bottom=190;" subject="EAID_AC000000_0000_0000_0000_000000000001" seqno="2" style="DUID=A01;"/>
+<element geometry="Left=850;Top=250;Right=895;Bottom=340;" subject="EAID_AC000000_0000_0000_0000_000000000002" seqno="3" style="DUID=A02;"/>
+<element geometry="Left=850;Top=1100;Right=895;Bottom=1190;" subject="EAID_AC000000_0000_0000_0000_000000000003" seqno="4" style="DUID=A03;"/>
+<element geometry="Left=300;Top=95;Right=420;Bottom=145;" subject="EAID_UC000000_0000_0000_0000_000000000001" seqno="11" style="DUID=U01;"/>
+<element geometry="Left=550;Top=140;Right=670;Bottom=190;" subject="EAID_UC000000_0000_0000_0000_000000000002" seqno="12" style="DUID=U02;"/>
+<element geometry="Left=300;Top=185;Right=420;Bottom=235;" subject="EAID_UC000000_0000_0000_0000_000000000003" seqno="13" style="DUID=U03;"/>
+<element geometry="Left=550;Top=230;Right=670;Bottom=280;" subject="EAID_UC000000_0000_0000_0000_000000000004" seqno="14" style="DUID=U04;"/>
+<element geometry="Left=300;Top=275;Right=420;Bottom=325;" subject="EAID_UC000000_0000_0000_0000_000000000005" seqno="15" style="DUID=U05;"/>
+<element geometry="Left=550;Top=320;Right=670;Bottom=370;" subject="EAID_UC000000_0000_0000_0000_000000000006" seqno="16" style="DUID=U06;"/>
+<element geometry="Left=300;Top=365;Right=420;Bottom=415;" subject="EAID_UC000000_0000_0000_0000_000000000007" seqno="17" style="DUID=U07;"/>
+<element geometry="Left=550;Top=410;Right=670;Bottom=460;" subject="EAID_UC000000_0000_0000_0000_000000000008" seqno="18" style="DUID=U08;"/>
+<element geometry="Left=300;Top=455;Right=420;Bottom=505;" subject="EAID_UC000000_0000_0000_0000_000000000009" seqno="19" style="DUID=U09;"/>
+<element geometry="Left=550;Top=500;Right=670;Bottom=550;" subject="EAID_UC000000_0000_0000_0000_000000000010" seqno="20" style="DUID=U10;"/>
+<element geometry="Left=300;Top=545;Right=420;Bottom=595;" subject="EAID_UC000000_0000_0000_0000_000000000011" seqno="21" style="DUID=U11;"/>
+<element geometry="Left=550;Top=590;Right=670;Bottom=640;" subject="EAID_UC000000_0000_0000_0000_000000000012" seqno="22" style="DUID=U12;"/>
+<element geometry="Left=300;Top=635;Right=420;Bottom=685;" subject="EAID_UC000000_0000_0000_0000_000000000013" seqno="23" style="DUID=U13;"/>
+<element geometry="Left=550;Top=680;Right=670;Bottom=730;" subject="EAID_UC000000_0000_0000_0000_000000000014" seqno="24" style="DUID=U14;"/>
+<element geometry="Left=300;Top=725;Right=420;Bottom=775;" subject="EAID_UC000000_0000_0000_0000_000000000015" seqno="25" style="DUID=U15;"/>
+<element geometry="Left=550;Top=770;Right=670;Bottom=820;" subject="EAID_UC000000_0000_0000_0000_000000000016" seqno="26" style="DUID=U16;"/>
+<element geometry="Left=300;Top=815;Right=420;Bottom=865;" subject="EAID_UC000000_0000_0000_0000_000000000017" seqno="27" style="DUID=U17;"/>
+<element geometry="Left=550;Top=860;Right=670;Bottom=910;" subject="EAID_UC000000_0000_0000_0000_000000000018" seqno="28" style="DUID=U18;"/>
+<element geometry="Left=300;Top=905;Right=420;Bottom=955;" subject="EAID_UC000000_0000_0000_0000_000000000019" seqno="29" style="DUID=U19;"/>
+<element geometry="Left=550;Top=950;Right=670;Bottom=1000;" subject="EAID_UC000000_0000_0000_0000_000000000020" seqno="30" style="DUID=U20;"/>
+<element geometry="Left=300;Top=995;Right=420;Bottom=1045;" subject="EAID_UC000000_0000_0000_0000_000000000021" seqno="31" style="DUID=U21;"/>
+<element geometry="Left=550;Top=1040;Right=670;Bottom=1090;" subject="EAID_UC000000_0000_0000_0000_000000000022" seqno="32" style="DUID=U22;"/>
+<element geometry="Left=300;Top=1085;Right=420;Bottom=1135;" subject="EAID_UC000000_0000_0000_0000_000000000023" seqno="33" style="DUID=U23;"/>
+<element geometry="Left=550;Top=1130;Right=670;Bottom=1180;" subject="EAID_UC000000_0000_0000_0000_000000000024" seqno="34" style="DUID=U24;"/>
+<element geometry="Left=300;Top=1175;Right=420;Bottom=1225;" subject="EAID_UC000000_0000_0000_0000_000000000025" seqno="35" style="DUID=U25;"/>
+<element geometry="Left=550;Top=1220;Right=670;Bottom=1270;" subject="EAID_UC000000_0000_0000_0000_000000000026" seqno="36" style="DUID=U26;"/>
+<element geometry="Left=300;Top=1265;Right=420;Bottom=1315;" subject="EAID_UC000000_0000_0000_0000_000000000027" seqno="37" style="DUID=U27;"/>
+<element geometry="Left=550;Top=1310;Right=670;Bottom=1360;" subject="EAID_UC000000_0000_0000_0000_000000000028" seqno="38" style="DUID=U28;"/>
+<element geometry="Left=300;Top=1355;Right=420;Bottom=1405;" subject="EAID_UC000000_0000_0000_0000_000000000029" seqno="39" style="DUID=U29;"/>
+<element geometry="Left=550;Top=1400;Right=670;Bottom=1450;" subject="EAID_UC000000_0000_0000_0000_000000000030" seqno="40" style="DUID=U30;"/>
+
+                </elements>
+            </diagram>
+        </diagrams>
+    </XMI.extensions>
+</XMI>

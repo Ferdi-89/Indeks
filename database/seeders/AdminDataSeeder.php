@@ -20,6 +20,22 @@ class AdminDataSeeder extends Seeder
             [
                 'name' => 'Admin R-NET',
                 'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
+
+        // Pastikan role diset jika user sudah ada sebelumnya
+        if ($user->wasRecentlyCreated === false && $user->role !== 'admin') {
+            $user->update(['role' => 'admin']);
+        }
+
+        // Tambahkan juga akun teknisi default untuk kemudahan testing
+        $teknisi = \App\Models\User::firstOrCreate(
+            ['email' => 'teknisi@rnet.com'],
+            [
+                'name' => 'Teknisi R-NET',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'teknisi',
             ]
         );
 
@@ -57,6 +73,13 @@ class AdminDataSeeder extends Seeder
                 'jam_buka_sabtu' => '08:00',
                 'jam_tutup_sabtu' => '12:00',
                 'buka_minggu' => false,
+                'primary_color' => '#1977BF',
+                'secondary_color' => '#10B981',
+                'accent_color' => '#F59E0B',
+                'biaya_pasang' => 350000,
+                'estimasi_pasang' => '1-3 Hari Kerja',
+                'kelengkapan_pasang' => "Modem WiFi ONT Dual-Band\nKabel Fiber Optik FTTH\nJasa Pasang Teknisi\nAktivasi Layanan",
+                'langkah_pasang' => "Verifikasi & Survei|Admin memproses berkas pendaftaran dan teknisi mensurvei jalur tiang ke rumah Anda.\nInstalasi & Aktivasi|Teknisi menarik kabel fiber optik, merapikan perangkat modem WiFi, serta mengaktifkan paket internet Anda.",
             ]
         );
 

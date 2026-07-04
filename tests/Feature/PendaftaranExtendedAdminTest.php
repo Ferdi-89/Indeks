@@ -35,6 +35,7 @@ class PendaftaranExtendedAdminTest extends TestCase
             'name' => 'Admin Test',
             'email' => 'admin@test.com',
             'password' => bcrypt('password123'),
+            'role' => 'admin',
         ]);
 
         // Create a default package

@@ -44,6 +44,17 @@ Route::get('/daftar', function () {
 
 // ─── Proses Pendaftaran (POST) ──────────────────────────────────────────
 Route::post('/daftar', function (Illuminate\Http\Request $request) {
+    if ($request->has('nomor_tlpn')) {
+        $phone = trim($request->input('nomor_tlpn'));
+        $phone = preg_replace('/[^\+0-9]/', '', $phone);
+        if (str_starts_with($phone, '8')) {
+            $phone = '+62' . $phone;
+        }
+        if (str_starts_with($phone, '62') && !str_starts_with($phone, '+62')) {
+            $phone = '+' . $phone;
+        }
+        $request->merge(['nomor_tlpn' => $phone]);
+    }
 
     // 1. Validasi data (max length disesuaikan dengan schema database Supabase)
     $validated = $request->validate([
@@ -52,9 +63,11 @@ Route::post('/daftar', function (Illuminate\Http\Request $request) {
         'latitude' => 'nullable|numeric',
         'longtitude' => 'nullable|numeric',
         'wilayah' => 'required|string|max:100',
-        'nomor_tlpn' => 'required|string|max:20',
+        'nomor_tlpn' => ['required', 'string', 'max:20', 'regex:/^(\+62|08)[0-9]{8,15}$/'],
         'path_gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'id_paket' => 'required|string|max:5'
+    ], [
+        'nomor_tlpn.regex' => 'Format nomor HP/WhatsApp harus diawali dengan 08 atau +62.',
     ]);
 
     // 2. Generate ID unik (hindari collision)
@@ -145,8 +158,16 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
     ]);
 
     if (Illuminate\Support\Facades\Auth::attempt($credentials, $request->boolean('remember'))) {
+        $user = Illuminate\Support\Facades\Auth::user();
         $request->session()->regenerate();
-        return redirect()->intended('/admin');
+        
+        if ($user->role === 'admin') {
+            return redirect()->intended('/admin');
+        } elseif ($user->role === 'teknisi') {
+            return redirect()->intended('/teknisi');
+        } else {
+            return redirect()->intended('/cek-status');
+        }
     }
 
     return back()->withErrors([
@@ -161,15 +182,29 @@ Route::post('/logout', function (Illuminate\Http\Request $request) {
     return redirect('/login');
 })->name('logout');
 
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     // --- Pendaftaran ---
     Route::post('/pendaftaran', function(Illuminate\Http\Request $request) {
+        if ($request->has('nomor_tlpn')) {
+            $phone = trim($request->input('nomor_tlpn'));
+            $phone = preg_replace('/[^\+0-9]/', '', $phone);
+            if (str_starts_with($phone, '8')) {
+                $phone = '+62' . $phone;
+            }
+            if (str_starts_with($phone, '62') && !str_starts_with($phone, '+62')) {
+                $phone = '+' . $phone;
+            }
+            $request->merge(['nomor_tlpn' => $phone]);
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:100',
             'wilayah' => 'required|string|max:100',
-            'nomor_tlpn' => 'required|string|max:20',
+            'nomor_tlpn' => ['required', 'string', 'max:20', 'regex:/^(\+62|08)[0-9]{8,15}$/'],
             'id_paket' => 'required|string|max:5'
+        ], [
+            'nomor_tlpn.regex' => 'Format nomor HP/WhatsApp harus diawali dengan 08 atau +62.',
         ]);
 
         do {
@@ -214,19 +249,31 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $pendaftaran->delete();
         return redirect()->back()->with('success', 'Pendaftaran dihapus.');
     })->name('pendaftaran.destroy');
-
     Route::put('/pendaftaran/{id}', function(Illuminate\Http\Request $request, $id) {
+        if ($request->has('nomor_tlpn')) {
+            $phone = trim($request->input('nomor_tlpn'));
+            $phone = preg_replace('/[^\+0-9]/', '', $phone);
+            if (str_starts_with($phone, '8')) {
+                $phone = '+62' . $phone;
+            }
+            if (str_starts_with($phone, '62') && !str_starts_with($phone, '+62')) {
+                $phone = '+' . $phone;
+            }
+            $request->merge(['nomor_tlpn' => $phone]);
+        }
+
         $data = $request->validate([
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:100',
             'wilayah' => 'required|string|max:100',
-            'nomor_tlpn' => 'required|string|max:20',
+            'nomor_tlpn' => ['required', 'string', 'max:20', 'regex:/^(\+62|08)[0-9]{8,15}$/'],
             'id_paket' => 'required|string|max:5'
+        ], [
+            'nomor_tlpn.regex' => 'Format nomor HP/WhatsApp harus diawali dengan 08 atau +62.',
         ]);
         App\Models\pendaftaran::findOrFail($id)->update($data);
         return redirect()->back()->with('success', 'Data pendaftaran diperbarui.');
     })->name('pendaftaran.update');
-
     Route::post('/pendaftaran/export', function(Illuminate\Http\Request $request) {
         $search = $request->input('search');
         $exportOption = $request->input('export_option', 'all');
@@ -680,6 +727,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'alamat_perusahaan'  => 'nullable|string',
             'website'            => 'nullable|url|max:255',
             'npwp'               => 'nullable|string|max:30',
+            'primary_color'      => ['nullable', 'string', 'max:10', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'secondary_color'    => ['nullable', 'string', 'max:10', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'accent_color'       => ['nullable', 'string', 'max:10', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'biaya_pasang'       => 'nullable|integer|min:0',
+            'estimasi_pasang'    => 'nullable|string|max:50',
+            'kelengkapan_pasang' => 'nullable|string',
+            'langkah_pasang'     => 'nullable|string',
         ]);
         App\Models\CompanySetting::getInstance()->update($data);
         return $jsonOrRedirect($request, 'Informasi perusahaan berhasil diperbarui.');
@@ -909,6 +963,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         // Pengaturan Perusahaan + Area Layanan
         $company = App\Models\CompanySetting::getInstance();
         $areaLayanan = App\Models\AreaLayanan::all();
+        $users = App\Models\User::orderBy('id', 'desc')->get();
 
         return view('admin.index', compact(
             'pendaftaran', 'totalPendaftaran', 
@@ -917,7 +972,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             'chartLabels', 'chartValues',
             'promosi',
             'adminProfile',
-            'company', 'areaLayanan'
+            'company', 'areaLayanan', 'users'
         ));
     })->name('index');
 
@@ -1067,5 +1122,128 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         $unread = App\Models\AdminNotification::unread()->count();
         return response()->json(['success' => true, 'unread' => $unread]);
     })->name('api.notifications.clear');
+
+    // --- Manajemen User ---
+    Route::post('/users', function(Illuminate\Http\Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:admin,teknisi,pengguna'
+        ]);
+
+        $user = App\Models\User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Illuminate\Support\Facades\Hash::make($validated['password']),
+            'role' => $validated['role']
+        ]);
+
+        // Jika role admin, buatkan profil admin default
+        if ($validated['role'] === 'admin') {
+            App\Models\AdminProfile::create([
+                'user_id' => $user->id,
+                'nama_lengkap' => $user->name,
+                'username' => 'admin_' . $user->id,
+                'email' => $user->email,
+                'role' => 'Administrator',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan.');
+    })->name('users.store');
+
+    Route::put('/users/{id}', function(Illuminate\Http\Request $request, $id) {
+        $user = App\Models\User::findOrFail($id);
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:admin,teknisi,pengguna',
+            'password' => 'nullable|string|min:6'
+        ]);
+
+        $updateData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role']
+        ];
+
+        if ($request->filled('password')) {
+            $updateData['password'] = Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+
+        // Update profil admin jika ada
+        if ($user->role === 'admin') {
+            $profil = App\Models\AdminProfile::where('user_id', $user->id)->first();
+            if ($profil) {
+                $profil->update([
+                    'nama_lengkap' => $user->name,
+                    'email' => $user->email,
+                ]);
+            } else {
+                App\Models\AdminProfile::create([
+                    'user_id' => $user->id,
+                    'nama_lengkap' => $user->name,
+                    'username' => 'admin_' . $user->id,
+                    'email' => $user->email,
+                    'role' => 'Administrator',
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'User berhasil diperbarui.');
+    })->name('users.update');
+
+    Route::delete('/users/{id}', function($id) {
+        if (Illuminate\Support\Facades\Auth::id() == $id) {
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $user = App\Models\User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User berhasil dihapus.');
+    })->name('users.destroy');
+});
+
+// ─── Dashboard & Fungsionalitas Teknisi ─────────────────────────────
+Route::prefix('teknisi')->name('teknisi.')->middleware(['auth', 'role:teknisi'])->group(function () {
+    Route::get('/', function() {
+        $activeTasks = App\Models\pendaftaran::with('paket')
+            ->whereIn('status', ['validated', 'setup'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $completedTasks = App\Models\pendaftaran::with('paket')
+            ->where('status', 'active')
+            ->where('installed_by', Illuminate\Support\Facades\Auth::id())
+            ->orderBy('installed_at', 'desc')
+            ->get();
+            
+        $company = App\Models\CompanySetting::getInstance();
+        return view('teknisi.dashboard', compact('activeTasks', 'completedTasks', 'company'));
+    })->name('dashboard');
+
+    Route::post('/install/{id}', function(Illuminate\Http\Request $request, $id) {
+        $pendaftaran = App\Models\pendaftaran::findOrFail($id);
+        $validated = $request->validate([
+            'pon_sn' => 'required|string|max:100',
+            'wifi_name' => 'required|string|max:100',
+            'wifi_password' => 'required|string|max:100',
+        ]);
+
+        $pendaftaran->update([
+            'status' => 'active',
+            'pon_sn' => $validated['pon_sn'],
+            'wifi_name' => $validated['wifi_name'],
+            'wifi_password' => $validated['wifi_password'],
+            'installed_by' => Illuminate\Support\Facades\Auth::id(),
+            'installed_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Instalasi berhasil didokumentasikan dan status pendaftaran aktif.');
+    })->name('install.store');
 });
 

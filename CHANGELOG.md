@@ -2,27 +2,39 @@
 
 ---
 
-## [Planned] - Fitur Baru PBL R-NET & Status Instalasi
+## [2026-07-03] Jumat, 3 Juli 2026 — 21:44 WIB
 
-### Added
+### 🚀 Implementasi Fitur Kustomisasi Tema, Dashboard Teknisi, dan Pemasangan Perangkat
+
 - **Multi-Role & Autentikasi** — Penambahan role akun `teknisi` dan `pengguna` selain `admin` untuk pembatasan hak akses yang sesuai.
 - **Portal & Dashboard Teknisi** — Modul dashboard baru khusus untuk teknisi lapangan untuk mengelola penugasan instalasi fisik.
 - **Dokumentasi Pemasangan Fisik** — Form di dashboard teknisi untuk merekam nomor PON S/N (dapat diinput manual atau dipindai dengan kamera menggunakan barcode/QR scanner), nama Wi-Fi (SSID), dan password Wi-Fi.
 - **Konektivitas WhatsApp Direct** — Integrasi link langsung WhatsApp pada nomor telepon pelanggan di dashboard admin untuk mempermudah komunikasi tim CS/admin.
 - **Kustomisasi Tema Landing Page** — Modul pengaturan di admin panel untuk mengubah warna tema utama landing page secara fleksibel.
-- **Fitur Status Instalasi Mandiri** — Pencarian status pelacakan pendaftaran oleh pelanggan via stepper visual interaktif dengan memasukkan ID Pendaftaran.
-- **Kustomisasi Tombol CTA Paket** — Penambahan input label kustom untuk tombol pembelian/CTA per paket internet.
-
-### Changed
+- **Kustomisasi Tombol CTA Paket** — Mengubah tombol paket di landing page menjadi "BELI PAKET" dan mengarahkan langsung ke halaman pendaftaran dengan query parameter paket terpilih.
 - **Pemasangan Perangkat Lebih Detail** — Bagian informasi panduan instalasi perangkat di landing page dibuat lebih rinci dan dapat diedit oleh admin via dashboard.
-- **Relokasi Tombol Feedback Admin** — Pemindahan tombol WhatsApp feedback ke lokasi melayang (floating) bawah kanan atau bagian footer agar lebih mudah dijangkau pelanggan.
-- **Tautan Navigasi "Cek Status"** — Penambahan link pelacakan status pada navbar `welcome.blade.php` dan `pendaftaran.blade.php`.
+- **Relokasi Tombol Feedback Admin** — Pemindahan tombol WhatsApp feedback ke lokasi melayang (floating) bawah kanan dengan tooltip bouncing dan efek denyut interaktif.
 
-### Impacted Modules
-- Customer Portal / Front-End Modul (Landing Page & Pendaftaran)
-- Administrator SPA Panel Dashboard
-- Route / Controller & Middleware Modul (Multi-role Auth)
-- Database Schema (penambahan kolom role, detail pemasangan, PON S/N, Wi-Fi info)
+### File yang Dimodifikasi
+
+| File | Perubahan |
+|------|-----------|
+| `database/migrations/*_add_new_fields_for_customization_and_technician.php` | Membuat migrasi kolom baru untuk users, company_settings, dan pendaftarans |
+| `app/Models/User.php` | Menambahkan `role` ke fillable |
+| `app/Models/CompanySetting.php` | Menambahkan field warna tema dan data pemasangan baru ke fillable |
+| `app/Models/pendaftaran.php` | Menambahkan detail dokumentasi instalasi ke fillable dan mendefinisikan relasi `installer()` |
+| `app/Http/Middleware/CheckRole.php` | Membuat middleware CheckRole untuk otorisasi berbasis peran |
+| `bootstrap/app.php` | Mendaftarkan alias middleware `'role'` |
+| `routes/web.php` | Update redirect pasca-login, rute dashboard teknisi, User CRUD admin, dan validasi warna/pemasangan |
+| `resources/views/welcome.blade.php` | Injeksi CSS warna tema dinamis, Floating WhatsApp button, detail pasang dari database, dan tombol Beli Paket |
+| `resources/views/pendaftaran.blade.php` | Injeksi CSS warna tema dinamis |
+| `resources/views/cek-status.blade.php` | Injeksi CSS warna tema dinamis |
+| `resources/views/admin/index.blade.php` | Menghubungkan panel Manajemen User dan JS switchTab |
+| `resources/views/admin/layouts/main.blade.php` | Menambahkan navigasi Manajemen User di sidebar layout admin |
+| `resources/views/admin/partials/pendaftaran.blade.php` | Menambahkan link WhatsApp pada nomor telepon dan detail dokumentasi pasang di modal detail |
+| `resources/views/admin/partials/pengaturan.blade.php` | Menambahkan form input warna tema, biaya pasang, estimasi pasang, kelengkapan, dan langkah pasang |
+| `resources/views/admin/partials/users.blade.php` | Membuat partial CRUD pengguna untuk admin |
+| `resources/views/teknisi/dashboard.blade.php` | Membuat dashboard khusus teknisi mobile-first dengan Google Maps dan Barcode Scanner |
 
 ---
 

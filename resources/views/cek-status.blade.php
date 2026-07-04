@@ -23,6 +23,25 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Dynamic Theme Customization -->
+    <style>
+        :root, [data-theme="light"], [data-theme="dark"] {
+            @if(isset($company) && $company->primary_color)
+                --color-primary: {{ $company->primary_color }} !important;
+                --color-primary-content: #ffffff !important;
+                --color-primary-hover: {{ $company->primary_color }}ee !important;
+            @endif
+            @if(isset($company) && $company->secondary_color)
+                --color-secondary: {{ $company->secondary_color }} !important;
+                --color-secondary-content: #ffffff !important;
+            @endif
+            @if(isset($company) && $company->accent_color)
+                --color-accent: {{ $company->accent_color }} !important;
+                --color-accent-content: #ffffff !important;
+            @endif
+        }
+    </style>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;

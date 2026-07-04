@@ -31,6 +31,7 @@ class AdminManagementTest extends TestCase
             'name' => 'Admin R-NET',
             'email' => 'admin@rnet.com',
             'password' => bcrypt('password123'),
+            'role' => 'admin',
         ]);
     }
 

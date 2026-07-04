@@ -1,3 +1,18 @@
+@php
+    $biaya = number_format($company->biaya_pasang ?? 350000, 0, ',', '.');
+    $estimasi = $company->estimasi_pasang ?? '1-3 Hari Kerja';
+    
+    $kelengkapanRaw = isset($company->kelengkapan_pasang) && !empty($company->kelengkapan_pasang)
+        ? explode("\n", str_replace("\r", "", $company->kelengkapan_pasang))
+        : ['Modem WiFi ONT Dual-Band', 'Kabel Fiber Optik FTTH', 'Jasa Pasang Teknisi', 'Aktivasi Layanan'];
+        
+    $langkahRaw = isset($company->langkah_pasang) && !empty($company->langkah_pasang)
+        ? explode("\n", str_replace("\r", "", $company->langkah_pasang))
+        : [
+            "Verifikasi & Survei|Admin memproses berkas pendaftaran dan teknisi mensurvei jalur tiang ke rumah Anda.",
+            "Instalasi & Aktivasi|Teknisi menarik kabel fiber optik, merapikan perangkat modem WiFi, serta mengaktifkan paket internet Anda."
+          ];
+@endphp
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
 
@@ -24,6 +39,25 @@
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Dynamic Theme Customization -->
+    <style>
+        :root, [data-theme="light"], [data-theme="dark"] {
+            @if(isset($company) && $company->primary_color)
+                --color-primary: {{ $company->primary_color }} !important;
+                --color-primary-content: #ffffff !important;
+                --color-primary-hover: {{ $company->primary_color }}ee !important;
+            @endif
+            @if(isset($company) && $company->secondary_color)
+                --color-secondary: {{ $company->secondary_color }} !important;
+                --color-secondary-content: #ffffff !important;
+            @endif
+            @if(isset($company) && $company->accent_color)
+                --color-accent: {{ $company->accent_color }} !important;
+                --color-accent-content: #ffffff !important;
+            @endif
+        }
+    </style>
+
     <!-- Theme Adaptive Hero Background -->
     <style>
         #hero-section {
@@ -520,17 +554,32 @@
                             <a href="/daftar?paket={{ $paket->id_paket }}"
                                 class="btn w-full rounded-xl font-bold text-xs active:scale-95 transition-all text-white border-none shadow-lg"
                                 style="@if($paket->warna_button) background-color: {{ $paket->warna_button }} !important; border-color: {{ $paket->warna_button }} !important; box-shadow: 0 4px 14px -2px {{ $paket->warna_button }}50 !important; @else background-color: #2563eb !important; border-color: #2563eb !important; box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4) !important; @endif">
-                                PILIH PAKET
+                                BELI PAKET
                             </a>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <p
-                class="flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-4 py-2.5 rounded-2xl sm:rounded-full text-xs font-bold mx-auto w-fit text-center border border-yellow-500 shadow-md">
-                <i data-lucide="info" class="w-4 h-4 shrink-0"></i> BIAYA PENARIKAN KABEL &amp; INSTALASI MODEM HANYA 350K
-            </p>
+            <div class="max-w-xl mx-auto bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm text-center space-y-4">
+                <div class="inline-flex items-center justify-center gap-2 bg-yellow-400 text-amber-950 px-4 py-2.5 rounded-2xl sm:rounded-full text-xs font-bold w-full border border-yellow-500 shadow-sm">
+                    <i data-lucide="info" class="w-4 h-4 shrink-0"></i> BIAYA PENARIKAN KABEL &amp; INSTALASI MODEM HANYA Rp {{ number_format($company->biaya_pasang ?? 350000, 0, ',', '.') }}
+                </div>
+                
+                <div class="space-y-3 pt-1">
+                    <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-widest block">Kelengkapan Paket Pasang yang Anda Dapatkan:</span>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        @foreach($kelengkapanRaw as $item)
+                            @if(trim($item))
+                            <span class="px-3.5 py-2 bg-base-200 text-base-content/85 text-[11px] font-bold rounded-2xl border border-base-300 flex items-center gap-2 hover:border-primary/40 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><polyline points="20 6 9 17 4 12"/></svg>
+                                {{ trim($item) }}
+                            </span>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </section>
 
 
@@ -1315,6 +1364,7 @@
         calculateRecommendation();
 
         // ── Interactive FAQ Terminal widget ──────────────────────
+        // Menggunakan variabel global yang dideklarasikan di bagian atas berkas
         const faqAnswers = {
             1: `
                 <div class="space-y-3 animate-fade-in-up">
@@ -1344,27 +1394,19 @@
                         <span class="text-xs text-base-content/50 font-bold">Sekali Bayar</span>
                     </div>
                     <p class="text-xs text-base-content/85 leading-relaxed font-medium">
-                        Biaya instalasi awal hanya sebesar <strong>Rp 350.000</strong> (sekali bayar saat pemasangan selesai).
+                        Biaya instalasi awal hanya sebesar <strong>Rp {{ $biaya }}</strong> (sekali bayar saat pemasangan selesai).
                     </p>
                     <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2.5">
                         <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-widest block">Kelengkapan Paket Pasang:</span>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-base-content/70">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="wifi" class="w-4.5 h-4.5 text-primary shrink-0"></i>
-                                <span>Modem WiFi ONT Dual-Band</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="cable" class="w-4.5 h-4.5 text-primary shrink-0"></i>
-                                <span>Kabel Fiber Optik FTTH</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="user-cog" class="w-4.5 h-4.5 text-primary shrink-0"></i>
-                                <span>Jasa Pasang Teknisi</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="shield-check" class="w-4.5 h-4.5 text-primary shrink-0"></i>
-                                <span>Aktivasi Layanan</span>
-                            </div>
+                            @foreach($kelengkapanRaw as $item)
+                                @if(trim($item))
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="check" class="w-3.5 h-3.5 text-primary shrink-0"></i>
+                                    <span>{{ trim($item) }}</span>
+                                </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -1376,17 +1418,22 @@
                         <span class="text-xs text-base-content/50 font-bold">Proses Cepat & Rapih</span>
                     </div>
                     <p class="text-xs text-base-content/85 leading-relaxed font-medium">
-                        Kabel akan ditarik langsung ke rumah Anda dalam jangka waktu <strong>1 hingga 3 hari kerja</strong> setelah pendaftaran disetujui.
+                        Kabel akan ditarik langsung ke rumah Anda dalam jangka waktu <strong>{{ $estimasi }}</strong> setelah pendaftaran disetujui.
                     </p>
                     <div class="bg-base-200/50 border border-base-300/20 rounded-xl p-3.5 space-y-2">
-                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
-                            <div class="w-5 h-5 rounded-full bg-secondary/15 text-secondary flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</div>
-                            <span><strong>Verifikasi & Survei:</strong> Admin memproses berkas pendaftaran dan teknisi mensurvei jalur tiang ke rumah Anda.</span>
-                        </div>
-                        <div class="flex items-start gap-2.5 text-xs text-base-content/75">
-                            <div class="w-5 h-5 rounded-full bg-secondary/15 text-secondary flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</div>
-                            <span><strong>Instalasi & Aktivasi:</strong> Teknisi menarik kabel fiber optik, merapikan perangkat modem WiFi, serta mengaktifkan paket internet Anda.</span>
-                        </div>
+                        @foreach($langkahRaw as $index => $line)
+                            @php
+                                $parts = explode('|', $line, 2);
+                                $title = $parts[0] ?? '';
+                                $desc = $parts[1] ?? '';
+                            @endphp
+                            @if(trim($title))
+                            <div class="flex items-start gap-2.5 text-xs text-base-content/75">
+                                <div class="w-5 h-5 rounded-full bg-secondary/15 text-secondary flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">{{ $index + 1 }}</div>
+                                <span><strong>{{ trim($title) }}:</strong> {{ trim($desc) }}</span>
+                            </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             `,
@@ -1533,8 +1580,27 @@
             if (typeof L !== 'undefined') initMap();
             if (typeof lucide !== 'undefined') lucide.createIcons();
         });
-
     </script>
+
+    <!-- Floating WhatsApp Action Button -->
+    @php
+        $waNumber = isset($company) && $company->whatsapp 
+            ? preg_replace('/[^0-9]/', '', $company->whatsapp) 
+            : '6281373242673';
+        $waText = urlencode("Halo R-NET, saya ingin bertanya tentang layanan pasang internet...");
+    @endphp
+    <div class="fixed bottom-6 right-6 z-[9999] flex flex-col items-end pointer-events-none">
+        <div class="mb-2 px-3 py-1.5 bg-base-100 text-base-content border border-base-300 rounded-xl shadow-lg text-[10px] font-bold tracking-wide animate-bounce pointer-events-auto flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+            Chat Admin WhatsApp
+        </div>
+        <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank" rel="noopener noreferrer" 
+           class="pointer-events-auto w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group relative">
+            <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping group-hover:animate-none"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+    </div>
+
 </body>
 
 </html>

@@ -24,6 +24,13 @@ class CompanySetting extends Model
         'jam_buka_sabtu',
         'jam_tutup_sabtu',
         'buka_minggu',
+        'primary_color',
+        'secondary_color',
+        'accent_color',
+        'biaya_pasang',
+        'estimasi_pasang',
+        'kelengkapan_pasang',
+        'langkah_pasang',
     ];
 
     protected $casts = [

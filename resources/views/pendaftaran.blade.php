@@ -24,6 +24,25 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Dynamic Theme Customization -->
+    <style>
+        :root, [data-theme="light"], [data-theme="dark"] {
+            @if(isset($company) && $company->primary_color)
+                --color-primary: {{ $company->primary_color }} !important;
+                --color-primary-content: #ffffff !important;
+                --color-primary-hover: {{ $company->primary_color }}ee !important;
+            @endif
+            @if(isset($company) && $company->secondary_color)
+                --color-secondary: {{ $company->secondary_color }} !important;
+                --color-secondary-content: #ffffff !important;
+            @endif
+            @if(isset($company) && $company->accent_color)
+                --color-accent: {{ $company->accent_color }} !important;
+                --color-accent-content: #ffffff !important;
+            @endif
+        }
+    </style>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -247,6 +266,7 @@
                                     </span>
                                     <input type="tel" name="nomor_tlpn" placeholder="8123456789"
                                         value="{{ old('nomor_tlpn') }}" required minlength="8"
+                                        pattern="^(08|\+62|8)[0-9\s\-]{7,15}$" title="Format nomor HP harus diawali dengan 08, +62, atau langsung 8"
                                         class="w-full px-4 py-3 outline-none text-sm bg-transparent text-base-content focus:bg-base-100">
                                 </div>
                             </div>
