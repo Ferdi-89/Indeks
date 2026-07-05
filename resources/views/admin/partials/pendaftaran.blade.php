@@ -336,8 +336,8 @@
         <div class="md:col-span-2"><span class="text-base-content/70 text-sm block">Alamat</span><span class="font-medium">{{ $item->alamat }}</span></div>
 
         @if($item->pon_sn || $item->wifi_name)
-        <div class="md:col-span-2 bg-success/5 border border-success/20 p-4 rounded-xl mt-2">
-            <span class="text-success font-bold text-sm block mb-2 flex items-center gap-1.5">
+        <div class="md:col-span-2 bg-success/5 border border-success/20 p-4 rounded-xl mt-2 space-y-3">
+            <span class="text-success font-bold text-sm block flex items-center gap-1.5 border-b border-success/10 pb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-success"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Dokumentasi Pemasangan (Teknisi)
             </span>
@@ -347,6 +347,18 @@
                 <div><span class="text-base-content/60 block">Password WiFi:</span> <strong class="text-sm text-base-content">{{ $item->wifi_password }}</strong></div>
                 <div><span class="text-base-content/60 block">Tanggal Pasang:</span> <strong class="text-sm text-base-content">{{ $item->installed_at ? \Carbon\Carbon::parse($item->installed_at)->format('d M Y H:i') : '-' }}</strong></div>
             </div>
+            @if($item->path_bukti_foto)
+                @php
+                    $buktiUrl = env('S3_ENDPOINT') ? str_replace('/s3', '/object/public/' . env('S3_BUCKET') . '/', env('S3_ENDPOINT')) . $item->path_bukti_foto : Storage::disk('s3')->url($item->path_bukti_foto);
+                    $buktiImgSrc = Str::startsWith($item->path_bukti_foto, 'http') ? $item->path_bukti_foto : $buktiUrl;
+                @endphp
+                <div class="mt-3">
+                    <span class="text-base-content/60 block text-xs mb-1.5 font-semibold">Foto Bukti Instalasi:</span>
+                    <div class="rounded-lg overflow-hidden border border-base-300 max-h-48 flex items-center justify-center bg-base-200">
+                        <img src="{{ $buktiImgSrc }}" alt="Foto Bukti Instalasi" class="max-h-48 w-full object-cover">
+                    </div>
+                </div>
+            @endif
         </div>
         @endif
         

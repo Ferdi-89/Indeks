@@ -19,6 +19,7 @@ class pendaftaran extends Model
         'wilayah',
         'nomor_tlpn',
         'path_gambar',
+        'path_bukti_foto',
         'id_paket',
         'status',
         'pon_sn',

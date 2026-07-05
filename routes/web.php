@@ -509,6 +509,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         }
     })->name('paket.destroy');
 
+    Route::get('/paket', function() {
+        return redirect()->route('admin.index')->withFragment('paket');
+    })->name('paket');
+
     Route::get('/paket/{id}', function() {
         return redirect()->route('admin.index')->withFragment('paket');
     });
@@ -548,6 +552,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         return redirect()->back()->with('success', 'Pengumuman dihapus.');
     })->name('pengumuman.destroy');
 
+    Route::get('/pengumuman', function() {
+        return redirect()->route('admin.index')->withFragment('pengumuman');
+    })->name('pengumuman');
+
     Route::get('/pengumuman/{id}', function() {
         return redirect()->route('admin.index')->withFragment('pengumuman');
     });
@@ -582,6 +590,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         App\Models\promosi::where('id_promosi', $id)->delete();
         return redirect()->back()->with('success', 'Promosi dihapus.');
     })->name('promosi.destroy');
+
+    Route::get('/promosi', function() {
+        return redirect()->route('admin.index')->withFragment('promosi');
+    })->name('promosi');
 
     Route::get('/promosi/{id}', function() {
         return redirect()->route('admin.index')->withFragment('promosi');
@@ -873,6 +885,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         App\Models\AreaLayanan::findOrFail($id)->delete();
         return $jsonOrRedirect($request, 'Area layanan dihapus.');
     })->name('area.destroy');
+
+    Route::get('/area', function() {
+        return redirect()->route('admin.index')->withFragment('wilayah');
+    })->name('area');
 
     Route::get('/area/{id}', function() {
         return redirect()->route('admin.index')->withFragment('wilayah');
@@ -1232,13 +1248,24 @@ Route::prefix('teknisi')->name('teknisi.')->middleware(['auth', 'role:teknisi'])
             'pon_sn' => 'required|string|max:100',
             'wifi_name' => 'required|string|max:100',
             'wifi_password' => 'required|string|max:100',
+            'bukti_foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        $filePath = $pendaftaran->path_bukti_foto;
+        if ($request->hasFile('bukti_foto')) {
+            $file = $request->file('bukti_foto');
+            $originalName = $file->getClientOriginalName();
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_bukti_' . preg_replace('/[^A-Za-z0-9\-]/', '', pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
+            $filePath = $file->storeAs('bukti_instalasi', $fileName, 's3');
+        }
 
         $pendaftaran->update([
             'status' => 'active',
             'pon_sn' => $validated['pon_sn'],
             'wifi_name' => $validated['wifi_name'],
             'wifi_password' => $validated['wifi_password'],
+            'path_bukti_foto' => $filePath,
             'installed_by' => Illuminate\Support\Facades\Auth::id(),
             'installed_at' => now(),
         ]);

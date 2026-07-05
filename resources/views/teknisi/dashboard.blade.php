@@ -132,12 +132,21 @@
                         </div>
 
                         <!-- Customer Details -->
-                        <div class="space-y-1">
+                        <div class="space-y-2">
                             <h4 class="font-bold text-base text-base-content leading-tight">{{ $task->nama }}</h4>
-                            <a href="tel:{{ $task->nomor_tlpn }}" class="text-xs text-primary font-medium hover:underline inline-flex items-center gap-1">
-                                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
-                                {{ $task->nomor_tlpn }}
-                            </a>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <a href="tel:{{ $task->nomor_tlpn }}" class="btn btn-xs btn-outline btn-primary text-xs font-medium gap-1 rounded-lg">
+                                    <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                                    {{ $task->nomor_tlpn }}
+                                </a>
+                                @php
+                                    $cleanPhone = preg_replace('/[^0-9]/', '', str_starts_with($task->nomor_tlpn, '0') ? '62' . substr($task->nomor_tlpn, 1) : $task->nomor_tlpn);
+                                @endphp
+                                <a href="https://wa.me/{{ $cleanPhone }}?text=Halo%20{{ urlencode($task->nama) }},%20saya%20teknisi%20R-NET%20ingin%20mengonfirmasi%20jadwal%20pemasangan%20internet%20Anda." target="_blank" rel="noopener noreferrer" class="btn btn-xs bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium gap-1 border-none rounded-lg">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                                    Hubungi WhatsApp
+                                </a>
+                            </div>
                             <p class="text-xs text-base-content/70 mt-1 leading-relaxed"><strong class="text-base-content/80">Alamat:</strong> {{ $task->alamat }} ({{ $task->wilayah }})</p>
                         </div>
 
@@ -149,7 +158,7 @@
                                 Peta Lokasi
                             </button>
                             <!-- Google Maps Direction Link -->
-                            <a href="https://maps.google.com/?q={{ $task->latitude }},{{ $task->longtitude }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost border border-base-300 text-xs font-semibold gap-1.5 w-full">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $task->latitude }},{{ $task->longtitude }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost border border-base-300 text-xs font-semibold gap-1.5 w-full">
                                 <i data-lucide="navigation" class="w-4 h-4 text-info"></i>
                                 Petunjuk Arah
                             </a>
@@ -260,7 +269,7 @@
             <h3 class="font-bold text-base mb-1">Dokumentasi Pemasangan Baru</h3>
             <p id="install-modal-cust" class="text-xs text-base-content/50 mb-6 font-semibold">Pelanggan: -</p>
             
-            <form id="install_form" method="POST" class="space-y-4">
+            <form id="install_form" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 
                 <!-- PON S/N -->
@@ -291,6 +300,15 @@
                         <span class="label-text font-bold text-xs uppercase tracking-wide text-base-content/75">Password WiFi</span>
                     </label>
                     <input type="text" name="wifi_password" class="input input-bordered w-full font-mono text-sm" placeholder="Contoh: budi12345" required />
+                </div>
+
+                <!-- Foto Bukti Pemasangan -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold text-xs uppercase tracking-wide text-base-content/75">Foto Bukti Instalasi</span>
+                    </label>
+                    <input type="file" name="bukti_foto" class="file-input file-input-bordered file-input-primary w-full text-sm" accept="image/png, image/jpeg, image/jpg" required />
+                    <span class="text-[10px] text-base-content/40 mt-1">Unggah foto bukti pemasangan perangkat di rumah pelanggan (Maks. 2MB).</span>
                 </div>
 
                 <!-- Action Button -->
