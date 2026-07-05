@@ -10,7 +10,7 @@
 /auth.json
 /composer.lock
 /package-lock.json
-/phpunit.result.cache
+/.phpunit.result.cache
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
 /storage/framework/testing/*
@@ -19,3 +19,7 @@
 .vscode/
 .idea/
 .DS_Store
+
+# Office files & templates
+*.docx
+~$*
