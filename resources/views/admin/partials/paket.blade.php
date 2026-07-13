@@ -88,7 +88,7 @@
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="opacity-60"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                         <span class="font-medium">Promosi:</span>
-                        <span class="font-semibold text-base-content ml-auto">{{ $item->promosi ? $item->promosi->text_promosi : 'Tidak ada' }}</span>
+                        <span class="font-semibold text-base-content ml-auto">{{ ($item->promosi instanceof \App\Models\promosi) ? $item->promosi->text_promosi : 'Tidak ada' }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="opacity-60"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

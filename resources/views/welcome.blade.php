@@ -518,7 +518,7 @@
                         $hasPromo = false;
                         $promoDiscount = 0;
                         $promoText = '';
-                        if ($paket->promosi) {
+                        if ($paket->promosi && $paket->promosi instanceof \App\Models\promosi) {
                             $now = now();
                             if ($now->between($paket->promosi->valid_start, $paket->promosi->valid_end)) {
                                 $hasPromo = true;
