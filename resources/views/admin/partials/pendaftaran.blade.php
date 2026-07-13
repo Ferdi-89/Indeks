@@ -166,11 +166,18 @@
                                 $cleanPhone = preg_replace('/[^0-9]/', '', $item->nomor_tlpn);
                                 if (str_starts_with($cleanPhone, '0')) {
                                     $cleanPhone = '62' . substr($cleanPhone, 1);
+                                } elseif (str_starts_with($cleanPhone, '8')) {
+                                    $cleanPhone = '62' . $cleanPhone;
+                                }
+
+                                $displayPhone = $item->nomor_tlpn;
+                                if (str_starts_with(preg_replace('/[^0-9]/', '', $displayPhone), '8')) {
+                                    $displayPhone = '+62' . $displayPhone;
                                 }
                             @endphp
                             <a href="https://wa.me/{{ $cleanPhone }}?text=Halo%20{{ urlencode($item->nama) }},%20kami%20dari%20R-NET..." target="_blank" rel="noopener noreferrer" class="link link-primary hover:underline inline-flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                                {{ $item->nomor_tlpn }}
+                                {{ $displayPhone }}
                             </a>
                         </div>
                         <div class="text-xs text-base-content/70">{{ $item->wilayah }}</div>
@@ -317,11 +324,18 @@
                 $cleanPhoneDetail = preg_replace('/[^0-9]/', '', $item->nomor_tlpn);
                 if (str_starts_with($cleanPhoneDetail, '0')) {
                     $cleanPhoneDetail = '62' . substr($cleanPhoneDetail, 1);
+                } elseif (str_starts_with($cleanPhoneDetail, '8')) {
+                    $cleanPhoneDetail = '62' . $cleanPhoneDetail;
+                }
+
+                $displayPhoneDetail = $item->nomor_tlpn;
+                if (str_starts_with(preg_replace('/[^0-9]/', '', $displayPhoneDetail), '8')) {
+                    $displayPhoneDetail = '+62' . $displayPhoneDetail;
                 }
             @endphp
             <a href="https://wa.me/{{ $cleanPhoneDetail }}?text=Halo%20{{ urlencode($item->nama) }},%20kami%20dari%20R-NET..." target="_blank" rel="noopener noreferrer" class="link link-primary hover:underline inline-flex items-center gap-1 font-semibold">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                {{ $item->nomor_tlpn }}
+                {{ $displayPhoneDetail }}
             </a>
         </div>
         <div>

@@ -104,7 +104,7 @@
     <!-- Chart -->
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body p-6">
-            <h3 class="card-title text-lg mb-4">Statistik Pendaftaran (7 Hari Terakhir)</h3>
+            <h3 class="card-title text-lg mb-4">Statistik Pengguna Mendaftar (7 Hari Terakhir)</h3>
             <div class="h-64 w-full">
                 <canvas id="regChart"></canvas>
             </div>

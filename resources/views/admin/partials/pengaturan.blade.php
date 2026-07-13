@@ -98,34 +98,6 @@
                                 </div>
                             </div>
 
-                            <!-- Detail Pemasangan Perangkat -->
-                            <div class="md:col-span-2 border-t border-base-200 pt-5 mt-3">
-                                <h4 class="font-bold text-sm text-base-content/80 mb-3 flex items-center gap-1.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"/><path d="M12 18h.01"/><path d="M7 6h10"/><path d="M7 10h10"/><path d="M7 14h10"/></svg>
-                                    Konfigurasi Detail Pemasangan Perangkat
-                                </h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="form-control">
-                                        <label class="label"><span class="label-text font-medium">Biaya Pasang Baru (Rp)</span></label>
-                                        <input type="number" name="biaya_pasang" class="input input-bordered w-full" value="{{ old('biaya_pasang', $company->biaya_pasang ?? 350000) }}" placeholder="350000" required>
-                                    </div>
-                                    <div class="form-control">
-                                        <label class="label"><span class="label-text font-medium">Estimasi Waktu Pemasangan</span></label>
-                                        <input type="text" name="estimasi_pasang" class="input input-bordered w-full" value="{{ old('estimasi_pasang', $company->estimasi_pasang ?? '1-3 Hari Kerja') }}" placeholder="1-3 Hari Kerja" required>
-                                    </div>
-                                    <div class="form-control md:col-span-2">
-                                        <label class="label"><span class="label-text font-medium">Kelengkapan Paket (Satu per baris)</span></label>
-                                        <textarea name="kelengkapan_pasang" class="textarea textarea-bordered w-full font-mono text-xs" rows="4" placeholder="Modem WiFi ONT Dual-Band&#10;Kabel Fiber Optik FTTH&#10;Jasa Pasang Teknisi&#10;Aktivasi Layanan">{{ old('kelengkapan_pasang', $company->kelengkapan_pasang ?? '') }}</textarea>
-                                    </div>
-                                    <div class="form-control md:col-span-2">
-                                        <label class="label">
-                                            <span class="label-text font-medium">Langkah Pemasangan (Format: <code>Judul|Deskripsi</code>, satu per baris)</span>
-                                        </label>
-                                        <textarea name="langkah_pasang" class="textarea textarea-bordered w-full font-mono text-xs" rows="4" placeholder="Verifikasi & Survei|Admin memproses berkas pendaftaran.&#10;Instalasi & Aktivasi|Teknisi menarik kabel fiber optik.">{{ old('langkah_pasang', $company->langkah_pasang ?? '') }}</textarea>
-                                        <span class="text-xs text-base-content/50 mt-1">Pecah judul langkah dan penjelasannya menggunakan karakter pipa <code>|</code> untuk tampilan yang rapi di landing page.</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="flex justify-end gap-3 mt-6">
                             <button type="submit" class="btn btn-primary gap-2">

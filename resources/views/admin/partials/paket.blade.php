@@ -169,6 +169,47 @@
     @endforelse
 </div>
 
+<!-- Detail Pemasangan Perangkat Section -->
+<div class="card bg-base-100 shadow-sm border border-base-200 mt-8">
+    <div class="card-body">
+        <h3 class="card-title text-lg border-b border-base-200 pb-3 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"/><path d="M12 18h.01"/><path d="M7 6h10"/><path d="M7 10h10"/><path d="M7 14h10"/></svg>
+            Konfigurasi Detail Pemasangan Perangkat
+        </h3>
+        <form action="{{ route('admin.pengaturan.update') }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-semibold text-xs uppercase text-base-content/70">Biaya Pasang Baru (Rp)</span></label>
+                    <input type="number" name="biaya_pasang" class="input input-bordered w-full rounded-xl text-sm" value="{{ old('biaya_pasang', $company->biaya_pasang ?? 350000) }}" placeholder="350000" required>
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-semibold text-xs uppercase text-base-content/70">Estimasi Waktu Pemasangan</span></label>
+                    <input type="text" name="estimasi_pasang" class="input input-bordered w-full rounded-xl text-sm" value="{{ old('estimasi_pasang', $company->estimasi_pasang ?? '1-3 Hari Kerja') }}" placeholder="1-3 Hari Kerja" required>
+                </div>
+                <div class="form-control md:col-span-2">
+                    <label class="label"><span class="label-text font-semibold text-xs uppercase text-base-content/70">Kelengkapan Paket (Satu per baris)</span></label>
+                    <textarea name="kelengkapan_pasang" class="textarea textarea-bordered w-full font-mono text-xs rounded-xl" rows="4" placeholder="Modem WiFi ONT Dual-Band&#10;Kabel Fiber Optik FTTH&#10;Jasa Pasang Teknisi&#10;Aktivasi Layanan">{{ old('kelengkapan_pasang', $company->kelengkapan_pasang ?? '') }}</textarea>
+                </div>
+                <div class="form-control md:col-span-2">
+                    <label class="label">
+                        <span class="label-text font-semibold text-xs uppercase text-base-content/70">Langkah Pemasangan (Format: <code>Judul|Deskripsi</code>, satu per baris)</span>
+                    </label>
+                    <textarea name="langkah_pasang" class="textarea textarea-bordered w-full font-mono text-xs rounded-xl" rows="4" placeholder="Verifikasi & Survei|Admin memproses berkas pendaftaran.&#10;Instalasi & Aktivasi|Teknisi menarik kabel fiber optik.">{{ old('langkah_pasang', $company->langkah_pasang ?? '') }}</textarea>
+                    <span class="text-[11px] text-base-content/50 mt-1">Pecah judul langkah dan penjelasannya menggunakan karakter pipa <code>|</code> untuk tampilan yang rapi di landing page.</span>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="submit" class="btn btn-primary rounded-xl font-bold text-sm shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Simpan Detail Pemasangan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Modal Tambah -->
 <dialog id="modal_tambah_paket" class="modal">
     <div id="modal_box_tambah" class="modal-box w-full max-w-lg transition-all duration-300 max-h-[90vh] flex flex-col overflow-hidden p-0 rounded-2xl border border-base-200/60 shadow-2xl bg-base-100">

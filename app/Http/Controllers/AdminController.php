@@ -690,7 +690,7 @@ class AdminController extends Controller
     public function pengaturanUpdate(Request $request)
     {
         $data = $request->validate([
-            'nama_perusahaan'    => 'required|string|max:100',
+            'nama_perusahaan'    => 'sometimes|required|string|max:100',
             'email_perusahaan'   => 'nullable|email|max:100',
             'telepon_perusahaan' => 'nullable|string|max:30',
             'alamat_perusahaan'  => 'nullable|string',

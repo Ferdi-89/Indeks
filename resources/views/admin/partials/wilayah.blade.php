@@ -92,7 +92,7 @@
                         <td>
                             <div class="flex justify-center gap-1.5">
                                 <!-- Toggle Hide -->
-                                <form action="{{ route('admin.area.toggle_hide', $area->id) }}" method="POST" class="inline-block" data-no-ajax>
+                                <form action="{{ route('admin.area.toggle_hide', $area->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" 
@@ -114,7 +114,7 @@
                                 </button>
                                 
                                 <!-- Delete Button -->
-                                <form action="{{ route('admin.area.destroy', $area->id) }}" method="POST" class="inline-block" data-no-ajax>
+                                <form action="{{ route('admin.area.destroy', $area->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
@@ -155,7 +155,7 @@
         </h3>
         <p class="text-xs text-base-content/50 mb-6">Buat titik operasional & konfigurasi jangkauan area jaringan pelanggan baru.</p>
         
-        <form action="{{ route('admin.area.store') }}" method="POST" data-no-ajax class="space-y-5">
+        <form action="{{ route('admin.area.store') }}" method="POST" class="space-y-5">
             @csrf
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -232,7 +232,7 @@
         </h3>
         <p class="text-xs text-base-content/50 mb-6">Sesuaikan nama, koordinat pusat, atau radius jangkauan wilayah.</p>
         
-        <form action="{{ route('admin.area.update', $area->id) }}" method="POST" data-no-ajax class="space-y-5">
+        <form action="{{ route('admin.area.update', $area->id) }}" method="POST" class="space-y-5">
             @csrf
             @method('PUT')
             

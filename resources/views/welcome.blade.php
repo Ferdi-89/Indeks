@@ -39,9 +39,66 @@
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @php
+    if (!function_exists('invertColorPHP')) {
+        function invertColorPHP($hex, $isDark = true) {
+            $hex = str_replace('#', '', $hex);
+            if (strlen($hex) == 3) {
+                $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+            }
+            if (strlen($hex) != 6) return '#' . $hex;
+
+            $r = hexdec(substr($hex, 0, 2)) / 255;
+            $g = hexdec(substr($hex, 2, 2)) / 255;
+            $b = hexdec(substr($hex, 4, 2)) / 255;
+
+            $max = max($r, $g, $b);
+            $min = min($r, $g, $b);
+
+            $l = ($max + $min) / 2;
+            if ($max == $min) {
+                $h = $s = 0;
+            } else {
+                $d = $max - $min;
+                $s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
+                switch ($max) {
+                    case $r: $h = ($g - $b) / $d + ($g < $b ? 6 : 0); break;
+                    case $g: $h = ($b - $r) / $d + 2; break;
+                    case $b: $h = ($r - $g) / $d + 4; break;
+                }
+                $h /= 6;
+            }
+
+            $h *= 360;
+            $s *= 100;
+            $l *= 100;
+
+            $l = 100 - $l;
+            if ($isDark) {
+                $s = min(100, $s * 1.15);
+            }
+
+            $s /= 100;
+            $l /= 100;
+            $a = $s * min($l, 1 - $l);
+            $f = function($n) use ($h, $l, $a) {
+                $k = ($n + $h / 30) % 12;
+                return $l - $a * max(min($k - 3, 9 - $k, 1), -1);
+            };
+
+            $r_hex = str_pad(dechex(max(0, min(255, round($f(0) * 255)))), 2, '0', STR_PAD_LEFT);
+            $g_hex = str_pad(dechex(max(0, min(255, round($f(8) * 255)))), 2, '0', STR_PAD_LEFT);
+            $b_hex = str_pad(dechex(max(0, min(255, round($f(4) * 255)))), 2, '0', STR_PAD_LEFT);
+
+            return '#' . $r_hex . $g_hex . $b_hex;
+        }
+    }
+    @endphp
+
     <!-- Dynamic Theme Customization -->
     <style>
-        :root, [data-theme="light"], [data-theme="dark"] {
+        /* Light Mode (Default) */
+        :root, [data-theme="light"] {
             @if(isset($company) && $company->primary_color)
                 --color-primary: {{ $company->primary_color }} !important;
                 --color-primary-content: #ffffff !important;
@@ -53,6 +110,23 @@
             @endif
             @if(isset($company) && $company->accent_color)
                 --color-accent: {{ $company->accent_color }} !important;
+                --color-accent-content: #ffffff !important;
+            @endif
+        }
+
+        /* Dark Mode (Inverted Lightness) */
+        [data-theme="dark"] {
+            @if(isset($company) && $company->primary_color)
+                --color-primary: {{ invertColorPHP($company->primary_color, true) }} !important;
+                --color-primary-content: #ffffff !important;
+                --color-primary-hover: {{ invertColorPHP($company->primary_color, true) }}ee !important;
+            @endif
+            @if(isset($company) && $company->secondary_color)
+                --color-secondary: {{ invertColorPHP($company->secondary_color, true) }} !important;
+                --color-secondary-content: #ffffff !important;
+            @endif
+            @if(isset($company) && $company->accent_color)
+                --color-accent: {{ invertColorPHP($company->accent_color, true) }} !important;
                 --color-accent-content: #ffffff !important;
             @endif
         }

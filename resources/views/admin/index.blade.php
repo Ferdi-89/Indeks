@@ -360,6 +360,22 @@
                                     companyNameEl.textContent = newCompanyName;
                                 }
                             }
+
+                            // Reload panel HTML if it's a CRUD panel returning JSON
+                            if (panel.id === 'panel-wilayah' || panel.id === 'panel-users') {
+                                try {
+                                    const res = await fetch(window.location.href);
+                                    const html = await res.text();
+                                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                                    const newPanel = doc.getElementById(panel.id);
+                                    if (newPanel) {
+                                        panel.innerHTML = newPanel.innerHTML;
+                                        document.querySelectorAll('dialog.modal').forEach(m => m.close());
+                                    }
+                                } catch (err) {
+                                    console.error('Failed to reload panel after JSON submit:', err);
+                                }
+                            }
                         } else {
                             const errMsg = json.message || (json.errors ? Object.values(json.errors).flat().join(' ') : 'Terjadi kesalahan.');
                             spaToast(errMsg, 'error');
@@ -422,27 +438,17 @@
         if (window.regChartInstance) window.regChartInstance.destroy();
 
         const ctx = canvas.getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
-        gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
-
         window.regChartInstance = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: {!! $chartLabels !!},
                 datasets: [{
-                    label: 'Pendaftaran',
+                    label: 'Pengguna Mendaftar',
                     data: {!! $chartValues !!},
-                    borderColor: '#2563eb',
-                    backgroundColor: gradient,
-                    borderWidth: 3,
-                    pointBackgroundColor: '#2563eb',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    fill: true,
-                    tension: 0.4
+                    backgroundColor: 'rgba(37, 99, 235, 0.85)',
+                    hoverBackgroundColor: 'rgba(37, 99, 235, 1)',
+                    borderRadius: 8,
+                    borderSkipped: false
                 }]
             },
             options: {
@@ -450,7 +456,13 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: '#f1f5f9', drawBorder: false } },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9', drawBorder: false },
+                        ticks: {
+                            precision: 0
+                        }
+                    },
                     x: { grid: { display: false } }
                 },
                 interaction: { intersect: false, mode: 'index' }

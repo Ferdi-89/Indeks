@@ -68,7 +68,7 @@
                             </button>
                             
                             @if(Auth::id() !== $user->id)
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')" class="inline-block" data-no-ajax>
+                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-ghost text-error btn-square" title="Hapus Pengguna">
@@ -95,7 +95,7 @@
         </form>
         <h3 class="font-bold text-lg mb-6">Tambah Pengguna Baru</h3>
         
-        <form action="{{ route('admin.users.store') }}" method="POST" class="space-y-4" data-no-ajax>
+        <form action="{{ route('admin.users.store') }}" method="POST" class="space-y-4">
             @csrf
             <div class="form-control">
                 <label class="label"><span class="label-text font-semibold">Nama Lengkap</span></label>
@@ -136,7 +136,7 @@
         </form>
         <h3 class="font-bold text-lg mb-6">Edit Data Pengguna</h3>
         
-        <form id="form_edit_user" method="POST" class="space-y-4" data-no-ajax>
+        <form id="form_edit_user" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
             
