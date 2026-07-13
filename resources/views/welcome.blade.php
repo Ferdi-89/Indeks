@@ -514,6 +514,9 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                 @foreach($pakets as $index => $paket)
                     @php
+                        if (!is_object($paket) || !($paket instanceof \App\Models\paket)) {
+                            continue;
+                        }
                         $isPopular = ($index == 1);
                         $hasPromo = false;
                         $promoDiscount = 0;

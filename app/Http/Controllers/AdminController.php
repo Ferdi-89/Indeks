@@ -705,6 +705,7 @@ class AdminController extends Controller
             'langkah_pasang'     => 'nullable|string',
         ]);
         CompanySetting::getInstance()->update($data);
+        $this->clearHomeCaches();
         return $this->jsonOrRedirect($request, 'Informasi perusahaan berhasil diperbarui.');
     }
 
@@ -716,6 +717,7 @@ class AdminController extends Controller
             'whatsapp'  => 'nullable|string|max:20',
         ]);
         CompanySetting::getInstance()->update($data);
+        $this->clearHomeCaches();
         return $this->jsonOrRedirect($request, 'Media sosial berhasil diperbarui.');
     }
 
@@ -729,6 +731,7 @@ class AdminController extends Controller
         ]);
         $data['buka_minggu'] = $request->boolean('buka_minggu');
         CompanySetting::getInstance()->update($data);
+        $this->clearHomeCaches();
         return $this->jsonOrRedirect($request, 'Jam operasional berhasil diperbarui.');
     }
 
@@ -771,6 +774,7 @@ class AdminController extends Controller
         }
 
         $company->update(['logo_path' => $url]);
+        $this->clearHomeCaches();
         return $request->ajax()
             ? response()->json(['success' => true, 'message' => 'Logo berhasil diperbarui.', 'logo_url' => $url])
             : redirect()->back()->with('success', 'Logo perusahaan berhasil diperbarui.');
@@ -800,6 +804,7 @@ class AdminController extends Controller
             }
             $company->update(['logo_path' => null]);
         }
+        $this->clearHomeCaches();
         return $this->jsonOrRedirect($request, 'Logo perusahaan berhasil dihapus.');
     }
 
