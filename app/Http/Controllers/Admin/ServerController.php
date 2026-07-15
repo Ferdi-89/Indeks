@@ -20,7 +20,18 @@ class ServerController extends Controller
             '--secret' => 'rnet-admin',
             '--render' => 'errors.503'
         ]);
-        return $this->jsonOrRedirect($request, 'Mode maintenance diaktifkan. Anda dapat bypass menggunakan URL /rnet-admin');
+
+        // Clear public customer-facing page caches (excluding admin cache)
+        \Illuminate\Support\Facades\Cache::forget('home_pengumuman');
+        \Illuminate\Support\Facades\Cache::forget('home_pakets');
+        \Illuminate\Support\Facades\Cache::forget('home_area_layanan');
+        \Illuminate\Support\Facades\Cache::forget('daftar_pakets');
+        \Illuminate\Support\Facades\Cache::forget('daftar_area_layanan');
+
+        // Clear compiled view cache to force immediate template regeneration
+        Artisan::call('view:clear');
+
+        return $this->jsonOrRedirect($request, 'Mode maintenance diaktifkan. Cache halaman utama dan form pendaftaran dibersihkan.');
     }
 
     /**
@@ -29,7 +40,18 @@ class ServerController extends Controller
     public function up(Request $request)
     {
         Artisan::call('up');
-        return $this->jsonOrRedirect($request, 'Server kembali online untuk publik.');
+
+        // Clear public customer-facing page caches (excluding admin cache)
+        \Illuminate\Support\Facades\Cache::forget('home_pengumuman');
+        \Illuminate\Support\Facades\Cache::forget('home_pakets');
+        \Illuminate\Support\Facades\Cache::forget('home_area_layanan');
+        \Illuminate\Support\Facades\Cache::forget('daftar_pakets');
+        \Illuminate\Support\Facades\Cache::forget('daftar_area_layanan');
+
+        // Clear compiled view cache
+        Artisan::call('view:clear');
+
+        return $this->jsonOrRedirect($request, 'Server kembali online untuk publik. Cache halaman utama dan form pendaftaran dibersihkan.');
     }
 
     /**
