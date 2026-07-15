@@ -209,13 +209,14 @@
 /* Theme switching — instant via CSS variables, no per-element transitions needed */
 
 /* Fix GPU rendering glitch / noise on mobile and tablet devices caused by backdrop-filter & transforms */
-@media (max-width: 1023px) {
+@media (max-width: 1023px), (pointer: coarse) {
     .glass-card,
     .glass-panel,
     [class*="backdrop-blur-"] {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         transition: none !important;
+        overflow: hidden !important;
     }
     .glass-card:hover,
     .glass-panel:hover {

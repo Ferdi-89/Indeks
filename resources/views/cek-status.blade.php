@@ -150,8 +150,8 @@
             @endif
         }
 
-        /* Cache-proof fix for GPU rendering tearing/ghosting on mobile/tablet screens */
-        @media (max-width: 1023px) {
+        /* Cache-proof fix for GPU rendering tearing/ghosting on mobile/tablet screens & touch devices */
+        @media (max-width: 1023px), (pointer: coarse) {
             .glass-card,
             .glass-panel,
             [class*="backdrop-blur-"] {
