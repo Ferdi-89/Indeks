@@ -208,13 +208,18 @@
 
 /* Theme switching — instant via CSS variables, no per-element transitions needed */
 
-/* Fix GPU rendering glitch / noise on mobile devices caused by backdrop-filter */
-@media (max-width: 767px) {
+/* Fix GPU rendering glitch / noise on mobile and tablet devices caused by backdrop-filter & transforms */
+@media (max-width: 1023px) {
     .glass-card,
     .glass-panel,
     [class*="backdrop-blur-"] {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
+        transition: none !important;
+    }
+    .glass-card:hover,
+    .glass-panel:hover {
+        transform: none !important;
     }
     [data-theme="light"] .glass-card {
         background-color: rgba(255, 255, 255, 0.95) !important;

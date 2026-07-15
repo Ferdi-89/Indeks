@@ -48,13 +48,16 @@
             }
             if (strlen($hex) != 6) return '#' . $hex;
 
-            $r = hexdec(substr($hex, 0, 2)) / 255;
-            $g = hexdec(substr($hex, 2, 2)) / 255;
-            $b = hexdec(substr($hex, 4, 2)) / 255;
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
 
-            $max = max($r, $g, $b);
-            $min = min($r, $g, $b);
-
+            // RGB to HSL
+            $r_norm = $r / 255;
+            $g_norm = $g / 255;
+            $b_norm = $b / 255;
+            $max = max($r_norm, $g_norm, $b_norm);
+            $min = min($r_norm, $g_norm, $b_norm);
             $l = ($max + $min) / 2;
             if ($max == $min) {
                 $h = $s = 0;
@@ -62,17 +65,17 @@
                 $d = $max - $min;
                 $s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
                 switch ($max) {
-                    case $r: $h = ($g - $b) / $d + ($g < $b ? 6 : 0); break;
-                    case $g: $h = ($b - $r) / $d + 2; break;
-                    case $b: $h = ($r - $g) / $d + 4; break;
+                    case $r_norm: $h = ($g_norm - $b_norm) / $d + ($g_norm < $b_norm ? 6 : 0); break;
+                    case $g_norm: $h = ($b_norm - $r_norm) / $d + 2; break;
+                    case $b_norm: $h = ($r_norm - $g_norm) / $d + 4; break;
                 }
                 $h /= 6;
             }
-
             $h *= 360;
             $s *= 100;
             $l *= 100;
 
+            // Adjust HSL based on mode
             if ($isDark) {
                 // Sisi Dark Mode: Jangan di-invers! Cukup pastikan warnanya kontras (tidak terlalu gelap).
                 // Jika lightness < 55%, naikkan ke 60% agar terlihat terang di latar gelap.
@@ -89,17 +92,38 @@
                 }
             }
 
-            $s /= 100;
-            $l /= 100;
-            $a = $s * min($l, 1 - $l);
-            $f = function($n) use ($h, $l, $a) {
-                $k = ($n + $h / 30) % 12;
-                return $l - $a * max(min($k - 3, 9 - $k, 1), -1);
-            };
+            // HSL to RGB
+            $h_norm = $h / 360;
+            $s_norm = $s / 100;
+            $l_norm = $l / 100;
+            
+            $r_res = $l_norm;
+            $g_res = $l_norm;
+            $b_res = $l_norm;
+            
+            $v = ($l_norm <= 0.5) ? ($l_norm * (1.0 + $s_norm)) : ($l_norm + $s_norm - $l_norm * $s_norm);
+            if ($v > 0) {
+                $m = $l_norm + $l_norm - $v;
+                $sv = ($v - $m) / $v;
+                $h_norm *= 6.0;
+                $sextant = floor($h_norm);
+                $fract = $h_norm - $sextant;
+                $vsf = $v * $sv * $fract;
+                $mid1 = $m + $vsf;
+                $mid2 = $v - $vsf;
+                switch ($sextant) {
+                    case 0: $r_res = $v; $g_res = $mid1; $b_res = $m; break;
+                    case 1: $r_res = $mid2; $g_res = $v; $b_res = $m; break;
+                    case 2: $r_res = $m; $g_res = $v; $b_res = $mid1; break;
+                    case 3: $r_res = $m; $g_res = $mid2; $b_res = $v; break;
+                    case 4: $r_res = $mid1; $g_res = $m; $b_res = $v; break;
+                    case 5: $r_res = $v; $g_res = $m; $b_res = $mid2; break;
+                }
+            }
 
-            $r_hex = str_pad(dechex(max(0, min(255, round($f(0) * 255)))), 2, '0', STR_PAD_LEFT);
-            $g_hex = str_pad(dechex(max(0, min(255, round($f(8) * 255)))), 2, '0', STR_PAD_LEFT);
-            $b_hex = str_pad(dechex(max(0, min(255, round($f(4) * 255)))), 2, '0', STR_PAD_LEFT);
+            $r_hex = str_pad(dechex(max(0, min(255, round($r_res * 255)))), 2, '0', STR_PAD_LEFT);
+            $g_hex = str_pad(dechex(max(0, min(255, round($g_res * 255)))), 2, '0', STR_PAD_LEFT);
+            $b_hex = str_pad(dechex(max(0, min(255, round($b_res * 255)))), 2, '0', STR_PAD_LEFT);
 
             return '#' . $r_hex . $g_hex . $b_hex;
         }
