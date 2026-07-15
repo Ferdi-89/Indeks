@@ -207,3 +207,25 @@
 }
 
 /* Theme switching — instant via CSS variables, no per-element transitions needed */
+
+/* Fix GPU rendering glitch / noise on mobile devices caused by backdrop-filter */
+@media (max-width: 767px) {
+    .glass-card,
+    .glass-panel,
+    [class*="backdrop-blur-"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    [data-theme="light"] .glass-card {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+    [data-theme="dark"] .glass-card {
+        background-color: rgba(20, 26, 45, 0.96) !important;
+    }
+    .glass-panel {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+    [data-theme="dark"] .glass-panel {
+        background-color: rgba(15, 23, 42, 0.96) !important;
+    }
+}

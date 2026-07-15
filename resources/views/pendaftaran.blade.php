@@ -1167,30 +1167,36 @@
             var selectWilayah = document.querySelector('select[name="wilayah"]');
             var selectedVal = selectWilayah ? selectWilayah.value : "";
 
-            if (selectedVal && tempAddr && !tempAddr.includes("Geser peta") && !tempAddr.includes("Mencari")) {
-                var normalizedAddr = tempAddr.toLowerCase();
-                var keyword = selectedVal.toLowerCase()
-                    .replace('kota', '')
-                    .replace('kabupaten', '')
-                    .replace('kab.', '')
-                    .replace('kecamatan', '')
-                    .replace('kec.', '')
-                    .trim();
+            var currentLat = parseFloat(document.getElementById('lat').value) || tempCenter.lat;
+            var currentLng = parseFloat(document.getElementById('long').value) || tempCenter.lng;
 
-                var isMatched = normalizedAddr.includes(keyword);
-                if (!isMatched) {
-                    var confirmSubmit = confirm(`Perhatian: Lokasi yang Anda tandai di peta sepertinya berada di luar wilayah layanan "${selectedVal}" yang Anda pilih.\n\nApakah Anda yakin lokasi pemasangan sudah benar dan ingin melanjutkan pendaftaran?`);
-                    if (!confirmSubmit) {
-                        e.preventDefault();
-                        return;
+            if (selectedVal && !isNaN(currentLat) && !isNaN(currentLng)) {
+                var selectedArea = activeAreasData.find(function(area) {
+                    return area.nama_area === selectedVal;
+                });
+
+                if (selectedArea && selectedArea.latitude && selectedArea.longitude) {
+                    var pinLatLng = L.latLng(currentLat, currentLng);
+                    var areaLatLng = L.latLng(selectedArea.latitude, selectedArea.longitude);
+                    var distance = pinLatLng.distanceTo(areaLatLng);
+                    var radius = parseInt(selectedArea.radius) || 1000;
+
+                    if (distance > radius) {
+                        var confirmSubmit = confirm(`Perhatian: Lokasi yang Anda tandai di peta sepertinya berada di luar wilayah layanan "${selectedVal}" yang Anda pilih.\n\nApakah Anda yakin lokasi pemasangan sudah benar dan ingin melanjutkan pendaftaran?`);
+                        if (!confirmSubmit) {
+                            e.preventDefault();
+                            return;
+                        }
                     }
                 }
             }
 
             var btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.textContent = 'Memproses Data...';
-            btn.classList.add('btn-disabled');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Memproses Data...';
+                btn.classList.add('btn-disabled');
+            }
         });
 
         // ── Theme Switcher Initializer ──────────────────────────────────────

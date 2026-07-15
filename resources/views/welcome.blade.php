@@ -800,7 +800,7 @@
                                     <span class="font-extrabold text-base-content" id="calc-rec-cost">Rp 8.333 / hari (Total)</span>
                                 </div>
                             </div>
-                            <a href="/daftar"
+                            <a id="calc-buy-btn" href="/daftar"
                                 class="w-full btn btn-primary rounded-xl font-bold text-xs active:scale-[0.98] transition-transform">
                                 DAFTAR PAKET INI
                             </a>
@@ -1330,6 +1330,36 @@
         startLivePingSimulator();
 
         // ── Cost Configurator widget ───────────────────────────────
+        const dbPakets = @json($pakets);
+
+        // Pre-process package list from database
+        if (Array.isArray(dbPakets)) {
+            dbPakets.forEach(p => {
+                // Parse speed from title (e.g. "Paket Hemat 10 Mbps" -> 10)
+                let speedMatch = p.title_paket.match(/(\d+)\s*Mbps/i);
+                p.speedMbps = speedMatch ? parseInt(speedMatch[1]) : 0;
+
+                // Fallback speed based on price if not found in title
+                if (!p.speedMbps) {
+                    if (p.harga_paket <= 200000) p.speedMbps = 10;
+                    else if (p.harga_paket <= 350000) p.speedMbps = 30;
+                    else p.speedMbps = 100;
+                }
+
+                // Check active promotion value
+                let discount = 0;
+                if (p.promosi) {
+                    let now = new Date();
+                    let start = new Date(p.promosi.valid_start);
+                    let end = new Date(p.promosi.valid_end);
+                    if (now >= start && now <= end) {
+                        discount = parseFloat(p.promosi.value_promosi) || 0;
+                    }
+                }
+                p.finalPrice = Math.max(0, p.harga_paket - discount);
+            });
+        }
+
         let currentProfile = 'personal';
         const selectedActivities = {
             browsing: true,
@@ -1381,45 +1411,83 @@
 
         function calculateRecommendation() {
             let baseSpeed = 0;
-            
             if (currentProfile === 'personal') {
                 baseSpeed = 10;
             } else if (currentProfile === 'family') {
-                baseSpeed = 25;
+                baseSpeed = 30;
             } else if (currentProfile === 'business') {
-                baseSpeed = 60;
+                baseSpeed = 50;
             }
 
             let extraSpeed = 0;
             if (selectedActivities.browsing) extraSpeed += 5;
-            if (selectedActivities.streaming) extraSpeed += 15;
-            if (selectedActivities.gaming) extraSpeed += 10;
-            if (selectedActivities.work) extraSpeed += 10;
+            if (selectedActivities.streaming) extraSpeed += 20;
+            if (selectedActivities.gaming) extraSpeed += 15;
+            if (selectedActivities.work) extraSpeed += 20;
 
             const totalSpeedNeeded = baseSpeed + extraSpeed;
 
-            let recommended = {};
-            if (totalSpeedNeeded <= 20) {
-                recommended = { 
-                    name: 'Paket Hemat', 
-                    cost: 150000, 
-                    speed: '10 Mbps',
-                    activity: 'Browsing ringan, sosial media, dan chat keluarga.'
-                };
-            } else if (totalSpeedNeeded <= 50) {
-                recommended = { 
-                    name: 'Paket Populer', 
-                    cost: 250000, 
-                    speed: '30 Mbps',
-                    activity: 'Streaming video lancar, telekonferensi, dan browsing bersama.'
+            let recommended = null;
+
+            if (Array.isArray(dbPakets) && dbPakets.length > 0) {
+                // Sort packages by speed in ascending order
+                let sortedPakets = [...dbPakets].sort((a, b) => a.speedMbps - b.speedMbps);
+                
+                // Find dynamic index using midpoints
+                let selectedIndex = 0;
+                for (let i = 0; i < sortedPakets.length - 1; i++) {
+                    let midpoint = (sortedPakets[i].speedMbps + sortedPakets[i+1].speedMbps) / 2;
+                    if (totalSpeedNeeded > midpoint) {
+                        selectedIndex = i + 1;
+                    }
+                }
+                let bestPaket = sortedPakets[selectedIndex];
+                
+                // Map database package attributes to recommended format
+                let activityDesc = bestPaket.point_keunggulan && bestPaket.point_keunggulan.length > 0
+                    ? bestPaket.point_keunggulan.slice(0, 3).join(', ')
+                    : '';
+                if (!activityDesc) {
+                    if (bestPaket.speedMbps <= 20) {
+                        activityDesc = 'Browsing ringan, sosial media, dan chat keluarga.';
+                    } else if (bestPaket.speedMbps <= 50) {
+                        activityDesc = 'Streaming video lancar, telekonferensi, dan browsing bersama.';
+                    } else {
+                        activityDesc = 'Koneksi maksimal untuk game berat, streaming 4K, dan bisnis.';
+                    }
+                }
+
+                recommended = {
+                    id_paket: bestPaket.id_paket,
+                    name: bestPaket.title_paket,
+                    cost: bestPaket.finalPrice,
+                    speed: `${bestPaket.speedMbps} Mbps`,
+                    activity: activityDesc
                 };
             } else {
-                recommended = { 
-                    name: 'Paket Premium', 
-                    cost: 400000, 
-                    speed: '100 Mbps',
-                    activity: 'Koneksi maksimal untuk game berat, streaming 4K, dan bisnis.'
-                };
+                // Fallback to hardcoded values if no packages are loaded in database
+                if (totalSpeedNeeded <= 20) {
+                    recommended = { 
+                        name: 'Paket Hemat', 
+                        cost: 150000, 
+                        speed: '10 Mbps',
+                        activity: 'Browsing ringan, sosial media, dan chat keluarga.'
+                    };
+                } else if (totalSpeedNeeded <= 50) {
+                    recommended = { 
+                        name: 'Paket Populer', 
+                        cost: 250000, 
+                        speed: '30 Mbps',
+                        activity: 'Streaming video lancar, telekonferensi, dan browsing bersama.'
+                    };
+                } else {
+                    recommended = { 
+                        name: 'Paket Premium', 
+                        cost: 400000, 
+                        speed: '100 Mbps',
+                        activity: 'Koneksi maksimal untuk game berat, streaming 4K, dan bisnis.'
+                    };
+                }
             }
 
             // Update UI elements
@@ -1435,6 +1503,16 @@
             // Format daily cost: (Monthly price / 30 days)
             const dailyCost = Math.round(recommended.cost / 30);
             if (recCost) recCost.textContent = `Rp ${dailyCost.toLocaleString('id-ID')} / hari (Total)`;
+
+            // Update CTA button link dynamically
+            const recBuyBtn = document.getElementById('calc-buy-btn');
+            if (recBuyBtn) {
+                if (recommended.id_paket) {
+                    recBuyBtn.href = `/daftar?paket=${recommended.id_paket}`;
+                } else {
+                    recBuyBtn.href = '/daftar';
+                }
+            }
         }
 
         // Initialize calculator values
