@@ -193,6 +193,19 @@
                 background-color: rgba(15, 23, 42, 0.96) !important;
             }
         }
+
+        /* Bento Card Styles - Pure CSS Flat Layout (No backdrop-filter/transforms to prevent GPU tearing) */
+        .bento-card {
+            border-radius: 1.5rem !important;
+            overflow: hidden !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            background-color: #ffffff !important;
+        }
+        [data-theme="dark"] .bento-card {
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            background-color: #141a2d !important;
+        }
     </style>
 
     <!-- Theme Adaptive Hero Background -->
@@ -735,7 +748,7 @@
                     wilayah berikut. Klik wilayah untuk informasi detail.</p>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-base-300/30 shadow-sm overflow-hidden h-[320px] sm:h-[450px] relative">
+            <div class="bento-card p-4 h-[320px] sm:h-[450px] relative">
                 <div id="map" class="w-full h-full min-h-[290px] sm:min-h-[420px] rounded-2xl z-10"></div>
             </div>
         </section>
@@ -757,7 +770,7 @@
 
                 <!-- Card 2: Interactive Cost Configurator (12/12 width) -->
                 <div id="kalkulator"
-                    class="md:col-span-12 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
+                    class="md:col-span-12 bento-card p-5 sm:p-8 flex flex-col justify-between shadow-sm">
                     <div class="space-y-1 mb-6">
                         <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Konfigurator Layanan</span>
                         <h3 class="text-lg font-bold text-base-content tracking-tight">Rekomendasi Paket Berdasarkan Aktivitas</h3>
@@ -873,7 +886,7 @@
 
                 <!-- Card 3: No-FUP Flow Visualizer (8/12 width) -->
                 <div
-                    class="md:col-span-8 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col md:flex-row gap-8 items-stretch shadow-sm">
+                    class="md:col-span-8 bento-card p-5 sm:p-8 flex flex-col md:flex-row gap-8 items-stretch shadow-sm">
                     <div class="flex flex-col justify-between md:w-1/2 space-y-6">
                         <div class="space-y-2">
                             <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Keuntungan Tanpa FUP</span>
@@ -943,7 +956,7 @@
 
                 <!-- Card 4: Realtime Server Ping (4/12 width) -->
                 <div
-                    class="md:col-span-4 glass-card p-5 sm:p-8 rounded-3xl border border-base-300/30 flex flex-col justify-between shadow-sm">
+                    class="md:col-span-4 bento-card p-5 sm:p-8 flex flex-col justify-between shadow-sm">
                     <div class="space-y-2">
                         <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Pemantauan Kestabilan</span>
                         <h3 class="text-lg font-bold text-base-content tracking-tight">Status Latensi (Ping)</h3>
