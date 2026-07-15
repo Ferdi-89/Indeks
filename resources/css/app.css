@@ -50,7 +50,12 @@
 .marquee-track {
     display: flex;
     white-space: nowrap;
-    will-change: transform;
+    /* NOTE: will-change: transform removed intentionally.
+     * It was promoting .marquee-track to its own GPU compositor layer,
+     * causing rendering artifacts when the sticky header (backdrop-filter)
+     * overlapped scrolled content on mobile/touch devices.
+     * The marquee animation still runs via CSS transform — just on the same
+     * compositor layer as the parent, which eliminates the conflict. */
     animation: marquee 28s linear infinite;
 }
 
@@ -210,11 +215,32 @@
 
 /* Fix GPU rendering glitch / noise on mobile and tablet devices caused by backdrop-filter & transforms */
 @media (max-width: 1023px), (pointer: coarse) {
+
+    /* Core fix: remove backdrop-filter from ALL elements.
+     * On mobile GPUs, any element with backdrop-filter creates an isolated
+     * stacking context. When a CSS-animated element (marquee) lives inside
+     * that stacking context and overlaps other painted content during scroll,
+     * the compositor produces visible tearing/ghosting artifacts. */
+    header,
+    header *,
     .glass-card,
     .glass-panel,
     [class*="backdrop-blur-"] {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
+    }
+
+    /* Freeze all non-critical CSS animations during scroll on touch devices.
+     * .animate-flow-fast and .animate-flow-slow (SVG strokes) also create
+     * GPU layers that conflict with the marquee layer during compositing. */
+    .animate-flow-fast,
+    .animate-flow-slow {
+        animation: none !important;
+    }
+
+    /* Remove hover transforms — they trigger layout/paint on touch */
+    .glass-card,
+    .glass-panel {
         transition: none !important;
         overflow: hidden !important;
     }
@@ -222,16 +248,25 @@
     .glass-panel:hover {
         transform: none !important;
     }
+
+    /* Restore opaque solid backgrounds (removes semi-transparent alpha
+     * compositing that also causes GPU blend artifacts on older mobile GPUs) */
     [data-theme="light"] .glass-card {
-        background-color: rgba(255, 255, 255, 0.95) !important;
+        background-color: rgba(255, 255, 255, 0.97) !important;
     }
     [data-theme="dark"] .glass-card {
-        background-color: rgba(20, 26, 45, 0.96) !important;
+        background-color: rgba(20, 26, 45, 0.98) !important;
     }
     .glass-panel {
-        background-color: rgba(255, 255, 255, 0.95) !important;
+        background-color: rgba(255, 255, 255, 0.97) !important;
     }
     [data-theme="dark"] .glass-panel {
-        background-color: rgba(15, 23, 42, 0.96) !important;
+        background-color: rgba(15, 23, 42, 0.98) !important;
+    }
+
+    /* Solid sticky navbar — eliminates the backdrop stacking context entirely */
+    header.sticky {
+        background-color: var(--color-base-100) !important;
+        background-image: none !important;
     }
 }

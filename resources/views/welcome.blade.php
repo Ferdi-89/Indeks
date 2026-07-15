@@ -166,31 +166,35 @@
             @endif
         }
 
-        /* Cache-proof fix for GPU rendering tearing/ghosting on mobile/tablet screens & touch devices */
+        /* Mobile GPU compositing fix — authoritative rules are in app.css.
+         * This block ensures the sticky header's backdrop-filter is also stripped
+         * when inline styles or Tailwind utilities re-apply it on this page. */
         @media (max-width: 1023px), (pointer: coarse) {
-            .glass-card,
-            .glass-panel,
-            [class*="backdrop-blur-"] {
+            /* Kill backdrop stacking context on the sticky header — this is the
+             * primary cause of compositing artifacts when .marquee-track (GPU layer)
+             * overlaps scrolled content below it. */
+            header.sticky,
+            header.sticky * {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
-                transition: none !important;
-                overflow: hidden !important;
             }
+
+            /* Solid header background replaces the translucent glass effect */
+            header.sticky {
+                background-color: var(--color-base-100) !important;
+            }
+
+            /* Freeze the SVG flow animations — they also create compositor layers
+             * that conflict with the marquee layer on mobile GPUs. */
+            .animate-flow-fast,
+            .animate-flow-slow {
+                animation: none !important;
+            }
+
+            /* No hover transforms on touch */
             .glass-card:hover,
             .glass-panel:hover {
                 transform: none !important;
-            }
-            [data-theme="light"] .glass-card {
-                background-color: rgba(255, 255, 255, 0.95) !important;
-            }
-            [data-theme="dark"] .glass-card {
-                background-color: rgba(20, 26, 45, 0.96) !important;
-            }
-            .glass-panel {
-                background-color: rgba(255, 255, 255, 0.95) !important;
-            }
-            [data-theme="dark"] .glass-panel {
-                background-color: rgba(15, 23, 42, 0.96) !important;
             }
         }
 
