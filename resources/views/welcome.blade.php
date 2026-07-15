@@ -769,117 +769,123 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
 
                 <!-- Card 2: Interactive Cost Configurator (12/12 width) -->
-                <div id="kalkulator"
-                    class="md:col-span-12 bento-card p-5 sm:p-8 flex flex-col justify-between shadow-sm">
-                    <div class="space-y-1 mb-6">
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Konfigurator Layanan</span>
-                        <h3 class="text-lg font-bold text-base-content tracking-tight">Rekomendasi Paket Berdasarkan Aktivitas</h3>
-                        <p class="text-xs text-base-content/60 leading-relaxed">Pilih profil penggunaan dan jenis aktivitas internet Anda untuk mendapatkan rekomendasi kapasitas jaringan yang paling tepat.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                        <!-- Left Side: Interactive Configurator -->
-                        <div class="space-y-6 flex flex-col justify-between">
-                            <!-- Step 1: User Profile -->
-                            <div class="space-y-3">
-                                <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">1. Profil Pengguna</span>
-                                <div class="grid grid-cols-3 gap-2.5">
-                                    <button type="button" onclick="setProfile('personal', this)"
-                                        class="profile-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
-                                        <i data-lucide="user" class="w-5 h-5 shrink-0"></i>
-                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Personal</span>
-                                        <span class="text-[9px] opacity-60">1-3 Perangkat</span>
-                                    </button>
-                                    <button type="button" onclick="setProfile('family', this)"
-                                        class="profile-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
-                                        <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
-                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Keluarga</span>
-                                        <span class="text-[9px] opacity-60">4-8 Perangkat</span>
-                                    </button>
-                                    <button type="button" onclick="setProfile('business', this)"
-                                        class="profile-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all text-center">
-                                        <i data-lucide="building" class="w-5 h-5 shrink-0"></i>
-                                        <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Bisnis</span>
-                                        <span class="text-[9px] opacity-60">9+ Perangkat</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Step 2: Activities Toggles -->
-                            <div class="space-y-3">
-                                <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">2. Aktivitas Utama</span>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                    <button type="button" onclick="toggleActivity('browsing', this)"
-                                        class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
-                                        <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-                                            <i data-lucide="globe" class="w-4 h-4"></i>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs font-bold block leading-tight">Browsing &amp; Chatting</span>
-                                            <span class="text-[10px] opacity-60 font-medium leading-none">Sosial Media, Chatting</span>
-                                        </div>
-                                    </button>
-                                    <button type="button" onclick="toggleActivity('streaming', this)"
-                                        class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
-                                        <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-                                            <i data-lucide="video" class="w-4 h-4"></i>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs font-bold block leading-tight">Streaming Video</span>
-                                            <span class="text-[10px] opacity-60 font-medium leading-none">YouTube, Netflix HD/4K</span>
-                                        </div>
-                                    </button>
-                                    <button type="button" onclick="toggleActivity('gaming', this)"
-                                        class="activity-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
-                                        <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
-                                            <i data-lucide="gamepad-2" class="w-4 h-4"></i>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs font-bold block leading-tight">Online Gaming</span>
-                                            <span class="text-[10px] opacity-60 font-medium leading-none">Bermain Game Online</span>
-                                        </div>
-                                    </button>
-                                    <button type="button" onclick="toggleActivity('work', this)"
-                                        class="activity-btn border-base-300/60 bg-base-100/50 hover:bg-base-200 border rounded-2xl p-3.5 flex items-center gap-3 transition-all text-left">
-                                        <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
-                                            <i data-lucide="laptop" class="w-4 h-4"></i>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs font-bold block leading-tight">Kerja &amp; Belajar</span>
-                                            <span class="text-[10px] opacity-60 font-medium leading-none">Zoom Call, Upload File</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
+                <div id="kalkulator" class="md:col-span-12 bento-card shadow-sm">
+                    <div class="p-5 sm:p-8">
+                        <!-- Header -->
+                        <div class="mb-6">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-primary">Konfigurator Layanan</span>
+                            <h3 class="text-lg font-bold text-base-content tracking-tight mt-0.5">Rekomendasi Paket Berdasarkan Aktivitas</h3>
+                            <p class="text-xs text-base-content/60 leading-relaxed mt-1">Pilih profil penggunaan dan jenis aktivitas internet Anda untuk mendapatkan rekomendasi kapasitas jaringan yang paling tepat.</p>
                         </div>
 
-                        <!-- Right Side: Result Display Box (Enterprise Invoice Card) -->
-                        <div class="flex flex-col gap-4 justify-between">
-                            <div class="bg-base-200/50 border border-base-300/20 rounded-2xl p-5 space-y-4 flex-1 flex flex-col justify-center">
-                                <div class="flex justify-between items-center text-xs border-b border-base-300/10 pb-3">
-                                    <span class="font-medium text-base-content/60">Paket Rekomendasi:</span>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                                        <span class="font-extrabold text-primary" id="calc-rec-name">Paket Populer</span>
+                        <!-- Body: stacks on mobile, side-by-side on lg -->
+                        <div class="flex flex-col lg:flex-row gap-8">
+
+                            <!-- Left Side: Interactive Configurator -->
+                            <div class="flex-1 space-y-6">
+
+                                <!-- Step 1: User Profile -->
+                                <div class="space-y-2">
+                                    <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">1. Profil Pengguna</span>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button type="button" onclick="setProfile('personal', this)"
+                                            class="profile-btn border-primary bg-primary/10 text-primary border rounded-2xl py-3 px-2 flex flex-col items-center justify-center gap-1.5 text-center w-full">
+                                            <i data-lucide="user" class="w-5 h-5 shrink-0"></i>
+                                            <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Personal</span>
+                                            <span class="text-[9px] opacity-60">1-3 Perangkat</span>
+                                        </button>
+                                        <button type="button" onclick="setProfile('family', this)"
+                                            class="profile-btn border-base-300/60 bg-base-100/50 border rounded-2xl py-3 px-2 flex flex-col items-center justify-center gap-1.5 text-center w-full">
+                                            <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+                                            <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Keluarga</span>
+                                            <span class="text-[9px] opacity-60">4-8 Perangkat</span>
+                                        </button>
+                                        <button type="button" onclick="setProfile('business', this)"
+                                            class="profile-btn border-base-300/60 bg-base-100/50 border rounded-2xl py-3 px-2 flex flex-col items-center justify-center gap-1.5 text-center w-full">
+                                            <i data-lucide="building" class="w-5 h-5 shrink-0"></i>
+                                            <span class="text-[10px] font-black uppercase tracking-wider leading-tight">Bisnis</span>
+                                            <span class="text-[9px] opacity-60">9+ Perangkat</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="flex justify-between items-center text-xs border-b border-base-300/10 pb-3">
-                                    <span class="font-medium text-base-content/60">Estimasi Kecepatan:</span>
-                                    <span class="font-extrabold text-base-content" id="calc-rec-speed">30 Mbps</span>
-                                </div>
-                                <div class="flex justify-between items-start text-xs border-b border-base-300/10 pb-3">
-                                    <span class="font-medium text-base-content/60 mt-0.5">Aktivitas Ideal:</span>
-                                    <span class="font-bold text-base-content/85 text-right max-w-[200px]" id="calc-rec-activity">Streaming Netflix HD, Kerja Remote, Belajar Online</span>
-                                </div>
-                                <div class="flex justify-between items-center text-xs">
-                                    <span class="font-medium text-base-content/60">Estimasi Biaya:</span>
-                                    <span class="font-extrabold text-base-content" id="calc-rec-cost">Rp 8.333 / hari (Total)</span>
+
+                                <!-- Step 2: Activities Toggles -->
+                                <div class="space-y-2">
+                                    <span class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider block">2. Aktivitas Utama</span>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                        <button type="button" onclick="toggleActivity('browsing', this)"
+                                            class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3 flex items-center gap-3 text-left w-full">
+                                            <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                                                <i data-lucide="globe" class="w-4 h-4"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <span class="text-xs font-bold block leading-tight">Browsing &amp; Chatting</span>
+                                                <span class="text-[10px] opacity-60 font-medium">Sosial Media, Chatting</span>
+                                            </div>
+                                        </button>
+                                        <button type="button" onclick="toggleActivity('streaming', this)"
+                                            class="activity-btn border-primary bg-primary/10 text-primary border rounded-2xl p-3 flex items-center gap-3 text-left w-full">
+                                            <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                                                <i data-lucide="video" class="w-4 h-4"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <span class="text-xs font-bold block leading-tight">Streaming Video</span>
+                                                <span class="text-[10px] opacity-60 font-medium">YouTube, Netflix HD/4K</span>
+                                            </div>
+                                        </button>
+                                        <button type="button" onclick="toggleActivity('gaming', this)"
+                                            class="activity-btn border-base-300/60 bg-base-100/50 border rounded-2xl p-3 flex items-center gap-3 text-left w-full">
+                                            <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
+                                                <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <span class="text-xs font-bold block leading-tight">Online Gaming</span>
+                                                <span class="text-[10px] opacity-60 font-medium">Bermain Game Online</span>
+                                            </div>
+                                        </button>
+                                        <button type="button" onclick="toggleActivity('work', this)"
+                                            class="activity-btn border-base-300/60 bg-base-100/50 border rounded-2xl p-3 flex items-center gap-3 text-left w-full">
+                                            <div class="w-8 h-8 rounded-lg bg-base-content/10 flex items-center justify-center shrink-0">
+                                                <i data-lucide="laptop" class="w-4 h-4"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <span class="text-xs font-bold block leading-tight">Kerja &amp; Belajar</span>
+                                                <span class="text-[10px] opacity-60 font-medium">Zoom Call, Upload File</span>
+                                            </div>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <a id="calc-buy-btn" href="/daftar"
-                                class="w-full btn btn-primary rounded-xl font-bold text-xs active:scale-[0.98] transition-transform">
-                                DAFTAR PAKET INI
-                            </a>
+
+                            <!-- Right Side: Result Display -->
+                            <div class="lg:w-80 xl:w-96 flex flex-col gap-4">
+                                <div class="rounded-2xl border border-base-300/30 bg-base-200/40 p-5 flex-1 space-y-3">
+                                    <div class="flex justify-between items-center text-xs pb-3 border-b border-base-300/20">
+                                        <span class="font-medium text-base-content/60">Paket Rekomendasi:</span>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-success inline-block"></span>
+                                            <span class="font-extrabold text-primary" id="calc-rec-name">Paket Populer</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center text-xs pb-3 border-b border-base-300/20">
+                                        <span class="font-medium text-base-content/60">Estimasi Kecepatan:</span>
+                                        <span class="font-extrabold text-base-content" id="calc-rec-speed">30 Mbps</span>
+                                    </div>
+                                    <div class="flex justify-between items-start text-xs pb-3 border-b border-base-300/20 gap-4">
+                                        <span class="font-medium text-base-content/60 shrink-0">Aktivitas Ideal:</span>
+                                        <span class="font-bold text-base-content/85 text-right" id="calc-rec-activity">Streaming Netflix HD, Kerja Remote, Belajar Online</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-medium text-base-content/60">Estimasi Biaya:</span>
+                                        <span class="font-extrabold text-base-content" id="calc-rec-cost">Rp 8.333 / hari (Total)</span>
+                                    </div>
+                                </div>
+                                <a id="calc-buy-btn" href="/daftar"
+                                    class="btn btn-primary rounded-xl font-bold text-xs w-full">
+                                    DAFTAR PAKET INI
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
