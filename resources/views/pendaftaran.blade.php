@@ -475,6 +475,11 @@
                                     class="w-full select select-bordered px-4 py-3 bg-base-200/50 focus:bg-base-100 border-base-300/80 premium-input rounded-xl text-sm">
                                     <option value="" disabled {{ old('wilayah') ? '' : 'selected' }}>Pilih Wilayah</option>
                                     @foreach($areaLayanan as $area)
+                                        @php
+                                            if (!is_object($area) || !($area instanceof \App\Models\AreaLayanan)) {
+                                                continue;
+                                            }
+                                        @endphp
                                         <option value="{{ $area->nama_area }}" {{ old('wilayah') == $area->nama_area ? 'selected' : '' }}>{{ $area->nama_area }}</option>
                                     @endforeach
                                     <option value="konsultasi" class="text-primary font-bold">💬 Hubungi Admin R-NET</option>

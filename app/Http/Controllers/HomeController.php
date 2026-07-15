@@ -42,6 +42,19 @@ class HomeController extends Controller
             return AreaLayanan::where('is_active', true)->get();
         });
 
+        // Self-healing: clear cache if it contains corrupted/invalid types
+        $hasInvalidArea = false;
+        foreach ($areaLayanan as $area) {
+            if (!($area instanceof \App\Models\AreaLayanan)) {
+                $hasInvalidArea = true;
+                break;
+            }
+        }
+        if ($hasInvalidArea) {
+            Cache::forget('home_area_layanan');
+            $areaLayanan = AreaLayanan::where('is_active', true)->get();
+        }
+
         $company = CompanySetting::getInstance();
 
         return view('welcome', compact('pengumuman', 'pakets', 'areaLayanan', 'company'));
@@ -69,6 +82,19 @@ class HomeController extends Controller
         $areaLayanan = Cache::remember('daftar_area_layanan', 3600, function() {
             return AreaLayanan::where('is_active', true)->get();
         });
+
+        // Self-healing: clear cache if it contains corrupted/invalid types
+        $hasInvalidArea = false;
+        foreach ($areaLayanan as $area) {
+            if (!($area instanceof \App\Models\AreaLayanan)) {
+                $hasInvalidArea = true;
+                break;
+            }
+        }
+        if ($hasInvalidArea) {
+            Cache::forget('daftar_area_layanan');
+            $areaLayanan = AreaLayanan::where('is_active', true)->get();
+        }
 
         $company = CompanySetting::getInstance();
         return view('pendaftaran', compact('pakets', 'areaLayanan', 'company'));
