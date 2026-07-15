@@ -165,6 +165,34 @@
                 --color-accent-content: #ffffff !important;
             @endif
         }
+
+        /* Cache-proof fix for GPU rendering tearing/ghosting on mobile/tablet screens */
+        @media (max-width: 1023px) {
+            .glass-card,
+            .glass-panel,
+            [class*="backdrop-blur-"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                transition: none !important;
+                overflow: hidden !important;
+            }
+            .glass-card:hover,
+            .glass-panel:hover {
+                transform: none !important;
+            }
+            [data-theme="light"] .glass-card {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+            }
+            [data-theme="dark"] .glass-card {
+                background-color: rgba(20, 26, 45, 0.96) !important;
+            }
+            .glass-panel {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+            }
+            [data-theme="dark"] .glass-panel {
+                background-color: rgba(15, 23, 42, 0.96) !important;
+            }
+        }
     </style>
 
     <!-- Theme Adaptive Hero Background -->
@@ -1371,13 +1399,15 @@
         if (Array.isArray(dbPakets)) {
             dbPakets.forEach(p => {
                 // Parse speed from title (e.g. "Paket Hemat 10 Mbps" -> 10)
-                let speedMatch = p.title_paket.match(/(\d+)\s*Mbps/i);
+                let title = p.title_paket || '';
+                let speedMatch = title.match(/(\d+)\s*Mbps/i);
                 p.speedMbps = speedMatch ? parseInt(speedMatch[1]) : 0;
 
                 // Fallback speed based on price if not found in title
                 if (!p.speedMbps) {
-                    if (p.harga_paket <= 200000) p.speedMbps = 10;
-                    else if (p.harga_paket <= 350000) p.speedMbps = 30;
+                    let harga = parseFloat(p.harga_paket) || 0;
+                    if (harga <= 200000) p.speedMbps = 10;
+                    else if (harga <= 350000) p.speedMbps = 30;
                     else p.speedMbps = 100;
                 }
 
@@ -1385,13 +1415,17 @@
                 let discount = 0;
                 if (p.promosi) {
                     let now = new Date();
-                    let start = new Date(p.promosi.valid_start);
-                    let end = new Date(p.promosi.valid_end);
-                    if (now >= start && now <= end) {
+                    let start = p.promosi.valid_start ? new Date(p.promosi.valid_start) : null;
+                    let end = p.promosi.valid_end ? new Date(p.promosi.valid_end) : null;
+                    let isValidDate = true;
+                    if (start && now < start) isValidDate = false;
+                    if (end && now > end) isValidDate = false;
+                    if (isValidDate) {
                         discount = parseFloat(p.promosi.value_promosi) || 0;
                     }
                 }
-                p.finalPrice = Math.max(0, p.harga_paket - discount);
+                let baseHarga = parseFloat(p.harga_paket) || 0;
+                p.finalPrice = Math.max(0, baseHarga - discount);
             });
         }
 
@@ -1468,11 +1502,10 @@
                 // Sort packages by speed in ascending order
                 let sortedPakets = [...dbPakets].sort((a, b) => a.speedMbps - b.speedMbps);
                 
-                // Find dynamic index using midpoints
+                // Recommends the first package that meets or exceeds the required speed
                 let selectedIndex = 0;
                 for (let i = 0; i < sortedPakets.length - 1; i++) {
-                    let midpoint = (sortedPakets[i].speedMbps + sortedPakets[i+1].speedMbps) / 2;
-                    if (totalSpeedNeeded > midpoint) {
+                    if (totalSpeedNeeded > sortedPakets[i].speedMbps) {
                         selectedIndex = i + 1;
                     }
                 }
@@ -1501,14 +1534,14 @@
                 };
             } else {
                 // Fallback to hardcoded values if no packages are loaded in database
-                if (totalSpeedNeeded <= 20) {
+                if (totalSpeedNeeded <= 10) {
                     recommended = { 
                         name: 'Paket Hemat', 
                         cost: 150000, 
                         speed: '10 Mbps',
                         activity: 'Browsing ringan, sosial media, dan chat keluarga.'
                     };
-                } else if (totalSpeedNeeded <= 50) {
+                } else if (totalSpeedNeeded <= 30) {
                     recommended = { 
                         name: 'Paket Populer', 
                         cost: 250000, 

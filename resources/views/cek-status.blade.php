@@ -149,6 +149,34 @@
                 --color-accent-content: #ffffff !important;
             @endif
         }
+
+        /* Cache-proof fix for GPU rendering tearing/ghosting on mobile/tablet screens */
+        @media (max-width: 1023px) {
+            .glass-card,
+            .glass-panel,
+            [class*="backdrop-blur-"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                transition: none !important;
+                overflow: hidden !important;
+            }
+            .glass-card:hover,
+            .glass-panel:hover {
+                transform: none !important;
+            }
+            [data-theme="light"] .glass-card {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+            }
+            [data-theme="dark"] .glass-card {
+                background-color: rgba(20, 26, 45, 0.96) !important;
+            }
+            .glass-panel {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+            }
+            [data-theme="dark"] .glass-panel {
+                background-color: rgba(15, 23, 42, 0.96) !important;
+            }
+        }
     </style>
 
     <style>
