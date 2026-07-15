@@ -57,9 +57,20 @@
             $s *= 100;
             $l *= 100;
 
-            $l = 100 - $l;
             if ($isDark) {
+                // Sisi Dark Mode: Jangan di-invers! Cukup pastikan warnanya kontras (tidak terlalu gelap).
+                // Jika lightness < 55%, naikkan ke 60% agar terlihat terang di latar gelap.
+                if ($l < 55) {
+                    $l = 60;
+                }
+                // Tingkatkan sedikit saturasi untuk mode gelap agar lebih "vibrant"
                 $s = min(100, $s * 1.15);
+            } else {
+                // Sisi Light Mode: Cukup pastikan warnanya kontras (tidak terlalu terang/menyilaukan).
+                // Jika lightness > 65%, turunkan ke 55% agar terbaca di latar putih.
+                if ($l > 65) {
+                    $l = 55;
+                }
             }
 
             $s /= 100;
@@ -84,21 +95,21 @@
         /* Light Mode (Default) */
         :root, [data-theme="light"] {
             @if(isset($company) && $company->primary_color)
-                --color-primary: {{ $company->primary_color }} !important;
+                --color-primary: {{ invertColorPHP($company->primary_color, false) }} !important;
                 --color-primary-content: #ffffff !important;
-                --color-primary-hover: {{ $company->primary_color }}ee !important;
+                --color-primary-hover: {{ invertColorPHP($company->primary_color, false) }}ee !important;
             @endif
             @if(isset($company) && $company->secondary_color)
-                --color-secondary: {{ $company->secondary_color }} !important;
+                --color-secondary: {{ invertColorPHP($company->secondary_color, false) }} !important;
                 --color-secondary-content: #ffffff !important;
             @endif
             @if(isset($company) && $company->accent_color)
-                --color-accent: {{ $company->accent_color }} !important;
+                --color-accent: {{ invertColorPHP($company->accent_color, false) }} !important;
                 --color-accent-content: #ffffff !important;
             @endif
         }
 
-        /* Dark Mode (Inverted Lightness) */
+        /* Dark Mode (Dynamic Contrast Correction) */
         [data-theme="dark"] {
             @if(isset($company) && $company->primary_color)
                 --color-primary: {{ invertColorPHP($company->primary_color, true) }} !important;
