@@ -38,24 +38,34 @@
 /*
  * Marquee — berjalan di GPU compositor thread
  */
+/*
+ * Marquee animation — uses margin-left instead of transform.
+ *
+ * IMPORTANT: Do NOT change this back to transform: translateX().
+ *
+ * On Android Chrome, transform animations create a dedicated GPU compositor
+ * layer. When this layer is nested inside a sticky element that also has
+ * backdrop-filter (which creates its own compositor stacking context),
+ * the GPU compositor draws the layers in wrong order during scroll.
+ * This produces the visual "bleeding" / ghosting artifact visible on mobile.
+ *
+ * margin-left runs entirely on the CPU paint thread (no layer promotion),
+ * which eliminates the inter-layer compositing conflict.
+ * The performance cost on a short text banner is negligible.
+ */
 @keyframes marquee {
     from {
-        transform: translateX(0);
+        margin-left: 0;
     }
     to {
-        transform: translateX(-50%);
+        margin-left: -50%;
     }
 }
 
 .marquee-track {
     display: flex;
     white-space: nowrap;
-    /* NOTE: will-change: transform removed intentionally.
-     * It was promoting .marquee-track to its own GPU compositor layer,
-     * causing rendering artifacts when the sticky header (backdrop-filter)
-     * overlapped scrolled content on mobile/touch devices.
-     * The marquee animation still runs via CSS transform — just on the same
-     * compositor layer as the parent, which eliminates the conflict. */
+    /* No will-change, no transform — stays on CPU paint thread */
     animation: marquee 28s linear infinite;
 }
 
@@ -213,34 +223,55 @@
 
 /* Theme switching — instant via CSS variables, no per-element transitions needed */
 
-/* Fix GPU rendering glitch / noise on mobile and tablet devices caused by backdrop-filter & transforms */
+/*
+ * Mobile GPU compositing fix.
+ *
+ * Problem: On Android Chrome, a sticky element with backdrop-filter creates
+ * an isolated GPU stacking context. Any CSS animation inside it (the marquee)
+ * or in overlapping content triggers incorrect compositor layer ordering during
+ * scroll — visible as "bleeding" or ghosting of the navbar into page content.
+ *
+ * "Zoom fixes it" confirms this: pinch-zoom forces Chrome into a flat
+ * single-layer render, bypassing inter-layer compositing entirely.
+ *
+ * Solution:
+ *  1. Strip backdrop-filter from the sticky header (kills the bad stacking ctx)
+ *  2. Use fully opaque header background (no alpha compositing)
+ *  3. Add contain:layout paint to the header (enforces paint boundary)
+ *  4. The marquee animation fix (margin-left instead of transform) in the
+ *     @keyframes above is the primary fix and handles the root cause.
+ */
 @media (max-width: 1023px), (pointer: coarse) {
 
-    /* Core fix: remove backdrop-filter from ALL elements.
-     * On mobile GPUs, any element with backdrop-filter creates an isolated
-     * stacking context. When a CSS-animated element (marquee) lives inside
-     * that stacking context and overlaps other painted content during scroll,
-     * the compositor produces visible tearing/ghosting artifacts. */
-    header,
-    header *,
-    .glass-card,
-    .glass-panel,
-    [class*="backdrop-blur-"] {
+    /* 1. Kill the backdrop stacking context on the sticky header */
+    header.sticky {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: var(--color-base-100) !important;
+        background-image: none !important;
+        /* contain:layout paint prevents header children from painting outside
+         * the header bounds, which stops the bleeding effect */
+        contain: layout paint;
+    }
+
+    /* Ensure no child of the header re-introduces backdrop-filter */
+    header.sticky * {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
     }
 
-    /* Freeze all non-critical CSS animations during scroll on touch devices.
-     * .animate-flow-fast and .animate-flow-slow (SVG strokes) also create
-     * GPU layers that conflict with the marquee layer during compositing. */
+    /* 2. Freeze SVG stroke animations (also create GPU layers) */
     .animate-flow-fast,
     .animate-flow-slow {
         animation: none !important;
     }
 
-    /* Remove hover transforms — they trigger layout/paint on touch */
+    /* 3. Strip all other backdrop-filter usages */
     .glass-card,
-    .glass-panel {
+    .glass-panel,
+    [class*="backdrop-blur-"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         transition: none !important;
         overflow: hidden !important;
     }
@@ -249,24 +280,16 @@
         transform: none !important;
     }
 
-    /* Restore opaque solid backgrounds (removes semi-transparent alpha
-     * compositing that also causes GPU blend artifacts on older mobile GPUs) */
+    /* 4. Fully opaque backgrounds — alpha blending also contributes to GPU artifacts */
+    [data-theme="light"] header.sticky,
     [data-theme="light"] .glass-card {
-        background-color: rgba(255, 255, 255, 0.97) !important;
+        background-color: var(--color-base-100) !important;
     }
+    [data-theme="dark"] header.sticky,
     [data-theme="dark"] .glass-card {
-        background-color: rgba(20, 26, 45, 0.98) !important;
+        background-color: var(--color-base-100) !important;
     }
     .glass-panel {
-        background-color: rgba(255, 255, 255, 0.97) !important;
-    }
-    [data-theme="dark"] .glass-panel {
-        background-color: rgba(15, 23, 42, 0.98) !important;
-    }
-
-    /* Solid sticky navbar — eliminates the backdrop stacking context entirely */
-    header.sticky {
         background-color: var(--color-base-100) !important;
-        background-image: none !important;
     }
 }

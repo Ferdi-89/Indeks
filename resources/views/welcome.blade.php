@@ -166,26 +166,27 @@
             @endif
         }
 
-        /* Mobile GPU compositing fix — authoritative rules are in app.css.
-         * This block ensures the sticky header's backdrop-filter is also stripped
-         * when inline styles or Tailwind utilities re-apply it on this page. */
+        /* Mobile GPU compositing fix — mirrors app.css authoritative rules.
+         * Primary fix is the marquee @keyframes change (transform→margin-left) in app.css.
+         * These rules are the secondary safety net for this specific page. */
         @media (max-width: 1023px), (pointer: coarse) {
-            /* Kill backdrop stacking context on the sticky header — this is the
-             * primary cause of compositing artifacts when .marquee-track (GPU layer)
-             * overlaps scrolled content below it. */
-            header.sticky,
+
+            /* contain:layout paint is the most critical rule:
+             * it creates an explicit paint boundary so the sticky header's
+             * children (marquee animation) cannot bleed outside header bounds. */
+            header.sticky {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background-color: var(--color-base-100) !important;
+                background-image: none !important;
+                contain: layout paint;
+            }
             header.sticky * {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
             }
 
-            /* Solid header background replaces the translucent glass effect */
-            header.sticky {
-                background-color: var(--color-base-100) !important;
-            }
-
-            /* Freeze the SVG flow animations — they also create compositor layers
-             * that conflict with the marquee layer on mobile GPUs. */
+            /* Freeze SVG flow animations — extra GPU layers */
             .animate-flow-fast,
             .animate-flow-slow {
                 animation: none !important;
