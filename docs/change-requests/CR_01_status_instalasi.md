@@ -32,11 +32,11 @@ Menambahkan modul pencarian status instalasi mandiri bagi pelanggan pada landing
 
 - [x] Membuat branch baru `feature/status-instalasi`.
 - [x] Membuat dokumentasi Change Request & Impact Analysis.
-- [ ] Menambahkan rute GET `/cek-status/{id}` di `routes/web.php`.
-- [ ] Mendesain dan mengimplementasikan section pelacak status visual di `welcome.blade.php` (Tailwind, DaisyUI).
-- [ ] Menghubungkan form pencarian dengan backend menggunakan JavaScript Fetch API (AJAX).
-- [ ] Menambahkan link navigasi di navbar `welcome.blade.php` dan `pendaftaran.blade.php`.
-- [ ] Melakukan pengujian fungsionalitas dan visual.
+- [x] Menambahkan rute GET `/cek-status/{id}` di `routes/web.php`.
+- [x] Mendesain dan mengimplementasikan section pelacak status visual di `welcome.blade.php` (Tailwind, DaisyUI).
+- [x] Menghubungkan form pencarian dengan backend menggunakan JavaScript Fetch API (AJAX).
+- [x] Menambahkan link navigasi di navbar `welcome.blade.php` dan `pendaftaran.blade.php`.
+- [x] Melakukan pengujian fungsionalitas dan visual.
 
 ---
 

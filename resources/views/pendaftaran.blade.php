@@ -363,20 +363,25 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 @foreach ($pakets as $paket)
-                                    <button type="button" data-paket-id="{{ $paket['id_paket'] }}"
-                                        onclick="selectPaket(this)" class="paket-card group relative flex flex-col items-center text-center p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer w-full bg-base-200/40 border-base-300/60 hover:border-primary/50 hover:bg-base-100 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? 'border-primary bg-primary/5 ring-1 ring-primary/25 font-bold' : '' }}">
+                                    @php
+                                        if (!is_object($paket) || !($paket instanceof \App\Models\paket)) {
+                                            continue;
+                                        }
+                                    @endphp
+                                    <button type="button" data-paket-id="{{ $paket->id_paket }}"
+                                        onclick="selectPaket(this)" class="paket-card group relative flex flex-col items-center text-center p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer w-full bg-base-200/40 border-base-300/60 hover:border-primary/50 hover:bg-base-100 {{ old('id_paket', request('paket')) == $paket->id_paket ? 'border-primary bg-primary/5 ring-1 ring-primary/25 font-bold' : '' }}">
 
                                         {{-- Check indicator inside badge --}}
-                                        <div class="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? 'bg-primary border-primary text-white scale-100' : 'border-base-300/80 scale-90' }}">
-                                            <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket['id_paket'] ? '' : 'hidden' }}"
+                                        <div class="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 {{ old('id_paket', request('paket')) == $paket->id_paket ? 'bg-primary border-primary text-white scale-100' : 'border-base-300/80 scale-90' }}">
+                                            <svg class="w-3 h-3 {{ old('id_paket', request('paket')) == $paket->id_paket ? '' : 'hidden' }}"
                                                 fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                                             </svg>
                                         </div>
 
-                                        <p class="text-sm font-bold text-base-content mt-1">{{ $paket['title_paket'] }}</p>
+                                        <p class="text-sm font-bold text-base-content mt-1">{{ $paket->title_paket }}</p>
                                         <p class="text-primary font-black text-xl leading-tight mt-2">
-                                            Rp {{ number_format($paket['harga_paket'], 0, ',', '.') }}
+                                            Rp {{ number_format($paket->harga_paket, 0, ',', '.') }}
                                         </p>
                                         <p class="text-[10px] text-base-content/50 font-semibold uppercase tracking-wider">/bulan</p>
                                     </button>

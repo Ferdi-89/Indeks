@@ -25,6 +25,19 @@ class HomeController extends Controller
             return paket::with('promosi')->where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
         });
 
+        // Self-healing: clear cache if it contains corrupted/invalid types
+        $hasInvalid = false;
+        foreach ($pakets as $p) {
+            if (!($p instanceof \App\Models\paket)) {
+                $hasInvalid = true;
+                break;
+            }
+        }
+        if ($hasInvalid) {
+            Cache::forget('home_pakets');
+            $pakets = paket::with('promosi')->where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
+        }
+
         $areaLayanan = Cache::remember('home_area_layanan', 3600, function() {
             return AreaLayanan::where('is_active', true)->get();
         });
@@ -39,6 +52,19 @@ class HomeController extends Controller
         $pakets = Cache::remember('daftar_pakets', 3600, function() {
             return paket::where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
         });
+
+        // Self-healing: clear cache if it contains corrupted/invalid types
+        $hasInvalid = false;
+        foreach ($pakets as $p) {
+            if (!($p instanceof \App\Models\paket)) {
+                $hasInvalid = true;
+                break;
+            }
+        }
+        if ($hasInvalid) {
+            Cache::forget('daftar_pakets');
+            $pakets = paket::where('is_hidden', false)->orderBy('id_paket', 'asc')->get();
+        }
 
         $areaLayanan = Cache::remember('daftar_area_layanan', 3600, function() {
             return AreaLayanan::where('is_active', true)->get();
