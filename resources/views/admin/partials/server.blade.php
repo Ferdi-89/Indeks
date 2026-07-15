@@ -16,17 +16,39 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-bold">Maintenance Mode</h3>
-                    <p class="text-sm text-base-content/70 mt-1 mb-4">Tutup akses publik ke website sementara waktu (menampilkan halaman error 503). Admin masih bisa masuk menggunakan URL rahasia <strong>/rnet-admin</strong>.</p>
+                    <div class="mt-2 mb-3">
+                        @if(app()->isDownForMaintenance())
+                            <span class="badge badge-warning gap-1.5 py-2 px-3 text-xs font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
+                                Status: AKTIF (Pemeliharaan)
+                            </span>
+                        @else
+                            <span class="badge badge-success gap-1.5 py-2 px-3 text-xs font-bold text-white">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                Status: TIDAK AKTIF (Online)
+                            </span>
+                        @endif
+                    </div>
+                    <p class="text-sm text-base-content/70 mb-4">Tutup akses publik ke website sementara waktu (menampilkan halaman error 503). Halaman admin, login, dan modul manajemen tetap dapat diakses sepenuhnya oleh admin.</p>
                     
                     <div class="flex flex-wrap gap-2">
-                        <form action="{{ route('admin.server.maintenance') }}" method="POST" data-no-ajax>
-                            @csrf
-                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Aktifkan mode maintenance? Akses publik akan ditutup.')">Aktifkan Maintenance</button>
-                        </form>
-                        <form action="{{ route('admin.server.up') }}" method="POST" data-no-ajax>
-                            @csrf
-                            <button type="submit" class="btn btn-success btn-sm text-white" onclick="return confirm('Matikan mode maintenance? Akses publik akan dibuka kembali.')">Nonaktifkan (Online)</button>
-                        </form>
+                        @if(app()->isDownForMaintenance())
+                            <form action="{{ route('admin.server.up') }}" method="POST" data-no-ajax>
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm text-white font-bold" onclick="return confirm('Matikan mode maintenance? Akses publik akan dibuka kembali.')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="inline-block mr-1"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+                                    Matikan Maintenance Mode (Buka Akses Publik)
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('admin.server.maintenance') }}" method="POST" data-no-ajax>
+                                @csrf
+                                <button type="submit" class="btn btn-warning btn-sm font-bold" onclick="return confirm('Aktifkan mode maintenance? Akses publik akan ditutup.')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="inline-block mr-1"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    Aktifkan Maintenance Mode
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>

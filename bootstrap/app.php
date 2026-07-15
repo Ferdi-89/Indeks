@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
+
+        $middleware->preventRequestsDuringMaintenance(except: [
+            'login',
+            'logout',
+            'admin',
+            'admin/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
