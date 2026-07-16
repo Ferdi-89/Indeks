@@ -17,8 +17,26 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-control">
-                    <label class="label"><span class="label-text">ID Pengumuman</span></label>
-                    <input type="text" name="id_pengumuman" class="input input-bordered" placeholder="Contoh: PENG-01" required />
+                    <label class="label">
+                        <span class="label-text">ID Pengumuman</span>
+                        <span class="label-text-alt text-warning font-semibold">⚠ Maks. 5 karakter</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="id_pengumuman"
+                        id="input_id_pengumuman"
+                        class="input input-bordered"
+                        placeholder="Contoh: P-001"
+                        maxlength="5"
+                        oninput="checkIdLength(this)"
+                        required
+                    />
+                    <label class="label">
+                        <span class="label-text-alt text-error hidden" id="hint_id_pengumuman">
+                            ❌ ID melebihi 5 karakter — akan menyebabkan error database!
+                        </span>
+                        <span class="label-text-alt text-base-content/50" id="counter_id_pengumuman">0 / 5</span>
+                    </label>
                 </div>
                 <div class="form-control">
                     <label class="label"><span class="label-text">Tema</span></label>
@@ -45,6 +63,26 @@
             <div class="mt-4 flex gap-2">
                 <button type="button" class="btn btn-primary" onclick="alert('Route POST belum dikonfigurasi')">Publikasikan</button>
             </div>
+
+            <script>
+            function checkIdLength(input) {
+                var len = input.value.length;
+                var hint = document.getElementById('hint_id_pengumuman');
+                var counter = document.getElementById('counter_id_pengumuman');
+                counter.textContent = len + ' / 5';
+                if (len >= 5) {
+                    input.classList.add('input-error');
+                    hint.classList.remove('hidden');
+                    counter.classList.add('text-error');
+                    counter.classList.remove('text-base-content/50');
+                } else {
+                    input.classList.remove('input-error');
+                    hint.classList.add('hidden');
+                    counter.classList.remove('text-error');
+                    counter.classList.add('text-base-content/50');
+                }
+            }
+            </script>
         </form>
     </div>
 </div>
