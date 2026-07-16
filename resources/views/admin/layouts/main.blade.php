@@ -36,6 +36,74 @@
 
 <body class="bg-base-200">
 
+<!-- ===== OFFLINE WARNING BANNER ===== -->
+<div id="offline-banner"
+     style="display:none; position:fixed; top:0; left:0; right:0; z-index:9999;"
+     class="flex items-center justify-center gap-3 px-4 py-3 bg-error text-error-content text-sm font-semibold shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5"
+         stroke-linecap="round" stroke-linejoin="round" class="shrink-0 animate-pulse">
+        <line x1="1" y1="1" x2="23" y2="23"/>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+        <path d="M10.71 5.05A16 16 0 0 1 22.56 9"/>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+    </svg>
+    <span>⚠ Koneksi internet terputus — beberapa fitur mungkin tidak berfungsi.</span>
+    <span id="offline-reconnecting" class="hidden text-error-content/70 italic text-xs">Menghubungkan kembali...</span>
+</div>
+
+<div id="online-toast"
+     style="display:none; position:fixed; top:1rem; left:50%; transform:translateX(-50%); z-index:9999;"
+     class="flex items-center gap-2 px-5 py-3 bg-success text-success-content text-sm font-semibold rounded-xl shadow-xl">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5"
+         stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+    </svg>
+    ✓ Koneksi internet pulih kembali!
+</div>
+
+<script>
+(function () {
+    var banner   = document.getElementById('offline-banner');
+    var toast    = document.getElementById('online-toast');
+    var reconnecting = document.getElementById('offline-reconnecting');
+    var toastTimer;
+
+    function showOffline() {
+        banner.style.display = 'flex';
+        // Push page content down so banner doesn't overlap navbar
+        document.body.style.paddingTop = banner.offsetHeight + 'px';
+        reconnecting.classList.remove('hidden');
+    }
+
+    function showOnline() {
+        banner.style.display = 'none';
+        document.body.style.paddingTop = '';
+
+        // Show success toast briefly
+        toast.style.display = 'flex';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    window.addEventListener('offline', showOffline);
+    window.addEventListener('online',  showOnline);
+
+    // Check on initial load (e.g. opened while already offline)
+    if (!navigator.onLine) showOffline();
+})();
+</script>
+<!-- ===== /OFFLINE WARNING BANNER ===== -->
+
 <div class="drawer lg:drawer-open">
     <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
 
